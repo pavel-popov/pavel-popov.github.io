@@ -1,9 +1,11 @@
 ---
+title: Edge Cases
+date: 2015-02-17 06:04:01 -05:00
+categories:
+- post
 layout: post
-title:  "Edge Cases"
-date:   2015-02-17 11:04:01
-categories: post
 ---
+
 Some edge cases and cautionary examples on using Markdown for writing content using this theme. In particular, list syntax can really knot things up.
 <!--more-->
 
