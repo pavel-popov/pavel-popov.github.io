@@ -1,6 +1,6 @@
 ---
-title: Tufte
-timezone: America/New_York
+title: Pavel's block
+timezone: Europe/Moscow
 collections:
   posts:
     title: Posts
@@ -9,11 +9,14 @@ collections:
     title: Uploads
     output: true
 baseurl: "/tufte-jekyll"
-subtitle: Content-centric blogging
-author: clay harmon
+subtitle: just some random thoughts
+author: pavel popov
 simple_search: http://google.com/search
-description: A Jekyll theme for content-rich sites
-name: tufte
+description: |-
+  Personal blog of Pavel Popov containing his thoughts, experiments and projects.
+
+  And TILs.
+name: Pavel's blog
 markdown: kramdown
 markdown_ext: markdown,mkdown,mkdn,mkd,md
 permalink: "/articles/:short_year/:title"
@@ -26,15 +29,9 @@ exclude:
 - README.md
 post:
   template: _post.txt
-  extension: md
+  extension: markdown
 page:
   template: _page.txt
-  extension: md
-editor: gvim
+  extension: markdown
 git:
   branch: master
-transfer:
-  command: rsync
-  settings: "-av"
-  source: _site/
-  destination: "~/Git/clayh53.github.com/"
