@@ -13,10 +13,10 @@ subtitle: just some random thoughts
 author: pavel popov
 simple_search: http://google.com/search
 description: |-
-  Personal blog of Pavel Popov containing his thoughts, experiments and projects.
+  Personal block(g) of Pavel Popov containing his thoughts, experiments and projects.
 
   And TILs.
-name: Pavel's blog
+name: Pavel's block
 markdown: kramdown
 markdown_ext: markdown,mkdown,mkdn,mkd,md
 permalink: "/articles/:short_year/:title"
