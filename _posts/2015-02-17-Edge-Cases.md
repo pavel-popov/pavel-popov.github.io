@@ -10,7 +10,6 @@ Some edge cases and cautionary examples on using Markdown for writing content us
 <!--more-->
 
 * Table of contents
-{:toc}
 
 ## Section 1
 ## Section 2
