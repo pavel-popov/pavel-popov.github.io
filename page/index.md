@@ -3,7 +3,7 @@ title: page
 layout: post
 ---
 
-{% newthought 'In this first iteration'%} of the *Tufte-Jekyll* theme, a post and a page have exactly the same layout. That means that all the typographic and structural details are identical between the two.
+<span class="newthought">In this first iteration</span> of the *Tufte-Jekyll* theme, a post and a page have exactly the same layout. That means that all the typographic and structural details are identical between the two.
 
 ## Pages and Posts
 
