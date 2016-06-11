@@ -8,8 +8,8 @@ collections:
   uploads:
     title: Uploads
     output: true
-baseurl: ''
-subtitle: just some random thoughts
+baseurl: 
+subtitle: Some random thoughts
 author: pavel popov
 simple_search: http://google.com/search
 description: |-
