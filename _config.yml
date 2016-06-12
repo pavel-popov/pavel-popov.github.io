@@ -5,16 +5,17 @@ collections:
   posts:
     title: Posts
     output: true
+    template: _post.txt
   reviews:
     title: Reviews
     output: true
+    template: _post.txt
   uploads:
     title: Uploads
     output: true
 baseurl: 
 subtitle: Some random thoughts
 author: pavel popov
-simple_search: http://google.com/search
 description: |-
   Personal block(g) of Pavel Popov containing his thoughts, experiments and projects.
 
@@ -26,11 +27,3 @@ permalink: "/articles/:short_year/:title"
 excerpt_separator: "<!--more-->"
 exclude:
 - README.md
-post:
-  template: _post.txt
-  extension: markdown
-page:
-  template: _page.txt
-  extension: markdown
-git:
-  branch: master
