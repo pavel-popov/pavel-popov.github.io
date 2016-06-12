@@ -22,10 +22,6 @@ markdown_ext: markdown,mkdown,mkdn,mkd,md
 permalink: "/articles/:short_year/:title"
 excerpt_separator: "<!--more-->"
 exclude:
-- Gemfile
-- Gemfile.lock
-- Rakefile
-- UploadToGithub.Rakefile
 - README.md
 post:
   template: _post.txt
