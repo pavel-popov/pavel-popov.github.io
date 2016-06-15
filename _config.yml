@@ -13,7 +13,7 @@ collections:
   uploads:
     title: Uploads
     output: true
-baseurl:
+baseurl: 
 subtitle: Some random thoughts
 author: Pavel Popov
 description: |-
