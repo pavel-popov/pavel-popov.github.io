@@ -13,8 +13,7 @@ collections:
   uploads:
     title: Uploads
     output: true
-baseurl: 
-subtitle: Some random thoughts
+baseurl:
 author: Pavel Popov
 description: |-
   Personal block(g) of Pavel Popov containing his thoughts, experiments and projects.
