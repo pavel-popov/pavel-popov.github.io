@@ -13,14 +13,13 @@ collections:
   uploads:
     title: Uploads
     output: true
-baseurl: 
+baseurl:
 subtitle: Some random thoughts
-author: pavel popov
+author: Pavel Popov
 description: |-
   Personal block(g) of Pavel Popov containing his thoughts, experiments and projects.
 
   And TILs.
-name: Pavel's block
 markdown: kramdown
 markdown_ext: markdown,mkdown,mkdn,mkd,md
 permalink: "/articles/:short_year/:title"
