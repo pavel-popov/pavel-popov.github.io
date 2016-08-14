@@ -1,5 +1,5 @@
 ---
-title: Pushing to multiple remotes with one commend
+title: Pushing to multiple remotes with one command
 date: 2016-08-14 10:01:00 +03:00
 tags:
 - git
