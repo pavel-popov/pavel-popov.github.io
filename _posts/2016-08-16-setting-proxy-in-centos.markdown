@@ -14,7 +14,7 @@ Here I put proxy configuration for CentOS.
 
 *Following examples suppose your proxy is at "proxy.intranet.com:8080", your username is "user" and your password is "pass".*
 
-## Setting up environment variables
+### Setting up environment variables
 
 There are environment variables that various application may use for proxy:
 
@@ -33,7 +33,7 @@ To set them up for entire system put their values in `/etc/environment` file:
     HTTP_PROXY="http://user:pass@proxy.intranet.com:8080/"
     HTTPS_PROXY="https://user:pass@proxy.intranet.com:443/"
 
-## Setting up YUM
+### Setting up YUM
 
 You need to edit `/etc/yum.conf` file and add the following lines there:
 
@@ -41,7 +41,7 @@ You need to edit `/etc/yum.conf` file and add the following lines there:
     proxy_username=user
     proxy_password=pass
 
-## Setting up Maven
+### Setting up Maven
 
 You need to edit Maven settings in `{M2_HOME}/conf/settings.xml` and add your proxy details:
 
@@ -71,7 +71,9 @@ You need to edit Maven settings in `{M2_HOME}/conf/settings.xml` and add your pr
 ## Open questions
 
 1. Doublecheck that HTTPS proxy is working. In my current setup I have http-only proxy (http://...:8080) which correctly works with HTTPS traffic
+
 2. Once you change your password you need to update it in above configurations. How to automate it?
+
 3. **You keep your password in plain text. Everyone who has access to your machine and has corresponding privileges can read it. Be careful!**
 
 There is a `cntlm` virtual proxy which will route all the traffic through it thus resolving questions 2 and 3. This is the subject for followup post.
