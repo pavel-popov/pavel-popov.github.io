@@ -14,6 +14,7 @@ description: |-
   Personal blog of Pavel Popov containing his thoughts, experiments and projects.
 
   And TILs.
+markdown: kramdown
 markdown_ext: markdown,md
 permalink: "/post/:title"
 excerpt_separator: "<!--more-->"
@@ -34,3 +35,5 @@ defaults:
       type: "pages"
     values:
       layout: "page"
+kramdown:
+  parse_block_html: true
