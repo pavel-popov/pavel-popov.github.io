@@ -1,6 +1,5 @@
 ---
 title: Pavel's block
-timezone: Europe/Moscow
 collections:
   posts:
     title: Posts
@@ -13,15 +12,15 @@ collections:
   uploads:
     title: Uploads
     output: true
-baseurl: 
+baseurl:
 author: Pavel Popov
 description: |-
-  Personal block(g) of Pavel Popov containing his thoughts, experiments and projects.
+  Personal blog of Pavel Popov containing his thoughts, experiments and projects.
 
   And TILs.
 markdown: kramdown
-markdown_ext: markdown,mkdown,mkdn,mkd,md
-permalink: "/articles/:short_year/:title"
+markdown_ext: markdown,md
+permalink: "/post/:title"
 excerpt_separator: "<!--more-->"
 exclude:
 - README.md
