@@ -1,6 +1,7 @@
 ---
-title: Setting proxy in CentOS
+title: Setting up proxy in CentOS
 date: 2016-08-16 13:49:00 +03:00
+layout: post
 categories:
 - how-to
 tags:
@@ -19,19 +20,17 @@ Here I put proxy configuration for CentOS.
 There are environment variables that various application may use for proxy:
 
 * `HTTP_PROXY`
-
 * `HTTPS_PROXY`
 
-* `http_proxy`
-
-* `https_proxy`
+*Note, that some applications require lower-case environment variables, so I'm
+duplicating them.*
 
 To set them up for entire system put their values in `/etc/environment` file:
 
-    http_proxy="http://user:pass@proxy.intranet.com:8080/"
-    https_proxy="https://user:pass@proxy.intranet.com:443/"
     HTTP_PROXY="http://user:pass@proxy.intranet.com:8080/"
     HTTPS_PROXY="https://user:pass@proxy.intranet.com:443/"
+    http_proxy="http://user:pass@proxy.intranet.com:8080/"
+    https_proxy="https://user:pass@proxy.intranet.com:443/"
 
 ### Setting up YUM
 
@@ -47,7 +46,7 @@ You need to edit Maven settings in `{M2_HOME}/conf/settings.xml` and add your pr
 
     <proxies>
       <proxy>
-        <id>luxoft</id>
+        <id>proxyid</id>
         <active>true</active>
         <protocol>http</protocol>
         <username>user</username>
@@ -57,7 +56,7 @@ You need to edit Maven settings in `{M2_HOME}/conf/settings.xml` and add your pr
         <nonProxyHosts>local.net|some.host.com</nonProxyHosts>
       </proxy>
       <proxy>
-        <id>luxoft</id>
+        <id>proxyid</id>
         <active>true</active>
         <protocol>https</protocol>
         <username>user</username>
@@ -68,7 +67,7 @@ You need to edit Maven settings in `{M2_HOME}/conf/settings.xml` and add your pr
       </proxy>
     </proxies>
 
-## Open questions
+### Open questions
 
 1. Doublecheck that HTTPS proxy is working. In my current setup I have http-only proxy (http://...:8080) which correctly works with HTTPS traffic
 

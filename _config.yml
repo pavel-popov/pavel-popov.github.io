@@ -5,10 +5,6 @@ collections:
     title: Posts
     output: true
     layout: post
-  reviews:
-    title: Reviews
-    output: true
-    layout: post
   uploads:
     title: Uploads
     output: true
@@ -18,9 +14,23 @@ description: |-
   Personal blog of Pavel Popov containing his thoughts, experiments and projects.
 
   And TILs.
-markdown: kramdown
 markdown_ext: markdown,md
 permalink: "/post/:title"
 excerpt_separator: "<!--more-->"
 exclude:
 - README.md
+- "*.sh"
+- "theme/"
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
