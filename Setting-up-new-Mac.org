@@ -1,0 +1,134 @@
+#+TITLE: Setting up new Mac for development
+
+* Install Homebrew
+
+Go to Homebrew's website, install it.
+
+* Shell
+
+I use =fish= as a shell, so need to change the default shell from
+=zsh= to =fish=.
+
+1. Install fish via brew
+2. Add fish to known shells
+3. Run =chsh= command
+4. Install fisher for managing plugins
+5. Install =z= plugin
+6. Install plugin for command prompt
+7. Set universal variables that set PATH variable
+
+** Adding items to =PATH= and setting env variables
+
+This will be referenced later in the manual, but to set env variables
+and adding items to path, I maintain a single script under git, which
+I execute manually once after change.
+
+#+begin_src fish
+#!/usr/bin/env fish
+
+set --universal -x GOPATH /Users/pavel/code/go
+
+set --universal fish_user_paths \
+  /usr/local/opt/openjdk/bin \
+  $GOPATH/bin \
+  /Users/pavel/code/dotfiles/bin
+#+end_src
+
+* SSH keys and other credentials
+
+I store SSH keys and other secrets in iCloud in a folder =Documents/keys=,
+so symlinking them works just fine
+
+#+begin_src sh
+cd ~/Documents/keys
+ln -s (pwd)/ssh ~/.ssh
+ln -s (pwd)/aws ~/.aws
+
+cd ~/.ssh && chmod 600 *
+#+end_src
+
+* Emacs
+
+I use Emacs as a text editor and IDE.
+
+* Go
+
+1. Set =GOPATH= to where the all non-gomodule Go-code will live
+
+   #+begin_src fish
+   set --universal -x GOPATH /Users/pavel/code/go
+   #+end_src
+
+2. Install =gopls=
+
+   #+begin_src sh
+   go get golang.org/x/tools/gopls
+   #+end_src
+
+3. Try running =(eglot)= in Emacs
+
+* NPM
+Unfortunately I need to deal with NPM.
+
+The easiest way is to use NVM (Node Version Manager), but it's a bash script,
+so we'd need to drop to bash to install nvm.
+
+#+begin_src bash
+# install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+
+# add these lines to ~/.bashrc
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# start bash and verify that nvm is configured
+❯ bash
+
+bash-3.2$ env | grep NVM
+NVM_RC_VERSION=
+NVM_CD_FLAGS=
+NVM_DIR=/Users/pavel/.nvm
+
+# install node
+bash-3.2$ nvm install 10.17.0
+Downloading and installing node v10.17.0...
+Downloading https://nodejs.org/dist/v10.17.0/node-v10.17.0-darwin-x64.tar.xz...
+Computing checksum with shasum -a 256
+Checksums matched!
+Now using node v10.17.0 (npm v6.11.3)
+Creating default alias: default -> 10.17.0 (-> v10.17.0)
+#+end_src
+
+Now return back to fish and add
+=/Users/pavel/.nvm/versions/node/v10.17.0/bin= folder to PATH and
+check that =npm= and =node= are available.
+
+#+begin_src bash
+❯ which npm
+/Users/pavel/.nvm/versions/node/v10.17.0/bin/npm
+
+❯ which node
+/Users/pavel/.nvm/versions/node/v10.17.0/bin/node
+
+❯ which npx
+/Users/pavel/.nvm/versions/node/v10.17.0/bin/npx
+#+end_src
+
+* Clojure(Script)
+
+Install OpenJDK:
+
+#+begin_src sh
+brew install openjdk
+#+end_src
+
+Add =/usr/local/opt/openjdk/bin= to =PATH=.
+
+
+* Apps from App Store
+
+** Tot
+
+** Magnet
+
+** The unarchiver

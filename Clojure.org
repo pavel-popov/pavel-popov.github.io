@@ -1,0 +1,156 @@
+#+TITLE: Using Clojure
+
+This file contains manual how to live with Clojure.
+
+* Linter
+=clj-kondo=
+
+* Documentation
+
+- [[https://clojuredocs.org][Clojuredocs.org]] :: Reference with community-provided examples
+- [[https://clojuredocs.org/quickref][Quick reference]] :: One page with all functions and their docstrings
+- [[http://clojure-doc.org/articles/content.html][clojure-docs.org]] :: Community-developed guides (tutorials, cookbooks, manuals)
+- [[http://clojure.github.io/clojure/index.html][API overview]] :: official api overview, the same as in Dash/DevDocs docset
+
+*Cheatsheets*
+
+- [[https://jafingerhut.github.io/cheatsheet/clojuredocs/cheatsheet-tiptip-cdocs-summary.html][Clojure cheatsheet with tooltips]] :: liks go to Clojuredocs
+- [[https://clojure.org/api/cheatsheet][Official cheatsheet]] :: links go to Clojuredocs
+
+*Blogs*
+
+- https://betweentwoparens.com/
+
+* Notes on talks/books/posts
+
+** What Sucks about Clojure and Why You'll Love It Anyway Chas Emerick
+https://www.youtube.com/watch?v=wXgdxCFDjD0
+
+Objectives:
+- Present a fair critique of Clojure from a pragmatic user's perspective
+- What will you with you knew now?
+
+* Starting new application
+
+- [[https://github.com/seancorfield/clj-new][clj-new]] :: Generate new projects based on clj, Boot, or Leiningen Templates
+
+
+*ClojureScript*
+
+* Style guide
+
+** Docstrings
+
+* Working with files
+
+** Write file
+
+=clojure.java.io= is your friend here.
+
+#+begin_src clojure
+(require '[clojure.java.io :as io])
+
+(defn write-file [name content]
+  (with-open [w (io/writer name)]
+    (.write w content)))
+#+end_src
+
+** Read file
+
+=slurp= to read all as a string from a file.
+
+#+begin_src clojure
+(require '[clojure.java.io :as io])
+
+(defn read-file [name]
+  (slurp (io/reader name)))
+
+(read-file "sqd_offers.env")
+#+end_src
+
+* Working with JSON
+
+[[http://dakrone.github.io/cheshire/][Cheshire documentation]].
+
+* Namespaces
+
+#+begin_src clojure
+; switch to namespace
+(in-ns 'fh.hotel-explorer.main)
+#+end_src
+
+* Destructuring
+
+#+begin_src clojure
+((fn [{a :a b :b :as full}]
+   [a b full]) {:a 1 :b 2 :c 3})
+;; => [1 2 {:c 3, :b 2, :a 1}]
+#+end_src
+
+* Convert data formats
+
+- jet :: convert between JSON, END and Transit
+
+* Portal - tool for exploring data structures in web-interface
+https://github.com/djblue/portal
+
+To Start Babashka with Portal dependency:
+#+begin_src shell
+bb -cp $(clj -Spath -Sdeps '{:deps {djblue/portal {:mvn/version "0.5.1"}}}') --nrepl-server 1666
+#+end_src
+
+* Dependencies
+
+Create =deps.edn= file like this
+
+#+begin_src clojure
+{:deps {djblue/portal {:mvn/version "0.5.1"}
+        com.google.guava/guava {:mvn/version "29.0-jre"}}}
+#+end_src
+
+and from the folder with the file run
+
+#+begin_src shell
+clj -Spath
+#+end_src
+
+it will load specified dependencies and output CLASSPATH.
+
+* REPL/nREPL
+
+#+begin_src shell
+clj -R:nREPL -m nrepl.cmdline --port 1700
+#+end_src
+
+To change namespace:
+
+#+begin_src clojure
+(in-ns 'main)
+#+end_src
+
+* Babashka
+
+#+begin_src bash
+bb -cp (clj -Spath) --nrepl-server 1666
+#+end_src
+
+** Use AWS with Babashka
+
+https://github.com/tzzh/pod-tzzh-aws
+
+* Benchmarking
+<2020-11-14 Sat>
+Found this snippet in ClojureDocs on =into=
+
+#+begin_src clojure
+;; Let's benchmark, using Criterium (https://github.com/hugoduncan/criterium)
+(require '[criterium.core :refer [quick-bench]])
+(quick-bench (into [-1 -2] xform (range 1000000)))
+;   Execution time lower quantile : 54.368948 ms ( 2.5%)
+;   Execution time upper quantile : 55.976303 ms (97.5%)
+#+end_src
+
+* Getting help within Emacs
+
+- =C-c C-d C-d=, =cider-doc=, within CIDER buffer - open documentation
+- Then within *cider-doc* buffer - =cider-clojuredocs= - open ClojureDocs examples

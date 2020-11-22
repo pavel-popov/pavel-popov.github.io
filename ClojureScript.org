@@ -1,0 +1,57 @@
+#+TITLE: Using ClojureScript
+
+This is a sibling document to ./Clojure.org dedicated to ClojureScript.
+
+* How to do AJAX / web communication
+
+- [[https://github.com/ptaoussanis/sente][sente]] :: a small client+server library that makes it easy to build
+  reliable, high-performance realtime web applications with Clojure +
+  ClojureScript
+
+- [[https://github.com/r0man/cljs-http][cljs-http]] :: returns core.async channels, so you need to
+  import the =go= macro and the =<!= function
+
+* Working with HTML
+
+- [[https://github.com/weavejester/hiccup][hiccup]] ::  is a library for representing HTML in Clojure. It uses
+  vectors to represent elements, and maps to represent an element's
+  attributes. Most other templators (rum, reagent) use this style.
+
+* Deployment
+
+Netlify
+
+* Documentation
+
+*Cheatsheets*
+
+- [[https://cljs.info/cheatsheet/][ClojureScript cheatsheet]]
+
+*Books and comprehensive guides*
+
+- [[https://shadow-cljs.github.io/docs/UsersGuide.html][Shadow CLJS User's Guide]]
+
+* Starting new application
+
+- [[https://github.com/athomasoriginal/create-reagent-app][create-reagent-app]] :: A ClojureScript/Reagent App Template
+
+** Mike Zamansky's template and introductory videos
+
+https://github.com/zamansky/shadow-cljs-template
+
+* Reagent
+https://purelyfunctional.tv/guide/reagent/
+Reagent has its own Atoms. They're just like regular Clojure Atoms in
+every way except they do one extra thing: they keep track of Reagent
+components who have derefed them. Every time those Atoms change
+values, the component will be re-rendered.
+
+* Interop with JavaScript
+
+
+JS                            CLJS
+
+object.method(arg1, arg2) <=> (.method object arg1 arg2)
+object.field              <=> (.-field object)
+object.field = "foo"      <=> (set! (.-field object) "foo")
+object.nested.field       <=> (.-field (.-nested object))

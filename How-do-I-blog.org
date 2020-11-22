@@ -1,0 +1,24 @@
+#+TITLE: How do I blog?
+#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
+
+* Org Mode for everything
+
+Posts are usually about some broad topic, and I have no intention to
+make them complete before publishing, they more a scratch notes on a
+subject that I dump out of my brain.
+
+To create a post I create a new Org file in a directory
+=~/Documents/Projects/Blog= and start writing. Upon the file has
+enough content to be published, I export it to =html= using
+=(org-html-export-to-html)= and move the file to the folder
+=~/Documents/Projects/pavel-popov.github.io=, which contains contents
+of [[https://pavel-popov.github.io][pavel-popov.github.io]] website.
+
+
+- =Blog= directory points to =org= branch in [[https://github.com/pavel-popov/pavel-popov.github.io][pavel-popov.github.io]] repo.
+
+* Styling
+
+I adopted a beautiful =org.css= by Zhitao Gong from his post [[https://gongzhitaao.org/orgcss/][CSS for
+Org-exported HTML]].

@@ -1,0 +1,25 @@
+#+TITLE: Article Title Goes Here
+#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
+
+#+BEGIN_abstract
+Article abstract goes here.
+#+END_abstract
+
+# now prints out the previously disabled (toc:nil) table of contents.
+#+TOC: headlines 2
+
+Your content goes here.
+
+# note the ignore tag
+* Refrences                                                          :ignore:
+
+# prints out bibliograph, if any, with bibtex2html.  The first parameter is the
+# bibliograph file name without .bib extension, the second is the reference
+# style.  The rest parameters are parsed to `bibtex2html'.  Refer to the
+# ox-bibtex document for further information.
+
+#+BIBLIOGRAPHY: ref plain limit:t option:-nokeywords
+
+# This is an automatically generated section if you use footnote.
+* Footnotes
