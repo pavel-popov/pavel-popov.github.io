@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-11-22 Sun 12:01 -->
+<!-- 2020-11-22 Sun 11:33 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pavel's Notes</title>
+<title>How do I blog?</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Pavel Popov" />
 <style type="text/css">
@@ -193,7 +193,7 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" href="tufte.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="org.css"/>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -243,15 +243,54 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Pavel's Notes</h1>
+<h1 class="title">How do I blog?</h1>
+
+<div id="outline-container-org6b352ea" class="outline-2">
+<h2 id="org6b352ea"><span class="section-number-2">1</span> Org Mode for everything</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Posts are usually about some broad topic, and I have no intention to
+make them complete before publishing, they more a scratch notes on a
+subject that I dump out of my brain.
+</p>
+
+<p>
+To create a post I create a new Org file in a directory
+<code>~/Documents/Projects/Blog</code> and start writing. Upon the file has
+enough content to be published, I export it to <code>html</code> using
+<code>(org-html-export-to-html)</code> and move the file to the folder
+<code>~/Documents/Projects/pavel-popov.github.io</code>, which contains contents
+of <a href="https://pavel-popov.github.io">pavel-popov.github.io</a> website.
+</p>
+
 <ul class="org-ul">
-<li><a href="./Pavels-Emacs-Configuration.html">Pavels Emacs Configuration</a> - <span class="timestamp-wrapper"><span class="timestamp">[2020-11-22 Sun]</span></span></li>
-<li><a href="./How-do-I-blog.html">How do I blog</a> - <span class="timestamp-wrapper"><span class="timestamp">[2020-11-22 Sun]</span></span></li>
+<li><code>Blog</code> directory points to <a href="https://github.com/pavel-popov/pavel-popov.github.io/tree/org">org</a> branch in <a href="https://github.com/pavel-popov/pavel-popov.github.io">pavel-popov.github.io</a> repo.</li>
 </ul>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/export-to-blog ()
+  (interactive)
+  (let ((filename (org-html-export-to-html)))
+    (rename-file filename "~/Documents/Projects/pavel-popov.github.io/")))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb73c34d" class="outline-2">
+<h2 id="orgb73c34d"><span class="section-number-2">2</span> Styling</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+I adopted a beautiful <code>org.css</code> by Zhitao Gong from his post <a href="https://gongzhitaao.org/orgcss/">CSS for
+Org-exported HTML</a>.
+</p>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Pavel Popov</p>
-<p class="date">Created: 2020-11-22 Sun 12:01</p>
+<p class="date">Created: 2020-11-22 Sun 11:33</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

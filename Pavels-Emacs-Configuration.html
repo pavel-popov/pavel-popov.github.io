@@ -1,0 +1,2848 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-11-22 Sun 11:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pavel's Emacs Configuration</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Pavel Popov" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Pavel's Emacs Configuration</h1>
+<div class="abstract">
+<p>
+After trying to use many distributions I finally decided to start mine
+from scratch. Many parts of this configuration is copied from
+Castlemacs distribution.
+</p>
+
+<p>
+Literate programming layout is inpired by Protesilaos Stavrou' <a href="https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/">dotfiles</a>.
+</p>
+
+</div>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org71e03d5">1. Reference cards / cheatsheets</a></li>
+<li><a href="#orgc26bfa4">2. Regenerating Elisp code from Org code</a></li>
+<li><a href="#org49892af">3. Server mode</a></li>
+<li><a href="#orgaca3e6f">4. GUI configuration</a></li>
+<li><a href="#orgd798d58">5. Init</a></li>
+<li><a href="#org136e8dd">6. Working with Buffers</a>
+<ul>
+<li><a href="#org6f4cd91">6.1. Ibuffer</a></li>
+<li><a href="#org2e547b9">6.2. Bufler</a></li>
+<li><a href="#org6cecba5">6.3. Minibuffer</a></li>
+<li><a href="#org4ed9065">6.4. Navigation in a buffer</a></li>
+<li><a href="#org943d86b">6.5. Unique buffer names</a></li>
+</ul>
+</li>
+<li><a href="#orgd1f9ff3">7. Custom packages</a>
+<ul>
+<li><a href="#orgff72327">7.1. <span class="todo TODO">TODO</span> Figure out how to download packages from Github url</a></li>
+</ul>
+</li>
+<li><a href="#org2755ec4">8. Getting help, documentation</a>
+<ul>
+<li><a href="#org944ecc2">8.1. Info mode</a></li>
+<li><a href="#org446eaee">8.2. <span class="done DONE">DONE</span> Integrate DevDocs?</a></li>
+</ul>
+</li>
+<li><a href="#org15cca89">9. Modifier keys</a></li>
+<li><a href="#org6909892">10. Sane defaults</a></li>
+<li><a href="#orgf0a84f6">11. Recent files</a>
+<ul>
+<li><a href="#org41a2217">11.1. Opening files</a></li>
+</ul>
+</li>
+<li><a href="#org4719b16">12. Working with lists and hash-maps</a></li>
+<li><a href="#org83dd494">13. Clipboard / Copy / Yank / Paste / Delete</a></li>
+<li><a href="#org97381b9">14. Calendar</a></li>
+<li><a href="#org48e4b42">15. Working with text</a>
+<ul>
+<li><a href="#org7449908">15.1. Google Translate</a></li>
+<li><a href="#orgd973ee3">15.2. Text Editing</a></li>
+<li><a href="#orgdf5cc8d">15.3. Join lines</a></li>
+<li><a href="#orgc1edbc7">15.4. Wrap lines on a screen, visual line mode</a></li>
+</ul>
+</li>
+<li><a href="#org5a082b5">16. File management / Dired&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Dired">Dired</span></span></a></li>
+<li><a href="#orgd967b3b">17. Undo and redo</a></li>
+<li><a href="#org0e97fde">18. Visuals</a></li>
+<li><a href="#org3cae6a7">19. Automatic Dark Mode in macOS</a></li>
+<li><a href="#org71cc2c8">20. Mode line, mode-line, Status Bar</a></li>
+<li><a href="#org689226e">21. Font</a></li>
+<li><a href="#org1ace6e8">22. Color themes</a></li>
+<li><a href="#org037c7e4">23. Line numbers</a></li>
+<li><a href="#orgf920259">24. Keybindings</a>
+<ul>
+<li><a href="#orgfd4b0cc">24.1. Commenting/uncommenting</a></li>
+</ul>
+</li>
+<li><a href="#org2d5e1ad">25. Moving around</a>
+<ul>
+<li><a href="#org9ec4d8e">25.1. Evil</a></li>
+<li><a href="#org2874fd6">25.2. Xah Fly Keys</a></li>
+<li><a href="#org004df6e">25.3. Moving back</a></li>
+</ul>
+</li>
+<li><a href="#orgb5cefb6">26. Window management</a></li>
+<li><a href="#org1119025">27. Project management</a></li>
+<li><a href="#orga3e35e5">28. Ivy, a generic completion mechanism</a>
+<ul>
+<li><a href="#org947bd1f">28.1. <span class="todo TODO">TODO</span> Home directory abbreviation doesn't work with <code>councel-recentf</code></a></li>
+</ul>
+</li>
+<li><a href="#orga2b7c9e">29. Swiper, an Ivy-enhanced alternative to isearch</a></li>
+<li><a href="#org989c081">30. Counsel, a collection of Ivy-enhanced versions of common commands</a></li>
+<li><a href="#orgfc5b89b">31. git, version control system</a></li>
+<li><a href="#org744deb1">32. Code completion</a></li>
+<li><a href="#org0f5a7cd">33. Org-mode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="OrgMode">OrgMode</span></span></a>
+<ul>
+<li><a href="#org185d113">33.1. Org-babel, Babel, Org Babel&#xa0;&#xa0;&#xa0;<span class="tag"><span class="OrgBabel">OrgBabel</span></span></a></li>
+<li><a href="#orgf15b1ac">33.2. Org-agenda, Ora Agenda&#xa0;&#xa0;&#xa0;<span class="tag"><span class="OrgAgenda">OrgAgenda</span></span></a></li>
+<li><a href="#org78e616c">33.3. <span class="done DONE">DONE</span> How to automatically add creation metadata timestamp to Org-mode entry?</a></li>
+<li><a href="#orgd993f7f">33.4. <span class="done DONE">DONE</span> Saving of fh.org (272K) takes significant time</a></li>
+</ul>
+</li>
+<li><a href="#orgd584896">34. Outline-mode - folding and unfolding in Org-mode style</a></li>
+<li><a href="#org9b965d3">35. Eshell</a>
+<ul>
+<li><a href="#orge60ce5a">35.1. How to open a file in emacs?</a></li>
+<li><a href="#org14e6daf">35.2. Setting environment variables</a></li>
+</ul>
+</li>
+<li><a href="#org09362fb">36. restclient, major mode for sending HTTP requests</a></li>
+<li><a href="#orgbd8e1ca">37. Smart Notes / Slip-Box / ZettelKasten</a></li>
+<li><a href="#org4077a7d">38. AnyBar, show circle indicator in macOS menu</a></li>
+<li><a href="#org23ef3e2">39. Searching in multiple files</a></li>
+<li><a href="#orge070bfc">40. Formatting code</a>
+<ul>
+<li><a href="#org494cea5">40.1. Lispy - working with lisp s-expressions</a></li>
+<li><a href="#org7404e30">40.2. Dealing with pairs - smartparens</a></li>
+<li><a href="#org1ff4172">40.3. <span class="todo TODO">TODO</span> Setup sql formatting</a></li>
+</ul>
+</li>
+<li><a href="#org4147267">41. Colors in compilation buffers</a></li>
+<li><a href="#orga8a3d5a">42. Language Server Protocol, LSP</a></li>
+<li><a href="#org45482ca">43. Error checking</a></li>
+<li><a href="#orgc142818">44. Elisp</a>
+<ul>
+<li><a href="#org5f74b7a">44.1. Dash - A modern list api for Emacs</a></li>
+<li><a href="#org3a06c83">44.2. S - working with strings</a></li>
+</ul>
+</li>
+<li><a href="#org4089470">45. Golang</a></li>
+<li><a href="#org3274249">46. Terraform</a></li>
+<li><a href="#orgbfe3a2b">47. JSON</a></li>
+<li><a href="#orgc77ec76">48. YAML</a></li>
+<li><a href="#org6af30fe">49. Ledger, double-entry plain text accounting system</a></li>
+<li><a href="#org65cfb05">50. Clojure</a>
+<ul>
+<li><a href="#org5ef2702">50.1. How to develop in Clojure (CIDER)</a></li>
+<li><a href="#orgde90822">50.2. inf-clojure</a></li>
+<li><a href="#org5cdae87">50.3. Useful helper functions</a></li>
+<li><a href="#org1a02671">50.4. Linter - clj-kondo</a></li>
+<li><a href="#orga813a7b">50.5. ClojureScript</a></li>
+<li><a href="#org069ab99">50.6. 4Clojure</a></li>
+</ul>
+</li>
+<li><a href="#org5c3130c">51. JavaScript</a></li>
+<li><a href="#org321c77a">52. TypeScript</a></li>
+<li><a href="#org37f146e">53. Scala</a></li>
+<li><a href="#orgb00b2d9">54. Highlighting</a></li>
+<li><a href="#org2623284">55. Random helper functions</a></li>
+<li><a href="#org98b0511">56. Network utilities in Emacs</a></li>
+<li><a href="#org9bb0ffd">57. Open browser from Emacs</a></li>
+<li><a href="#org417bcb5">58. Blogging</a></li>
+<li><a href="#org058875b">59. Recording video</a></li>
+<li><a href="#orge78b1fd">60. Jet - transforms between JSON, EDN and Transit&#xa0;&#xa0;&#xa0;<span class="tag"><span class="json">json</span>&#xa0;<span class="edn">edn</span>&#xa0;<span class="clojure">clojure</span>&#xa0;<span class="clj">clj</span></span></a></li>
+<li><a href="#org5274150">61. Command log mode - record keystrokes</a></li>
+<li><a href="#org472b769">62. Collaborative editing, Floobits, Live Share</a></li>
+<li><a href="#orge05e096">63. Packages to try someday</a></li>
+<li><a href="#org06e9810">64. Trying packages</a></li>
+<li><a href="#org51dc741">65. Reading from s3 using <code>sqlc</code> tool</a></li>
+<li><a href="#orgf537a01">66. <span class="todo TODO">TODO</span> Typing response</a></li>
+<li><a href="#orgf0882c6">67. <span class="todo TODO">TODO</span> Publish this Org file as a blog post</a></li>
+<li><a href="#org95be205">68. Emacs-webkit - using Safari from Emacs</a></li>
+<li><a href="#orga1f74b2">69. <span class="todo TODO">TODO</span> How to explicitly record the mental stack?</a></li>
+<li><a href="#org1fe3e05">70. Xah Lee's functions</a>
+<ul>
+<li><a href="#org3e9095f">70.1. Opening file in External App</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org71e03d5" class="outline-2">
+<h2 id="org71e03d5"><span class="section-number-2">1</span> Reference cards / cheatsheets</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://www.gnu.org/software/emacs/refcards/">https://www.gnu.org/software/emacs/refcards/</a>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf">Dired cheatsheet</a></li>
+<li><a href="https://www.gnu.org/software/emacs/refcards/pdf/refcard.pdf">Emacs cheatsheet</a></li>
+<li><a href="https://www.gnu.org/software/emacs/refcards/pdf/survival.pdf">Emacs survival card</a></li>
+<li><a href="https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf">Org cheatsheet</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc26bfa4" class="outline-2">
+<h2 id="orgc26bfa4"><span class="section-number-2">2</span> Regenerating Elisp code from Org code</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package emacs
+  :config
+  (defun prot/delete-emacs-init ()
+    (interactive)
+    (let ((configs "~/.emacs.d/emacs-init.el"))
+      (when configs
+        (delete-file configs))))
+  :hook ((kill-emacs-hook . prot/delete-emacs-init)
+       ;;  (kill-emacs-hook . package-quickstart-refresh)
+        ))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org49892af" class="outline-2">
+<h2 id="org49892af"><span class="section-number-2">3</span> Server mode</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Needed to edit commit messages from Eshell when running git commands.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">  (server-start)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaca3e6f" class="outline-2">
+<h2 id="orgaca3e6f"><span class="section-number-2">4</span> GUI configuration</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(tool-bar-mode -1)    ;; Hide tool bar
+(scroll-bar-mode -1)  ;; Hide scroll bar
+(fringe-mode '(1 . 1))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd798d58" class="outline-2">
+<h2 id="orgd798d58"><span class="section-number-2">5</span> Init</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Do run below command from time to time.
+;; (package-refresh-contents)
+
+(use-package diminish :ensure t
+  :after use-package)
+
+(use-package exec-path-from-shell :ensure t
+  :config (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
+;; adding directories with binaries.
+;;(setq exec-path (append exec-path '("/Users/pavel/go/bin"
+;;                                    "/usr/local/bin"
+;;                                    "/Users/pavel/.pyenv/shims")))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org136e8dd" class="outline-2">
+<h2 id="org136e8dd"><span class="section-number-2">6</span> Working with Buffers</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org6f4cd91" class="outline-3">
+<h3 id="org6f4cd91"><span class="section-number-3">6.1</span> Ibuffer</h3>
+<div class="outline-text-3" id="text-6-1">
+</div>
+<div id="outline-container-org09b0893" class="outline-4">
+<h4 id="org09b0893"><span class="section-number-4">6.1.1</span> <span class="todo TODO">TODO</span> Stop confirmation when killing non-edited buffers</h4>
+<div class="outline-text-4" id="text-6-1-1">
+<p>
+@Prot showed example in one of his videos.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2e547b9" class="outline-3">
+<h3 id="org2e547b9"><span class="section-number-3">6.2</span> Bufler</h3>
+<div class="outline-text-3" id="text-6-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(use-package bufler :ensure t)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6cecba5" class="outline-3">
+<h3 id="org6cecba5"><span class="section-number-3">6.3</span> Minibuffer</h3>
+</div>
+
+<div id="outline-container-org4ed9065" class="outline-3">
+<h3 id="org4ed9065"><span class="section-number-3">6.4</span> Navigation in a buffer</h3>
+<div class="outline-text-3" id="text-6-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Activates by typing s or S then two arbitrary chars and it will
+;; jump the cursor to the position.
+(use-package evil-snipe :ensure t
+  :diminish evil-snipe-local-mode
+  :init (evil-snipe-mode +1)
+  :config (setq evil-snipe-scope 'visible))
+
+(use-package avy :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org943d86b" class="outline-3">
+<h3 id="org943d86b"><span class="section-number-3">6.5</span> Unique buffer names</h3>
+<div class="outline-text-3" id="text-6-5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd1f9ff3" class="outline-2">
+<h2 id="orgd1f9ff3"><span class="section-number-2">7</span> Custom packages</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-24 Thu&gt;</span></span>
+Some packages are not in (M)ELPA, so we need either download them manually
+or have some mechanism doing that for us.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; Load custom packages
+(add-to-list 'load-path "~/.emacs.d/packages")
+(load "visit-source")
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgff72327" class="outline-3">
+<h3 id="orgff72327"><span class="section-number-3">7.1</span> <span class="todo TODO">TODO</span> Figure out how to download packages from Github url</h3>
+</div>
+</div>
+
+<div id="outline-container-org2755ec4" class="outline-2">
+<h2 id="org2755ec4"><span class="section-number-2">8</span> Getting help, documentation</h2>
+<div class="outline-text-2" id="text-8">
+<dl class="org-dl">
+<dt><code>C-h</code>, <code>F1</code></dt><dd>open help key drawer</dd>
+<dt><code>F1 v</code>, <code>describe-varriable</code></dt><dd>Describe variable</dd>
+<dt><code>F1 f</code>, <code>describe-function</code></dt><dd>Describe function</dd>
+</dl>
+</div>
+
+<div id="outline-container-org944ecc2" class="outline-3">
+<h3 id="org944ecc2"><span class="section-number-3">8.1</span> Info mode</h3>
+<div class="outline-text-3" id="text-8-1">
+<dl class="org-dl">
+<dt><code>&lt;backspace&gt;</code></dt><dd>go back</dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org446eaee" class="outline-3">
+<h3 id="org446eaee"><span class="section-number-3">8.2</span> <span class="done DONE">DONE</span> Integrate DevDocs?</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-24 Thu&gt;</span></span>
+I've found the blog post <a href="https://scripter.co/accessing-devdocs-from-emacs/">Accessing Devdocs from Emacs</a> which suggests
+using <code>devdocs-lookup</code> package.
+</p>
+
+<p>
+It's not published to MELPA, so we need to download it from Github. For now I'll do it manually using <code>curl</code>
+and save to custom packages folder ~/code/dotfiles/emacs.d/packages .
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; (use-package devdocs-lookup :ensure t) -- doesn't work since not on MELPA
+(load "devdocs-lookup")
+(devdocs-setup)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org15cca89" class="outline-2">
+<h2 id="org15cca89"><span class="section-number-2">9</span> Modifier keys</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Control is control, and I also changed Caps Lock to Control in the
+Keyboard preferences in macOS.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(setq
+  mac-right-command-modifier 'super  ;; Both command keys are 'Super'
+  mac-command-modifier 'super
+  mac-option-modifier 'meta ;; Option or Alt is naturally 'Meta'
+  mac-right-option-modifier 'nil) ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6909892" class="outline-2">
+<h2 id="org6909892"><span class="section-number-2">10</span> Sane defaults</h2>
+<div class="outline-text-2" id="text-10">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; Smoother and nicer scrolling
+(setq
+  scroll-margin 0
+  scroll-step 1
+  next-line-add-newlines t
+  visible-bell nil
+  scroll-conservatively 10000
+  scroll-preserve-screen-position t
+  mouse-wheel-follow-mouse t
+  mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+
+(setq-default
+  auto-save-default nil    ;; Don't bother with auto save
+  make-backup-files nil    ;; and backups.
+  delete-by-moving-to-trash t  ;; Move file to trash instead of removing.
+  indent-tabs-mode nil)        ;; Indent using spaces by default
+
+;; Revert (update) buffers automatically when underlying files are changed externally.
+(global-auto-revert-mode t)
+
+(setq
+  inhibit-startup-message t              ;; Don't show the startup message...
+  inhibit-startup-screen t               ;; ... or screen
+  cursor-in-non-selected-windows nil     ;; Hide the cursor in inactive windows
+  ;echo-keystrokes 0.1                   ;; Show keystrokes right away, don't show the message in the scratch buffer
+  initial-scratch-message nil            ;; Empty scratch buffer
+  ;initial-major-mode 'org-mode           ;; Org mode by default in *scratch* buffer
+  sentence-end-double-space nil          ;; Sentences should end in one space
+  confirm-kill-emacs 'y-or-n-p           ;; y and n instead of yes and no when quitting
+  help-window-select t                   ;; Select help window so it's easy to quit it with 'q'
+  large-file-warning-threshold 10000000  ;; Warn only when opening files bigger than 10MB
+  )
+
+(fset 'yes-or-no-p 'y-or-n-p)      ; y and n instead of yes and no everywhere else
+(delete-selection-mode 1)          ; Delete selected text when typing
+(global-unset-key (kbd "s-p"))     ; Don't print, later =s-p= remapped to open files in the project
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf0a84f6" class="outline-2">
+<h2 id="orgf0a84f6"><span class="section-number-2">11</span> Recent files</h2>
+<div class="outline-text-2" id="text-11">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; (defmacro with-suppressed-message (&amp;rest body)
+;;   "Suppress new messages temporarily in the echo area and the
+;;   `*Messages*' buffer while BODY is evaluated."
+;;   (declare (indent 0))
+;;   (let ((message-log-max nil))
+;;     `(with-temp-message (or (current-message) "") ,@body)))
+
+;; (setq save-silently t)
+;; (with-suppressed-message (recentf-save-list))
+
+(defun pp/recentf-save-list ()
+  "Save recentf list supressing message."
+  (let ((inhibit-message t)) (recentf-save-list)))
+
+(use-package recentf
+  :init
+  (recentf-mode 1)
+  (run-at-time "5 min" 300 'pp/recentf-save-list)
+  :config
+  (setq
+    recentf-max-menu-items 20
+    recentf-max-saved-items 1000))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org41a2217" class="outline-3">
+<h3 id="org41a2217"><span class="section-number-3">11.1</span> Opening files</h3>
+<div class="outline-text-3" id="text-11-1">
+<p>
+I use <code>pp/visit-or-open</code> function, bound to <code>s-o</code> globally.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/visit-or-open ()
+  "Try to 'visit-source', if fail, then fallback to 'find-file'."
+  (interactive)
+  (or
+    (visit-source)
+    (counsel-find-file)))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org85f00bf" class="outline-4">
+<h4 id="org85f00bf"><span class="section-number-4">11.1.1</span> <span class="todo TODO">TODO</span> Remove trailing dot from text under cursor before trying to <code>visit-source</code></h4>
+<div class="outline-text-4" id="text-11-1-1">
+<p>
+Acceptance: having cursor above ~/repos/dotfiles/emacs.d/packages.
+should open the folder in Dired.
+</p>
+
+<p>
+Maybe also don't take into account other Org-related markup, like
+<code>./filename.txt</code>.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4719b16" class="outline-2">
+<h2 id="org4719b16"><span class="section-number-2">12</span> Working with lists and hash-maps</h2>
+<div class="outline-text-2" id="text-12">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package dash :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org83dd494" class="outline-2">
+<h2 id="org83dd494"><span class="section-number-2">13</span> Clipboard / Copy / Yank / Paste / Delete</h2>
+<div class="outline-text-2" id="text-13">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-22 Sun&gt;</span></span>
+</p>
+
+<p>
+Shortcuts:
+</p>
+
+<ul class="org-ul">
+<li><code>C-y</code> - yank = paste from Emacs' clipboard</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; We need Emacs kill ring and system clipboard to be
+;; independent. Simpleclip is the solution to that.
+(use-package simpleclip :ensure t
+  :init (simpleclip-mode 1))
+
+(defun pp/copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                      (file-name-nondirectory (buffer-file-name)))))
+    (when filename
+      (simpleclip-set-contents filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
+
+(defun pp/copy-file-path-to-clipboard ()
+  "Copy the current buffer file path to the clipboard."
+  (interactive)
+  (let ((filepath (if (equal major-mode 'dired-mode)
+                      default-directory
+                      (buffer-file-name))))
+    (when filepath
+      (simpleclip-set-contents filepath)
+      (message "Copied buffer file path '%s' to the clipboard." filepath))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org97381b9" class="outline-2">
+<h2 id="org97381b9"><span class="section-number-2">14</span> Calendar</h2>
+<div class="outline-text-2" id="text-14">
+<p>
+<a href="https://www.emacswiki.org/emacs/CalendarLocalization">https://www.emacswiki.org/emacs/CalendarLocalization</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(setq calendar-week-start-day 1)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org48e4b42" class="outline-2">
+<h2 id="org48e4b42"><span class="section-number-2">15</span> Working with text</h2>
+<div class="outline-text-2" id="text-15">
+</div>
+<div id="outline-container-org7449908" class="outline-3">
+<h3 id="org7449908"><span class="section-number-3">15.1</span> Google Translate</h3>
+<div class="outline-text-3" id="text-15-1">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-19 Thu&gt;</span></span>
+</p>
+<ul class="org-ul">
+<li><code>go-translate</code> - for translating word under cursor (with prompt)</li>
+<li><code>C-n</code>, <code>C-p</code> - to change language sequences when prompted</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package go-translate :ensure t
+  :config
+  (setq go-translate-local-language "en"
+        go-translate-target-language "ru"
+        go-translate-extra-directions '(("nl" . "en"))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd973ee3" class="outline-3">
+<h3 id="orgd973ee3"><span class="section-number-3">15.2</span> Text Editing</h3>
+<div class="outline-text-3" id="text-15-2">
+<ul class="org-ul">
+<li><code>fill-paragraph</code>, <code>M-q</code> - wraps long-lined paragraph at 80 points</li>
+<li><code>transpose-word</code>, <code>M-t</code> - moves word under cursor to the right,
+respecting non-word symbolñs</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Expand-region allows to gradually expand selection inside words,
+;; sentences, expressions, etc.
+(use-package expand-region :ensure t)
+
+;; Move-text lines around with meta-up/down.
+(use-package move-text :ensure t)
+
+;; Wrap text, surround text, surround quotes.
+(use-package wrap-region :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdf5cc8d" class="outline-3">
+<h3 id="orgdf5cc8d"><span class="section-number-3">15.3</span> Join lines</h3>
+<div class="outline-text-3" id="text-15-3">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-24 Thu&gt;</span></span>
+Usually I just use <code>J</code> (<code>evil-join</code>), but if I need to wrap each line into quote,
+this is the helper function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/arrayify (start end quote)
+  "Join lines from START to END, surrounding each line with QUOTE.
+Source: https://news.ycombinator.com/item?id=22131815"
+  (interactive "r\nMQuote: ")
+  (let ((insertion
+         (mapconcat
+          (lambda (x) (format "%s%s%s" quote x quote))
+          (split-string (buffer-substring start end)) ", ")))
+    (delete-region start end)
+    (insert insertion)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc1edbc7" class="outline-3">
+<h3 id="orgc1edbc7"><span class="section-number-3">15.4</span> Wrap lines on a screen, visual line mode</h3>
+<div class="outline-text-3" id="text-15-4">
+<pre class="example">
+(visual-line-mode 1)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a082b5" class="outline-2">
+<h2 id="org5a082b5"><span class="section-number-2">16</span> File management / Dired&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Dired">Dired</span></span></h2>
+<div class="outline-text-2" id="text-16">
+<p>
+<a href="https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf">Cheatsheet</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/dired-sidebar-view-file ()
+  "Open file under cursor then switch back to dired-sidebar."
+  (interactive)
+  (dired-sidebar-find-file)
+  (dired-sidebar-jump-to-sidebar))
+
+(defun pp/dired-hook ()
+  "Hook for 'dired'."
+  (all-the-icons-dired-mode)
+  (unless (file-remote-p default-directory)
+    (auto-revert-mode)))
+
+(use-package dired-single :ensure t)
+
+(use-package dired
+  :init
+    (put 'dired-find-alternate-file 'disabled nil)
+  :hook (dired-mode-hook . pp/dired-hook)
+  :bind (:map dired-mode-map
+              (("RET" . dired-single-buffer)
+               ("DEL" . dired-single-up-directory)
+               ("s" . evil-snipe-s)
+               ("S" . evil-snipe-S))))
+
+(use-package dired-sidebar :ensure t
+  :commands dired-sidebar-toggle-sidebar)
+
+(use-package all-the-icons-dired :ensure t
+  :diminish)
+
+(use-package treemacs :ensure t)
+
+
+;; Delete trailing spaces and add new line in the end of a file on save.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq require-final-newline t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd967b3b" class="outline-2">
+<h2 id="orgd967b3b"><span class="section-number-2">17</span> Undo and redo</h2>
+<div class="outline-text-2" id="text-17">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; Linear undo and redo.
+(use-package undo-tree :ensure t
+  :diminish undo-tree-mode
+  :init
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/tmp/undo"))
+          undo-tree-auto-save-history nil
+          undo-tree-visualizer-timestamps t
+          undo-tree-visualizer-diff t
+          undo-tree-limit 100000)
+    (setq-default undo-limit 100000)))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0e97fde" class="outline-2">
+<h2 id="org0e97fde"><span class="section-number-2">18</span> Visuals</h2>
+<div class="outline-text-2" id="text-18">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package highlight-indent-guides :ensure t
+  :config
+  (setq highlight-indent-guides-method 'character))
+
+(global-hl-line-mode -1)
+
+(use-package all-the-icons :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3cae6a7" class="outline-2">
+<h2 id="org3cae6a7"><span class="section-number-2">19</span> Automatic Dark Mode in macOS</h2>
+<div class="outline-text-2" id="text-19">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; ;; emacs-mac-port does have this built-in.
+;; ;; emacs-plus doesn't, so as a workaround there's a package 'auto-dark-emacs.el
+;; ;; doing this.
+;; (if (and (version&lt;= "27.0" emacs-version)
+;;       (version&lt; emacs-version "28.0"))
+;;     (require 'auto-dark-emacs))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org71cc2c8" class="outline-2">
+<h2 id="org71cc2c8"><span class="section-number-2">20</span> Mode line, mode-line, Status Bar</h2>
+<div class="outline-text-2" id="text-20">
+<p>
+<a href="http://ergoemacs.org/emacs/modernization_mode_line.html">Xah Lee's post on Mode line.</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; (use-package smart-mode-line :ensure t
+;;   :config
+;;   (setq sml/theme 'light
+;;         sml/name-width 40
+;;         sml/mode-width 'full
+;;         sml/no-confirm-load-theme t
+;;         sml/not-modified-char " "
+;;         sml/numbers-separator "")
+;;   (add-to-list 'sml/replacer-regexp-list '("^~/go/src/github.com/FindHotel/" ":GoFH:") t)
+;;   (add-to-list 'sml/replacer-regexp-list '("^~/repos/dotfiles/emacs.d/" ":ED:") t)
+;;   (sml/setup))
+
+;; (use-package mood-line
+;;   :config
+;;     (mood-line-mode 1))
+
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :init (doom-modeline-mode 1)
+;;   :config
+;;   (setq doom-modeline-minor-modes nil
+;;         doom-modeline-height 0 ;; uses actual height of chars
+;;         doom-modeline-bar-width 1
+;;         doom-modeline-enable-word-count t
+;;         doom-modeline-buffer-encoding nil))
+
+;; (use-package ns-auto-titlebar
+;;  :config
+ ;;   (when (eq system-type 'darwin) (ns-auto-titlebar-mode)))
+
+;; Hide minor modes from modeline.
+(use-package rich-minority :ensure t
+  :config
+    (add-to-list 'rm-blacklist " $") ;; rich-minority itself
+    (add-to-list 'rm-blacklist " WE")
+    (add-to-list 'rm-blacklist " Ind")  ;; org-indent-mode
+    (add-to-list 'rm-blacklist " ElDoc") ;; Emacs Lisp documentation
+    (add-to-list 'rm-blacklist " fix")  ;; eslintd-fix-mode
+    (rich-minority-mode))
+
+(setq-default echo-bell-background "Gray")
+(load "echo-bell")
+(echo-bell-mode)
+
+</pre>
+</div>
+
+<pre class="example">
+
+(message mode-name)
+
+(message mode-line-modes)
+
+</pre>
+</div>
+
+<div id="outline-container-org90a4793" class="outline-4">
+<h4 id="org90a4793"><span class="section-number-4">20.0.1</span> <span class="todo TODO">TODO</span> mode-line resets when locally</h4>
+<div class="outline-text-4" id="text-20-0-1">
+<p>
+For some reason mode-line turns to contain only buffer name
+after some time, probably some package/mode sets it.
+The example below resets it to default original value.
+</p>
+
+<p>
+I was suspecting that this happens when I open a Go file, probably
+something with go-mode-hook.
+</p>
+
+<p>
+Can't reproduce on a fresh opened Emacs.
+</p>
+
+<p>
+Now I suspect eglot.
+</p>
+
+<pre class="example">
+(describe-variable 'mode-line-format)
+
+(setq-default mode-line-format
+  '("%e" mode-line-front-space
+    mode-line-mule-info mode-line-client mode-line-modified
+    mode-line-remote mode-line-frame-identification
+    mode-line-buffer-identification " " mode-line-position
+    evil-mode-line-tag (vc-mode vc-mode)
+    "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/reset-mode-line-format ()
+  (interactive)
+  (kill-local-variable 'mode-line-format))
+
+(defun pp/toggle-hide-mode-line ()
+  "Toggle mode-line visibility in current buffer.
+Source: https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8"
+  (interactive)
+  (if mode-line-format
+      (setq-local mode-line-format nil)
+    (kill-local-variable 'mode-line-format)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org689226e" class="outline-2">
+<h2 id="org689226e"><span class="section-number-2">21</span> Font</h2>
+<div class="outline-text-2" id="text-21">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/set-font (font size)
+  "Use FONT with SIZE if it's present in the system."
+ (when (member font (font-family-list))
+  (set-face-attribute 'default nil :font (format "%s %d" font size))))
+
+;; (pp/set-font "JetBrains Mono" 12)
+(pp/set-font "PragmataPro" 14)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ace6e8" class="outline-2">
+<h2 id="org1ace6e8"><span class="section-number-2">22</span> Color themes</h2>
+<div class="outline-text-2" id="text-22">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/disable-all-themes ()
+  "Disable all custom enabled themes.
+Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes))
+
+(defun pp/load-theme (theme)
+  "Load THEME as current theme."
+  (interactive "stheme: ")
+  (pp/disable-all-themes)
+  (load-theme theme t)
+  (pp/set-font "PragmataPro" 16))
+
+(setq-default line-spacing 2)
+
+;; (use-package ayu-theme)
+;; (use-package solarized-theme)
+;; (use-package doom-themes)
+;; (use-package ample-theme)
+;; (use-package quasi-monochrome-theme)
+;; (use-package monochrome-theme)
+;; (use-package modus-operandi-theme :ensure t)
+;; (use-package modus-vivendi-theme :ensure t)
+;; (use-package faff-theme :ensure t)
+
+;; 256 colors in term
+(use-package eterm-256color
+  :hook (term-mode-hook . eterm-256color-mode))
+
+(blink-cursor-mode 0) ;; disable blinking cursor
+</pre>
+</div>
+
+<pre class="example">
+;; light themes
+(pp/load-theme 'leuven)
+(pp/load-theme 'tsdh-light)
+(pp/load-theme 'monochrome-bright)
+(progn
+  (setq modus-operandi-theme-no-mixed-fonts t)
+  (pp/load-theme 'modus-operandi))
+(pp/load-theme 'whiteboard)
+
+;; sepia themes
+(pp/load-theme 'faff)
+
+;; dark themes
+(pp/load-theme 'ayu-dark) ;; favourite dark theme
+(pp/load-theme 'wombat)
+(pp/load-theme 'tsdh-dark)
+(pp/load-theme 'ayu-grey)
+(pp/load-theme 'monochrome)
+(pp/load-theme 'quasi-monochrome)
+(progn
+  (setq modus-vivendi-theme-no-mixed-fonts t)
+  (pp/load-theme 'modus-vivendi))
+(pp/load-theme 'ample)
+(pp/load-theme 'ample-flat)
+</pre>
+
+<pre class="example">
+(setq-default header-line-format
+              (list
+               "  "
+               '(:eval (let ((name (buffer-name)))
+                         (cond ((not buffer-file-truename)
+                                (propertize name 'face 'bold))
+                               ((equal name (file-name-nondirectory buffer-file-truename))
+                                (concat (propertize
+                                         (f-filename buffer-file-truename)
+                                         'face 'bold)
+                                        " "
+                                        (f-dirname buffer-file-truename)
+                                        "/…"))
+                               (t
+                                (concat (propertize name 'face 'bold)
+                                        " "
+                                        buffer-file-truename)))))
+
+               ;; Right aligned
+               '(:eval (let* ((right-text (format-mode-line mode-name)))
+                         (concat (propertize
+                                  " " 'display
+                                  `((space :align-to (- (+ right right-fringe right-margin)
+                                                        ,(+ 3 (string-width right-text))))))
+                                 right-text)))))
+</pre>
+</div>
+</div>
+<div id="outline-container-org037c7e4" class="outline-2">
+<h2 id="org037c7e4"><span class="section-number-2">23</span> Line numbers</h2>
+<div class="outline-text-2" id="text-23">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(defun pp/line-numbers-on ()
+  "Turn on showing line numbers."
+  (interactive)
+  (setq display-line-numbers 'relative))
+
+(defun pp/line-numbers-off ()
+  "Turn on showing line numbers."
+  (interactive)
+  (setq display-line-numbers nil))
+
+(add-hook 'text-mode-hook #'pp/line-numbers-on)
+(add-hook 'prog-mode-hook #'pp/line-numbers-on)
+(add-hook 'org-mode-hook #'pp/line-numbers-off)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf920259" class="outline-2">
+<h2 id="orgf920259"><span class="section-number-2">24</span> Keybindings</h2>
+<div class="outline-text-2" id="text-24">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Use ESC as universal get me out of here command
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+(use-package which-key :ensure t
+  :diminish which-key-mode
+  :config
+    (which-key-mode)
+    (which-key-setup-side-window-bottom)
+    ;;(which-key-setup-side-window-right-bottom)
+    (setq which-key-sort-order 'which-key-key-order-alpha
+          which-key-idle-delay 0.5))
+
+
+(use-package general :ensure t)
+
+(general-define-key
+  ;;"&lt;tab&gt;" 'org-cycle
+  "s-s" 'save-buffer
+  "s-S" 'write-file              ;; save as
+  "s-a" 'mark-whole-buffer       ;; select all
+  "s-z" 'undo-tree-undo
+  "s-Z" 'undo-tree-redo
+  "s-;" 'comment-line
+  "s-." 'company-complete
+  ;; windows
+  "s-1" 'delete-other-windows
+  "s-2" 'split-window-below
+  "s-3" 'split-window-right
+  "s-w" 'delete-window
+  ;; going around
+  "s-j" 'previous-buffer
+  "s-k" 'next-buffer
+  "s-b" 'ivy-switch-buffer
+  "s-n" 'switch-to-buffer
+  "s-t" 'eshell
+  "C-s-b" 'ivy-resume  ;; Ctrl+Cmd+B resume whatever Ivy was doing
+  "C-s" 'swiper-isearch   ;; Replace ISearch
+  "C-;" 'avy-goto-word-1
+  ;; smartparens
+  "&lt;s-down&gt;" 'sp-down-sexp
+  "&lt;s-up&gt;" 'sp-up-sexp
+  ;; magit
+  "s-g" 'magit-status
+  ;; counsel
+  "M-x" 'counsel-M-x
+  "s-o" 'pp/visit-or-open
+  "C-x C-o" 'counsel-find-file
+  "s-r" 'counsel-recentf  ; search recently edited files
+  ;; projectile
+  "s-p" 'counsel-projectile-find-file ;; Cmd+P open file in current project
+  "s-f" 'counsel-projectile-rg ;; Cmd+F search in current project
+  "C-s-p" 'projectile-command-map
+  ;; function keys
+  "&lt;f5&gt;" 'deadgrep
+  "&lt;f6&gt;" 'flymake-show-diagnostics-buffer
+  "&lt;f7&gt;" 'swiper-thing-at-point
+  "&lt;f8&gt;" 'dired-sidebar-toggle-sidebar
+  "&lt;f9&gt;" 'pp/switch-to-scratch-buffer
+  ;; text manipulation
+  "s-'" 'er/expand-region
+  "s-\"" 'er/contract-region
+  "&lt;M-up&gt;" 'move-text-up
+  "&lt;M-down&gt;" 'move-text-down
+  ;; zetteldeft
+  ;;"s-]" 'zetteldeft-follow-link
+  ;;"s-[" 'previous-buffer
+  )
+
+(general-define-key :states '(normal)
+  "C-k" 'evil-scroll-up
+  "C-j" 'evil-scroll-down)
+
+(general-define-key :states '(normal) :prefix "SPC"
+  "SPC" 'counsel-M-x
+  "2" 'lispy-arglist-inline
+  "a" 'org-agenda
+  "," 'org-insert-structure-template
+  "[" 'flymake-goto-previous-error
+  "]" 'flymake-goto-next-error
+  "d" 'counsel-projectile-find-dir
+  "j" 'dired-jump
+  "k" 'kill-this-buffer
+  "p" 'counsel-projectile-switch-project
+  "h" 'highlight-symbol
+  "l" 'lispy-mode
+  "w" 'visual-line-mode
+  "t" 'projectile-test-project)
+
+(general-define-key :states '(visual)
+ "SPC" 'er/expand-region
+ "DEL" 'er/contract-region)
+
+(general-define-key :states '(insert)
+  "C-a" 'beginning-of-line
+  "C-e" 'end-of-line
+  "C-n" 'next-line
+  "C-p" 'previous-line)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfd4b0cc" class="outline-3">
+<h3 id="orgfd4b0cc"><span class="section-number-3">24.1</span> Commenting/uncommenting</h3>
+<div class="outline-text-3" id="text-24-1">
+<dl class="org-dl">
+<dt><code>M-;</code></dt><dd><code>comment-dwim</code> - in Command mode will add comment to the end of line, in Visual mode will comment the whole line</dd>
+<dt><code>C-x C-;</code>, <code>s-;</code></dt><dd><code>comment-line</code> - will comment the whole line, but works strange in Org Babel</dd>
+</dl>
+
+<p>
+Good description in <a href="http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim.html">http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim.html</a>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2d5e1ad" class="outline-2">
+<h2 id="org2d5e1ad"><span class="section-number-2">25</span> Moving around</h2>
+<div class="outline-text-2" id="text-25">
+</div>
+<div id="outline-container-org9ec4d8e" class="outline-3">
+<h3 id="org9ec4d8e"><span class="section-number-3">25.1</span> Evil</h3>
+<div class="outline-text-3" id="text-25-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package evil
+  ;; :init (setq evil-want-C-u-scroll t)  ;; I'm using C-u as universal argument instead.
+  :config
+  (evil-set-undo-system 'undo-tree) ;; Evil made undo-tree optional, I'm setting it back here. Source: https://github.com/syl20bnr/spacemacs/issues/14036
+  (evil-mode 1))
+
+(use-package evil-surround :ensure t
+  :config
+  (global-evil-surround-mode 1))
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><a href="https://wikemacs.org/index.php/Evil#Enter_an_emacs_mode_in_a_given_state">Enter an Emacs mode in a given state</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2874fd6" class="outline-3">
+<h3 id="org2874fd6"><span class="section-number-3">25.2</span> Xah Fly Keys</h3>
+<div class="outline-text-3" id="text-25-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package xah-fly-keys
+  :commands xah-fly-keys
+  :config
+    ;; (xah-fly-keys 1)
+    (xah-fly-keys-set-layout 'qwerty))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org004df6e" class="outline-3">
+<h3 id="org004df6e"><span class="section-number-3">25.3</span> Moving back</h3>
+<div class="outline-text-3" id="text-25-3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package goto-last-change
+  :ensure
+  :bind ("&lt;s-backspace&gt;" . goto-last-change))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb5cefb6" class="outline-2">
+<h2 id="orgb5cefb6"><span class="section-number-2">26</span> Window management</h2>
+<div class="outline-text-2" id="text-26">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(setq
+   split-height-threshold 80
+   split-width-threshold 160)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1119025" class="outline-2">
+<h2 id="org1119025"><span class="section-number-2">27</span> Project management</h2>
+<div class="outline-text-2" id="text-27">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package projectile :ensure t
+  :config
+    (setq projectile-git-submodule-command "")
+    (setq projectile-mode-line-function '(lambda () (format " #%s" (projectile-project-name))))
+    (projectile-mode +1))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga3e35e5" class="outline-2">
+<h2 id="orga3e35e5"><span class="section-number-2">28</span> Ivy, a generic completion mechanism</h2>
+<div class="outline-text-2" id="text-28">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package ivy :ensure t
+  :diminish (ivy-mode . "")  ;; don't show Ivy in minor mode list
+  :init (ivy-mode 1)
+  :config (setq
+           ivy-use-virtual-buffers t ;; show bookmarks and recent files in buffer list
+           ivy-count-format "%d/%d "
+    enable-recursive-minibuffers t))
+
+;; Turns Ivy a bit more friendly by adding information to ivy buffers,
+;; e.g. description of commands in M-x, meta info when switching
+;; buffers, etc.
+(use-package ivy-rich :ensure t
+  :init (ivy-rich-mode 1)
+  :config (setq ivy-rich-path-style 'abbrev)) ;; replace “/home/username” with “~”
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org947bd1f" class="outline-3">
+<h3 id="org947bd1f"><span class="section-number-3">28.1</span> <span class="todo TODO">TODO</span> Home directory abbreviation doesn't work with <code>councel-recentf</code></h3>
+<div class="outline-text-3" id="text-28-1">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-20 Fri&gt;</span></span>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga2b7c9e" class="outline-2">
+<h2 id="orga2b7c9e"><span class="section-number-2">29</span> Swiper, an Ivy-enhanced alternative to isearch</h2>
+<div class="outline-text-2" id="text-29">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package swiper :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org989c081" class="outline-2">
+<h2 id="org989c081"><span class="section-number-2">30</span> Counsel, a collection of Ivy-enhanced versions of common commands</h2>
+<div class="outline-text-2" id="text-30">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package counsel :ensure t)
+
+;; Integrate Projectile with Counsel
+(use-package counsel-projectile :ensure t
+  :init (counsel-projectile-mode 1)
+  :config (setq projectile-completion-system 'ivy)) ;; Use Ivy in Projectile
+</pre>
+</div>
+
+<p>
+Counsel <a href="https://www.reddit.com/r/emacs/comments/ar4yxd/is_there_a_way_to_make_counselmx_remember_last/egl1xw3/">uses</a> <code>smex</code> for showing recently used interactive functions in
+<code>counsel-M-x</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package smex :ensure t
+  :after counsel)
+</pre>
+</div>
+
+
+<p>
+These were bindings for counsel, but I never used those hence removed.
+</p>
+<pre class="example">
+:bind
+  (("M-y" . counsel-yank-pop)
+   :map ivy-minibuffer-map
+   ("M-y" . ivy-next-line))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfc5b89b" class="outline-2">
+<h2 id="orgfc5b89b"><span class="section-number-2">31</span> git, version control system</h2>
+<div class="outline-text-2" id="text-31">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package magit :ensure t
+  :hook (magit-mode-hook . turn-off-evil-snipe-override-mode))
+
+(use-package forge :ensure t
+  :after magit)
+
+(use-package ghub :ensure t
+  :after magit)
+
+(use-package git-gutter :ensure t
+  :diminish
+  :init (global-git-gutter-mode 't)
+  :config
+    (custom-set-variables
+      '(git-gutter:modified-sign "~") ;; two space
+      '(git-gutter:added-sign "+")    ;; multiple character is OK
+      '(git-gutter:deleted-sign "-"))
+    (set-face-background 'git-gutter:modified "purple")   ;; background color
+    (set-face-background 'git-gutter:added "green")
+    (set-face-background 'git-gutter:deleted "red")
+    (set-face-foreground 'git-gutter:added "white")
+    (set-face-foreground 'git-gutter:deleted "white"))
+</pre>
+</div>
+
+<pre class="example">
+(forge-pull)
+(ghub-request "GET" "/user")
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org744deb1" class="outline-2">
+<h2 id="org744deb1"><span class="section-number-2">32</span> Code completion</h2>
+<div class="outline-text-2" id="text-32">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package company :ensure t
+  :diminish
+  :hook (prog-mode-hook . company-mode))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0f5a7cd" class="outline-2">
+<h2 id="org0f5a7cd"><span class="section-number-2">33</span> Org-mode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="OrgMode">OrgMode</span></span></h2>
+<div class="outline-text-2" id="text-33">
+<ul class="org-ul">
+<li><a href="https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf">Org cheatsheet</a></li>
+</ul>
+
+<p>
+Useful keybindings:
+</p>
+<dl class="org-dl">
+<dt><code>C-c C-l</code>, <code>org-insert-link</code></dt><dd>if on url - uses it and prompts for description. <a href="https://orgmode.org/manual/Handling-Links.html#Handling-Links">Docs</a></dd>
+</dl>
+
+<pre class="example">
+(describe-variable 'org-version)
+</pre>
+
+<p>
+After upgrading to Emacs 27.1 <code>&lt;s</code> and <code>&lt;e</code> expansions stopped
+working, the new shortcut is <code>C-c C-,</code> To get <code>&lt;s</code> and <code>&lt;e</code> working,
+we need this. More info in <a href="https://emacs.stackexchange.com/a/46992">this answer</a> on SO.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;(require 'org-tempo)
+(add-to-list 'org-modules 'org-tempo)
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package org
+  :config
+  (setq
+   org-startup-indented t
+   org-src-tab-acts-natively t
+   org-src-preserve-indentation t
+   org-src-fontify-natively t
+   org-log-into-drawer t
+   org-log-done 'time
+   org-support-shift-select t
+   org-directory "~/Documents/Notes"
+   org-agenda-files '("~/Documents/Notes/pavel.org"
+                      "~/.emacs.d/emacs-init.org"
+                      "~/Documents/Projects/Blog/Clojure.org"
+                      "~/Documents/FindHotel/fh.org"
+                      "~/fh/search-api/README.org"
+                      "~/fh/hotel-explorer-clj/README.org"
+                      "~/Projects/word-cloud/README.org")))
+
+(use-package org-bullets :ensure t
+  :hook (org-mode-hook . org-bullets-mode))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((restclient . t)))
+</pre>
+</div>
+
+<pre class="example">
+(setq org-agenda-files '("~/Documents/Notes/pavel.org"
+                         "~/.emacs.d/emacs-init.org"
+                         "~/fh/search-api/README.org"
+                         "~/fh/hotel-explorer-clj/README.org"
+                         "~/Documents/FindHotel/fh.org"))
+
+(setq-default org-confirm-babel-evaluate nil)
+</pre>
+</div>
+
+<div id="outline-container-org185d113" class="outline-3">
+<h3 id="org185d113"><span class="section-number-3">33.1</span> Org-babel, Babel, Org Babel&#xa0;&#xa0;&#xa0;<span class="tag"><span class="OrgBabel">OrgBabel</span></span></h3>
+<div class="outline-text-3" id="text-33-1">
+<p>
+For literate programming in Org-mode files.
+</p>
+
+<dl class="org-dl">
+<dt><code>&lt;s-TAB</code></dt><dd>start source block</dd>
+<dt><code>&lt;e-TAB</code></dt><dd>start example block</dd>
+<dt><code>C-c C-c</code></dt><dd>execute block</dd>
+<dt><code>C-c '</code></dt><dd>edit this block in a separate buffer</dd>
+</dl>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((clojure . t)
+   (emacs-lisp . t)
+   (shell . t)
+   (calc . t)))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2adcad0" class="outline-4">
+<h4 id="org2adcad0"><span class="section-number-4">33.1.1</span> <span class="todo TODO">TODO</span> Setup org-mode-babel for sql files</h4>
+<div class="outline-text-4" id="text-33-1-1">
+<ul class="org-ul">
+<li>Should be able to run SQL in Snowflake</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdb53723" class="outline-4">
+<h4 id="orgdb53723"><span class="section-number-4">33.1.2</span> <span class="done DONE">DONE</span> Setup org-mode-babel for shell</h4>
+<div class="outline-text-4" id="text-33-1-2">
+<div class="org-src-container">
+<pre class="src src-sh">ls ~
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9527344" class="outline-4">
+<h4 id="org9527344"><span class="section-number-4">33.1.3</span> <span class="todo TODO">TODO</span> Setup org-mode-babel for clojure</h4>
+<div class="outline-text-4" id="text-33-1-3">
+<div class="org-src-container">
+<pre class="src src-clojure">(+ 2 3)
+
+(defn foo [x] x)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org111ae90" class="outline-4">
+<h4 id="org111ae90"><span class="section-number-4">33.1.4</span> Example blocks</h4>
+<div class="outline-text-4" id="text-33-1-4">
+<div class="org-src-container">
+<pre class="src src-shell">printf "Please wait (this can take a while)...\n"
+sleep 5
+printf "Done!\n"
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org36e5c63" class="outline-4">
+<h4 id="org36e5c63"><span class="section-number-4">33.1.5</span> <span class="todo TODO">TODO</span> Try ob-async</h4>
+<div class="outline-text-4" id="text-33-1-5">
+<p>
+Asynchronous src_block execution for org-babel
+<a href="https://github.com/astahlman/ob-async">https://github.com/astahlman/ob-async</a>
+</p>
+</div>
+</div>
+<div id="outline-container-orgcdeee10" class="outline-4">
+<h4 id="orgcdeee10"><span class="section-number-4">33.1.6</span> How to insert source code block?</h4>
+<div class="outline-text-4" id="text-33-1-6">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-24 Fri&gt;</span></span>
+</p>
+
+<p>
+<a href="https://emacs.stackexchange.com/a/19946">https://emacs.stackexchange.com/a/19946</a>
+</p>
+
+<p>
+Insert <code>&lt;s</code> and press <code>TAB</code>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf15b1ac" class="outline-3">
+<h3 id="orgf15b1ac"><span class="section-number-3">33.2</span> Org-agenda, Ora Agenda&#xa0;&#xa0;&#xa0;<span class="tag"><span class="OrgAgenda">OrgAgenda</span></span></h3>
+<div class="outline-text-3" id="text-33-2">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-10-05 Mon&gt;</span></span>
+</p>
+
+<p>
+To setup category either add <code>#+CATEGORY</code> to the file or use
+<code>CATEGORY</code> property of an item. To setup a property use
+<code>org-set-property</code>.
+</p>
+</div>
+<div id="outline-container-org0134ccb" class="outline-4">
+<h4 id="org0134ccb"><span class="section-number-4">33.2.1</span> <span class="done DONE">DONE</span> How to split agenda vertically?</h4>
+<div class="outline-text-4" id="text-33-2-1">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-24 Fri&gt;</span></span>
+</p>
+
+<p>
+There is such configuration from Castlemacs which did that damage:
+</p>
+<pre class="example">
+;; This is rather radical, but saves from a lot of pain in the ass.
+;; When split is automatic, always split windows vertically
+(setq split-height-threshold 0)
+(setq split-width-threshold nil)
+</pre>
+
+<p>
+<a href="https://emacs.stackexchange.com/questions/39034/prefer-vertical-splits-over-horizontal-ones">https://emacs.stackexchange.com/questions/39034/prefer-vertical-splits-over-horizontal-ones</a>
+<a href="https://www.gnu.org/software/emacs/manual/html_node/eintr/See-variable-current-value.html">https://www.gnu.org/software/emacs/manual/html_node/eintr/See-variable-current-value.html</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org776d6a4" class="outline-4">
+<h4 id="org776d6a4"><span class="section-number-4">33.2.2</span> <span class="todo TODO">TODO</span> Alphapapa published org-super-agenda package to bring it to the next level</h4>
+<div class="outline-text-4" id="text-33-2-2">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-22 Sun&gt;</span></span>
+<a href="https://github.com/alphapapa/org-super-agenda">https://github.com/alphapapa/org-super-agenda</a>
+<a href="https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/">https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/</a>
+</p>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org78e616c" class="outline-3">
+<h3 id="org78e616c"><span class="section-number-3">33.3</span> <span class="done DONE">DONE</span> How to automatically add creation metadata timestamp to Org-mode entry?</h3>
+<div class="outline-text-3" id="text-33-3">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-24 Thu&gt;</span></span>
+</p>
+
+<p>
+Links:
+</p>
+<ul class="org-ul">
+<li><a href="https://orgmode.org/manual/Creating-Timestamps.html">https://orgmode.org/manual/Creating-Timestamps.html</a></li>
+<li><a href="https://stackoverflow.com/questions/12262220/add-created-date-property-to-todos-in-org-mode">https://stackoverflow.com/questions/12262220/add-created-date-property-to-todos-in-org-mode</a></li>
+</ul>
+
+<p>
+Use <code>org-expiry-insert-created</code> function.
+</p>
+
+<pre class="example">
+(load "org-expiry")
+(setq
+  org-expiry-created-property-name "CREATED" ; Name of property when an item is created
+  org-expiry-inactive-timestamps   t         ; Don't have everything in the agenda view
+)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd993f7f" class="outline-3">
+<h3 id="orgd993f7f"><span class="section-number-3">33.4</span> <span class="done DONE">DONE</span> Saving of fh.org (272K) takes significant time</h3>
+<div class="outline-text-3" id="text-33-4">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-01 Sun&gt;</span></span>
+</p>
+
+<p>
+The problem was in <code>undo-tree</code> mode which overtime grew significant
+amount of undo changes.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd584896" class="outline-2">
+<h2 id="orgd584896"><span class="section-number-2">34</span> Outline-mode - folding and unfolding in Org-mode style</h2>
+<div class="outline-text-2" id="text-34">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; (use-package outshine :ensure t) - way too complex
+
+;; (use-package outline-magic :ensure t) - use org-cycle instead
+;;  :config (setq-default outline-promotion-headings '("# * " "# ** " "# *** ")))
+
+(setq-default outline-regexp "[*#]+")
+
+(use-package emacs
+  :config
+  (defun pp/outline-minor-mode-hook ()
+     (general-define-key :keymaps 'local
+       "&lt;tab&gt;" 'org-cycle))
+  (add-hook 'outline-minor-mode-hook #'pp/outline-minor-mode-hook))
+
+</pre>
+</div>
+
+<pre class="example">
+(describe-variable 'outline-promotion-headings)
+</pre>
+</div>
+</div>
+<div id="outline-container-org9b965d3" class="outline-2">
+<h2 id="org9b965d3"><span class="section-number-2">35</span> Eshell</h2>
+<div class="outline-text-2" id="text-35">
+<p>
+<b>Links</b>
+</p>
+<ul class="org-ul">
+<li><a href="https://ambrevar.xyz/emacs-eshell/">https://ambrevar.xyz/emacs-eshell/</a></li>
+<li><a href="https://www.reddit.com/r/emacs/comments/6y3q4k/yes_eshell_is_my_main_shell/">https://www.reddit.com/r/emacs/comments/6y3q4k/yes_eshell_is_my_main_shell/</a></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(defun pp/eshell-prompt-function ()
+  "Eshell prompt function."
+  (format "%s\nλ " (abbreviate-file-name (eshell/pwd))))
+
+(use-package eshell
+  :config
+  (setq-default eshell-history-size 100000
+                eshell-prompt-regexp "^λ "
+                eshell-prompt-function #'pp/eshell-prompt-function))
+
+(defun pp/eshell-mode-hook ()
+  "Eshell mode hook."
+  (require 'eshell-z))
+
+(use-package eshell-z :ensure t
+  :hook (eshell-mode-hook . pp/eshell-mode-hook))
+
+(defun eshell-new ()
+  "Open a new instance of eshell."
+  (interactive)
+  (eshell 'N))
+
+(use-package eshell-syntax-highlighting :ensure t
+  :after esh-mode
+  :config
+  ;; Disable in all Eshell buffers by default.
+  (eshell-syntax-highlighting-global-mode -1))
+</pre>
+</div>
+
+<pre class="example">
+  (eshell-syntax-highlighting-global-mode -1)
+
+  (eshell-syntax-highlighting-global-mode +1)
+</pre>
+</div>
+
+<div id="outline-container-orge60ce5a" class="outline-3">
+<h3 id="orge60ce5a"><span class="section-number-3">35.1</span> How to open a file in emacs?</h3>
+<div class="outline-text-3" id="text-35-1">
+<p>
+find-file &lt;filename&gt; =&gt; (find-file "&lt;filename&gt;")
+</p>
+</div>
+</div>
+<div id="outline-container-org14e6daf" class="outline-3">
+<h3 id="org14e6daf"><span class="section-number-3">35.2</span> Setting environment variables</h3>
+<div class="outline-text-3" id="text-35-2">
+<p>
+(setenv "SNOWSQL_ACCOUNT" "kz62504.eu-west-1")
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org09362fb" class="outline-2">
+<h2 id="org09362fb"><span class="section-number-2">36</span> restclient, major mode for sending HTTP requests</h2>
+<div class="outline-text-2" id="text-36">
+<p>
+Although now I try to use Babashka instead.
+</p>
+
+<p>
+Another alternative - Elisp package <a href="https://github.com/tkf/emacs-request">https://github.com/tkf/emacs-request</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package restclient
+  :mode (("\\.http\\'" . restclient-mode)))
+
+(use-package ob-restclient :ensure t) ;; support in org-babel
+
+;(load "restclient-jq") - haven't manage to make it working, using Clojure instead for dealing with JSON
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbd8e1ca" class="outline-2">
+<h2 id="orgbd8e1ca"><span class="section-number-2">37</span> Smart Notes / Slip-Box / ZettelKasten</h2>
+<div class="outline-text-2" id="text-37">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; (use-package deft
+;;   :custom
+;;     (deft-extensions '("org" "md" "txt"))
+;;     (deft-directory "~/Documents/Notes")
+;;     (deft-use-filename-as-title t)
+;;     (deft-auto-save-interval 60.0))
+;;
+;; (use-package zetteldeft
+;;   :after deft
+;;   :config
+;;     (zetteldeft-set-classic-keybindings))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4077a7d" class="outline-2">
+<h2 id="org4077a7d"><span class="section-number-2">38</span> AnyBar, show circle indicator in macOS menu</h2>
+<div class="outline-text-2" id="text-38">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package anybar :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org23ef3e2" class="outline-2">
+<h2 id="org23ef3e2"><span class="section-number-2">39</span> Searching in multiple files</h2>
+<div class="outline-text-2" id="text-39">
+<p>
+grep / ripgrep / ag / ack / pt
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/deadgrep-view-file ()
+  "View result under cursor in other window."
+  (interactive)
+  (deadgrep-visit-result-other-window)
+  (other-window 1))
+
+(use-package deadgrep :ensure t
+  :bind (:map deadgrep-mode-map
+              ("v" . pp/deadgrep-view-file)))
+;; TODO: maybe setup next-error-follow-minor-mode as a hook?
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge070bfc" class="outline-2">
+<h2 id="orge070bfc"><span class="section-number-2">40</span> Formatting code</h2>
+<div class="outline-text-2" id="text-40">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package format-all :ensure t)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org494cea5" class="outline-3">
+<h3 id="org494cea5"><span class="section-number-3">40.1</span> Lispy - working with lisp s-expressions</h3>
+<div class="outline-text-3" id="text-40-1">
+<p>
+Useful keybindings in Lispy:
+</p>
+<dl class="org-dl">
+<dt><code>S</code>, <code>lispy-stringify</code></dt><dd>turn s-expr to string, useful fur turning JSON to string</dd>
+
+<dt><code>C-u "</code></dt><dd>when inside quote string - unquote</dd>
+<dt><code>C-8</code></dt><dd>lispy-parens-down</dd>
+
+<dt><code>C-2</code>, <code>SPC-2</code>, <code>lispy-arglist-inline</code></dt><dd>C-2 doesn't work, so I bound it to <code>SPC-2</code></dd>
+
+<dt><code>G</code>, =special-lispy-goto-local</dt><dd>go to local def</dd>
+<dt><code>M</code>.=</dt><dd>go to symbol definition</dd>
+
+<dt><code>d</code></dt><dd>go to other side of sexp</dd>
+
+<dt><code>C-,</code></dt><dd>lispy-kill-at-point</dd>
+<dt><code>m</code></dt><dd>mark current sexp, alternative to evil's <code>%</code></dd>
+</dl>
+
+<p>
+Avy-based movements, work in a current sexp
+</p>
+<dl class="org-dl">
+<dt><code>a</code></dt><dd>starts avy to go to symbol and mark it</dd>
+<dt><code>H</code></dt><dd>starts avy to replace symbol</dd>
+</dl>
+
+<p>
+<a href="https://github.com/r-darwish/.emacs.site.d/blob/8e565d29b50724dbe9cf973f4acd2faf526bccc5/config.el#L26">Example configuration with keybindings.</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/lispy-mode-hook ()
+  "Turn on lispy, turn off evil-mode locally."
+  (interactive)
+  (lispy-mode 1))
+
+(use-package lispy :ensure t
+  :hook ((emacs-lisp-mode-hook . pp/lispy-mode-hook)
+         (clojure-mode-hook . pp/lispy-mode-hook))
+  :config (setq lispy-compat '(edebug cider)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7404e30" class="outline-3">
+<h3 id="org7404e30"><span class="section-number-3">40.2</span> Dealing with pairs - smartparens</h3>
+<div class="outline-text-3" id="text-40-2">
+<p>
+Turning off smartparens to not interact with lispy.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;;(use-package smartparens :ensure t
+;;  :diminish
+;;  :config
+;;    (smartparens-global-mode))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1ff4172" class="outline-3">
+<h3 id="org1ff4172"><span class="section-number-3">40.3</span> <span class="todo TODO">TODO</span> Setup sql formatting</h3>
+<div class="outline-text-3" id="text-40-3">
+<p>
+Mandatory:
+</p>
+<ul class="org-ul">
+<li><code>format-all-buffer</code> should be able to invoke it</li>
+<li>Need to process multiple SQL statements in a file</li>
+<li>Static binary (go?), so no python dependencies</li>
+<li>Good defaults</li>
+</ul>
+
+<p>
+Nice to have:
+</p>
+<ul class="org-ul">
+<li>Should understand templating (highly unlekely)</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4147267" class="outline-2">
+<h2 id="org4147267"><span class="section-number-2">41</span> Colors in compilation buffers</h2>
+<div class="outline-text-2" id="text-41">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(add-hook 'compilation-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
+(defun pp/colorize-buffer ()
+  "Replace ANSI color sequences with actual colors in current buffer.
+Source: https://lists.gnu.org/archive/html/help-gnu-emacs/2013-10/msg00229.html"
+  (interactive)
+  (read-only-mode -1)
+  (ansi-color-apply-on-region (point-min) (point-max))
+  (read-only-mode +1))
+
+(add-hook 'compilation-filter-hook 'pp/colorize-buffer)
+
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga8a3d5a" class="outline-2">
+<h2 id="orga8a3d5a"><span class="section-number-2">42</span> Language Server Protocol, LSP</h2>
+<div class="outline-text-2" id="text-42">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package eglot :ensure t :commands eglot)
+
+(use-package dumb-jump :ensure t)  ;; go to definition
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org45482ca" class="outline-2">
+<h2 id="org45482ca"><span class="section-number-2">43</span> Error checking</h2>
+<div class="outline-text-2" id="text-43">
+<p>
+Two main packages providing minor mode for error checks:
+</p>
+
+<dl class="org-dl">
+<dt>flymake</dt><dd>built-in into Emacs</dd>
+<dt>flycheck</dt><dd>competitor that gained lots of popularity recently</dd>
+</dl>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;;(use-package flycheck
+;;  :init (global-flycheck-mode))
+;; (use-package flymake-easy)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc142818" class="outline-2">
+<h2 id="orgc142818"><span class="section-number-2">44</span> Elisp</h2>
+<div class="outline-text-2" id="text-44">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package rainbow-delimiters :ensure t
+  :hook (prog-mode-hook . rainbow-delimiters-mode))
+
+(show-paren-mode)
+
+(use-package elisp-format :commands elisp-format-region)
+
+(use-package paredit :ensure t
+  :diminish)
+
+(add-hook 'emacs-lisp-mode-hook 'flymake-mode)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5f74b7a" class="outline-3">
+<h3 id="org5f74b7a"><span class="section-number-3">44.1</span> Dash - A modern list api for Emacs</h3>
+<div class="outline-text-3" id="text-44-1">
+<p>
+<a href="https://github.com/magnars/dash.el">https://github.com/magnars/dash.el</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package dash :ensure t)
+</pre>
+</div>
+
+<pre class="example">
+(-map (lambda (n) (* n n)) '(1 2 3 4))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org3a06c83" class="outline-3">
+<h3 id="org3a06c83"><span class="section-number-3">44.2</span> S - working with strings</h3>
+<div class="outline-text-3" id="text-44-2">
+<p>
+<a href="https://github.com/magnars/s.el">https://github.com/magnars/s.el</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package s :ensure t)
+</pre>
+</div>
+
+<pre class="example">
+(s-split-words "fooBar")
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4089470" class="outline-2">
+<h2 id="org4089470"><span class="section-number-2">45</span> Golang</h2>
+<div class="outline-text-2" id="text-45">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/go-mode-hook ()
+  "Hook for 'go-mode'."
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (setq
+     tab-width 4
+     indent-tabs-mode 1)
+  ;; (flymake-mode)
+  (general-define-key
+     :states '(normal)
+     :prefix "g"
+     "d" 'xref-find-definitions
+     "h" 'godoc-at-point))
+
+(use-package go-mode
+  :config
+  (setq-default
+    gofmt-command "goimports"
+    ;; gofmt-args (list "-s")
+    )
+  :hook (go-mode-hook . pp/go-mode-hook))
+
+(use-package gotest :ensure t
+  :config
+  (setq-default go-test-args "-timeout 2s"))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3274249" class="outline-2">
+<h2 id="org3274249"><span class="section-number-2">46</span> Terraform</h2>
+<div class="outline-text-2" id="text-46">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package terraform-mode
+   :hook (terraform-mode-hook . terraform-format-on-save-mode))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbfe3a2b" class="outline-2">
+<h2 id="orgbfe3a2b"><span class="section-number-2">47</span> JSON</h2>
+<div class="outline-text-2" id="text-47">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/json-mode-hook ()
+  (setq
+     tab-width 2
+     js-indent-level 2
+     indent-tabs-mode nil))
+
+(use-package json-mode
+  :hook (json-mode-hook . pp/json-mode-hook))
+
+(use-package jq-mode :ensure t)
+</pre>
+</div>
+
+<p>
+Related:
+</p>
+<ul class="org-ul">
+<li><a href="https://github.com/p-baleine/jq.el">https://github.com/p-baleine/jq.el</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc77ec76" class="outline-2">
+<h2 id="orgc77ec76"><span class="section-number-2">48</span> YAML</h2>
+<div class="outline-text-2" id="text-48">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package yaml-mode :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6af30fe" class="outline-2">
+<h2 id="org6af30fe"><span class="section-number-2">49</span> Ledger, double-entry plain text accounting system</h2>
+<div class="outline-text-2" id="text-49">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;(use-package ledger-mode :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org65cfb05" class="outline-2">
+<h2 id="org65cfb05"><span class="section-number-2">50</span> Clojure</h2>
+<div class="outline-text-2" id="text-50">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package clojure-mode :ensure t
+  :config
+  (setq clojure-align-forms-automatically t))
+
+(require 'ob-clojure) ;; enable clojure in org-babel
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5ef2702" class="outline-3">
+<h3 id="org5ef2702"><span class="section-number-3">50.1</span> How to develop in Clojure (CIDER)</h3>
+<div class="outline-text-3" id="text-50-1">
+<p>
+CIDER Docs: <a href="https://docs.cider.mx/cider/index.html">https://docs.cider.mx/cider/index.html</a>
+</p>
+
+<dl class="org-dl">
+<dt><code>cider-eval-defun-at-point</code> (<code>C-c C-c</code>)</dt><dd>on S-exp will evaluate
+outer S-exp, both in Evil Normal and Insert modes</dd>
+
+<dt><code>cider-eval-last-sexp</code> (<code>C-c C-e</code>)</dt><dd>having cursor after S-exp will
+evaluate previous one, sometimes doesn't work as expected in Evil
+Normal mode, use Insert mode instead</dd>
+
+<dt><code>cider-clojuredocs</code> (<code>C-c C-d C-c</code>)</dt><dd>open documentation from
+ClojureDocs. Default search term is that under cursor</dd>
+</dl>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package cider :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgde90822" class="outline-3">
+<h3 id="orgde90822"><span class="section-number-3">50.2</span> inf-clojure</h3>
+<div class="outline-text-3" id="text-50-2">
+<p>
+<a href="https://github.com/clojure-emacs/inf-clojure">https://github.com/clojure-emacs/inf-clojure</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package inf-clojure :ensure t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5cdae87" class="outline-3">
+<h3 id="org5cdae87"><span class="section-number-3">50.3</span> Useful helper functions</h3>
+<div class="outline-text-3" id="text-50-3">
+<div class="org-src-container">
+<pre class="src src-clojure">;; change current namespace
+(in-ns 'hello.cruel-world)
+
+(filter #(clojure.string/includes? % "json")
+        (map str (all-ns)))
+
+(filter #(and
+          (not (clojure.string/includes? % "cider"))
+          (not (clojure.string/includes? % "nrepl"))
+          (not (clojure.string/includes? % "clojure")))
+        (map str (all-ns)))
+
+(filter #(complement (or (map
+clojure.string/includes? ["cider" "nrepl" "clojure"]))
+        (map str (all-ns)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a02671" class="outline-3">
+<h3 id="org1a02671"><span class="section-number-3">50.4</span> Linter - clj-kondo</h3>
+<div class="outline-text-3" id="text-50-4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package flymake-kondor
+  :ensure t
+  :hook (clojure-mode . flymake-kondor-setup))
+
+(defun pp/flymake-kondor-setup ()
+  (interactive)
+  (flymake-kondor-setup))
+</pre>
+</div>
+
+<pre class="example">
+(executable-find "clj-kondo")
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga813a7b" class="outline-3">
+<h3 id="orga813a7b"><span class="section-number-3">50.5</span> ClojureScript</h3>
+<div class="outline-text-3" id="text-50-5">
+</div>
+<div id="outline-container-org4ff330a" class="outline-4">
+<h4 id="org4ff330a"><span class="section-number-4">50.5.1</span> <span class="todo TODO">TODO</span> Try re-jump for re-frame</h4>
+<div class="outline-text-4" id="text-50-5-1">
+<p>
+<a href="https://github.com/oliyh/re-jump.el/blob/master/re-jump.el">https://github.com/oliyh/re-jump.el/blob/master/re-jump.el</a>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org069ab99" class="outline-3">
+<h3 id="org069ab99"><span class="section-number-3">50.6</span> 4Clojure</h3>
+<div class="outline-text-3" id="text-50-6">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-23 Wed&gt;</span></span>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun endless/4clojure-check-and-proceed ()
+  "Check the answer and show the next question if it worked."
+  (interactive)
+  (unless
+      (save-excursion
+        ;; Find last sexp (the answer).
+        (goto-char (point-max))
+        (forward-sexp -1)
+        ;; Check the answer.
+        (cl-letf ((answer
+                   (buffer-substring (point) (point-max)))
+                  ;; Preserve buffer contents, in case you failed.
+                  ((buffer-string)))
+          (goto-char (point-min))
+          (while (search-forward "__" nil t)
+            (replace-match answer))
+          (string-match "failed." (4clojure-check-answers))))
+    (4clojure-next-question)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5c3130c" class="outline-2">
+<h2 id="org5c3130c"><span class="section-number-2">51</span> JavaScript</h2>
+<div class="outline-text-2" id="text-51">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/js-mode-hook ()
+  "Hook for 'js-mode'."
+  (setq
+     tab-width 2
+     indent-tabs-mode nil)
+  (flymake-mode))
+
+(use-package js-mode
+  :hook (js-mode-hook . pp/js-mode-hook)
+  :config
+  (setq js-indent-level 2))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org321c77a" class="outline-2">
+<h2 id="org321c77a"><span class="section-number-2">52</span> TypeScript</h2>
+<div class="outline-text-2" id="text-52">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package typescript-mode :ensure t
+  :config
+  (setq typescript-indent-level 2))
+
+(use-package tide :ensure t
+  :config
+  (setq tide-format-options
+        (list :insertSpaceAfterFunctionKeywordForAnonymousFunctions t
+              :placeOpenBraceOnNewLineForFunctions nil)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org37f146e" class="outline-2">
+<h2 id="org37f146e"><span class="section-number-2">53</span> Scala</h2>
+<div class="outline-text-2" id="text-53">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/scala-mode-hook ()
+  "Hook for 'scala-mode'."
+  (general-define-key :states '(normal) :prefix "g"
+    "h" 'eglot-help-at-point))
+
+(use-package scala-mode
+  :mode "\\.s\\(cala\\|bt\\)$"
+  :hook (scala-mode-hook . pp/scala-mode-hook))
+
+;; Enable sbt mode for executing sbt commands
+(use-package sbt-mode
+  :commands (sbt-start sbt-command)
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  (substitute-key-definition
+   'minibuffer-complete-word
+   'self-insert-command
+   minibuffer-local-completion-map)
+   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+   (setq sbt:program-options '("-Dsbt.supershell=false")))
+
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb00b2d9" class="outline-2">
+<h2 id="orgb00b2d9"><span class="section-number-2">54</span> Highlighting</h2>
+<div class="outline-text-2" id="text-54">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package color-identifiers-mode :ensure t)
+
+(defun pp/highlight-symbol-hook ()
+  "Hook for highlighting symbols."
+  (highlight-symbol-nav-mode)
+  (highlight-symbol "TODO:"))
+
+(use-package highlight-symbol :ensure t
+  :hook ((prog-mode-hook . pp/highlight-symbol-hook)
+         (text-mode-hook . pp/highlight-symbol-hook))
+  :config
+  (setq
+     highlight-symbol-colors
+       (quote
+         ("light goldenrod" "deep sky blue" "light coral" "chocolate" "orange" "red" "orange red"))
+     highlight-symbol-foreground-color "black"))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2623284" class="outline-2">
+<h2 id="org2623284"><span class="section-number-2">55</span> Random helper functions</h2>
+<div class="outline-text-2" id="text-55">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/switch-to-scratch-buffer ()
+  "Switch to *scratch* buffer."
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org98b0511" class="outline-2">
+<h2 id="org98b0511"><span class="section-number-2">56</span> Network utilities in Emacs</h2>
+<div class="outline-text-2" id="text-56">
+<pre class="example">
+
+(telnet "ya.ru" 80)
+
+(ping "ya.ru")
+
+(telnet "inbucket.nyancat.gcp.in-gr.ru" 443)
+
+</pre>
+</div>
+</div>
+<div id="outline-container-org9bb0ffd" class="outline-2">
+<h2 id="org9bb0ffd"><span class="section-number-2">57</span> Open browser from Emacs</h2>
+<div class="outline-text-2" id="text-57">
+<pre class="example">
+(start-process "" nil "open" "http://clojure.org")
+
+(xwidget-webkit-browse-url "http://clojure.org")
+</pre>
+</div>
+</div>
+<div id="outline-container-org417bcb5" class="outline-2">
+<h2 id="org417bcb5"><span class="section-number-2">58</span> Blogging</h2>
+<div class="outline-text-2" id="text-58">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-27 Sun&gt;</span></span>
+How to run a blog from Emacs with minimum overhead efforts.
+</p>
+
+<p>
+Check <code>./How-do-I-blog.org</code> file for details.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/export-to-blog ()
+  "Converts current Org buffer to html and moves it to blog sources folder."
+  (interactive)
+  (let ((filename (org-html-export-to-html)))
+    (rename-file filename "~/Documents/Projects/pavel-popov.github.io/" t)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org058875b" class="outline-2">
+<h2 id="org058875b"><span class="section-number-2">59</span> Recording video</h2>
+<div class="outline-text-2" id="text-59">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-22 Tue&gt;</span></span>
+<a href="https://macreports.com/record-face-screen-mac/">https://macreports.com/record-face-screen-mac/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge78b1fd" class="outline-2">
+<h2 id="orge78b1fd"><span class="section-number-2">60</span> Jet - transforms between JSON, EDN and Transit&#xa0;&#xa0;&#xa0;<span class="tag"><span class="json">json</span>&#xa0;<span class="edn">edn</span>&#xa0;<span class="clojure">clojure</span>&#xa0;<span class="clj">clj</span></span></h2>
+<div class="outline-text-2" id="text-60">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-21 Mon&gt;</span></span>
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/jet-edn-prettify ()
+  "Prettyfy selection of buffer using jet."
+  (interactive)
+  (shell-command-on-region
+   (region-beginning)
+   (region-end)
+   "jet --pretty --edn-reader-opts '{:default tagged-literal}'"
+   (current-buffer)
+   t
+   "*jet error buffer*"
+   t))
+
+(defun pp/jet-edn-to-json ()
+  "Prettyfy selection of buffer using jet."
+  (interactive)
+  (shell-command-on-region
+   (region-beginning)
+   (region-end)
+   "jet --pretty --from edn --to json"
+   (current-buffer)
+   t
+   "*jet error buffer*"
+   t))
+
+(defun pp/jet-json-to-edn ()
+  "Prettyfy selection of buffer using jet."
+  (interactive)
+  (shell-command-on-region
+   (region-beginning)
+   (region-end)
+   "jet --pretty --from json --to edn --keywordize"
+   (current-buffer)
+   t
+   "*jet error buffer*"
+   t))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5274150" class="outline-2">
+<h2 id="org5274150"><span class="section-number-2">61</span> Command log mode - record keystrokes</h2>
+<div class="outline-text-2" id="text-61">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-22 Tue&gt;</span></span>
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package command-log-mode :ensure t)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org472b769" class="outline-2">
+<h2 id="org472b769"><span class="section-number-2">62</span> Collaborative editing, Floobits, Live Share</h2>
+<div class="outline-text-2" id="text-62">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package floobits :ensure t)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge05e096" class="outline-2">
+<h2 id="orge05e096"><span class="section-number-2">63</span> Packages to try someday</h2>
+<div class="outline-text-2" id="text-63">
+<dl class="org-dl">
+<dt>Productivity tips</dt><dd><a href="https://news.ycombinator.com/item?id=22129636">https://news.ycombinator.com/item?id=22129636</a></dd>
+<dt>Literate Devops</dt><dd><a href="http://howardism.org/Technical/Emacs/literate-devops.html">http://howardism.org/Technical/Emacs/literate-devops.html</a>
+Discussion: <a href="https://news.ycombinator.com/item?id=16559004">https://news.ycombinator.com/item?id=16559004</a></dd>
+<dt>Purpose</dt><dd>Manage Windows and Buffers According to Purposes
+<a href="https://github.com/bmag/emacs-purpose">https://github.com/bmag/emacs-purpose</a></dd>
+</dl>
+</div>
+</div>
+<div id="outline-container-org06e9810" class="outline-2">
+<h2 id="org06e9810"><span class="section-number-2">64</span> Trying packages</h2>
+<div class="outline-text-2" id="text-64">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package try :ensure t)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org51dc741" class="outline-2">
+<h2 id="org51dc741"><span class="section-number-2">65</span> Reading from s3 using <code>sqlc</code> tool</h2>
+<div class="outline-text-2" id="text-65">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-18 Wed&gt;</span></span>
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun pp/sqlc (url)
+  "Run sql command with provided URL and other options."
+  (interactive "sURL for sqlc: ")
+  (let* ((out-buffer-name (first (split-string url)))
+         (err-buffer-name "*sqlc errors*")
+         (out-buffer (get-buffer-create out-buffer-name))
+         (err-buffer (get-buffer-create err-buffer-name)))
+    (with-current-buffer out-buffer (erase-buffer))
+    (with-current-buffer err-buffer (erase-buffer))
+    (shell-command (format "sqlc -f %s" url) out-buffer err-buffer-name)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf537a01" class="outline-2">
+<h2 id="orgf537a01"><span class="section-number-2">66</span> <span class="todo TODO">TODO</span> Typing response</h2>
+<div class="outline-text-2" id="text-66">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-22 Sun&gt;</span></span>
+</p>
+
+<p>
+Sometimes I feel that typing feedback in Emacs is really slow, like
+visually noticable lag when I press the button and a character appears
+on the screen.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf0882c6" class="outline-2">
+<h2 id="orgf0882c6"><span class="section-number-2">67</span> <span class="todo TODO">TODO</span> Publish this Org file as a blog post</h2>
+</div>
+<div id="outline-container-org95be205" class="outline-2">
+<h2 id="org95be205"><span class="section-number-2">68</span> Emacs-webkit - using Safari from Emacs</h2>
+<div class="outline-text-2" id="text-68">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-22 Sun&gt;</span></span>
+</p>
+
+<p>
+<a href="https://www.reddit.com/r/emacs/comments/jyowe0/introducing_emacswebkit_a_successor_to/">Announcement on Reddit</a>
+</p>
+
+<blockquote>
+<p>
+emacs-webkit requires at least Emacs 28
+</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-orga1f74b2" class="outline-2">
+<h2 id="orga1f74b2"><span class="section-number-2">69</span> <span class="todo TODO">TODO</span> How to explicitly record the mental stack?</h2>
+<div class="outline-text-2" id="text-69">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-22 Sun&gt;</span></span>
+<a href="https://www.reddit.com/r/emacs/comments/jxvm1h/how_to_explicitly_record_the_mental_stack/">https://www.reddit.com/r/emacs/comments/jxvm1h/how_to_explicitly_record_the_mental_stack/</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org1fe3e05" class="outline-2">
+<h2 id="org1fe3e05"><span class="section-number-2">70</span> Xah Lee's functions</h2>
+<div class="outline-text-2" id="text-70">
+</div>
+<div id="outline-container-org3e9095f" class="outline-3">
+<h3 id="org3e9095f"><span class="section-number-3">70.1</span> Opening file in External App</h3>
+<div class="outline-text-3" id="text-70-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun xah-open-in-external-app (&amp;optional @fname)
+  "Open the current file or dired marked files in external app.
+The app is chosen from your OS's preference.
+
+When called in emacs lisp, if @fname is given, open that.
+
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2019-11-04"
+  (interactive)
+  (let* (
+         ($file-list
+          (if @fname
+              (progn (list @fname))
+            (if (string-equal major-mode "dired-mode")
+                (dired-get-marked-files)
+              (list (buffer-file-name)))))
+         ($do-it-p (if (&lt;= (length $file-list) 5)
+                       t
+                     (y-or-n-p "Open more than 5 files? "))))
+    (when $do-it-p
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda ($fpath)
+           (w32-shell-execute "open" $fpath)) $file-list))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda ($fpath)
+           (shell-command
+            (concat "open " (shell-quote-argument $fpath))))  $file-list))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda ($fpath) (let ((process-connection-type nil))
+                            (start-process "" nil "xdg-open" $fpath))) $file-list))))))
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Pavel Popov</p>
+<p class="date">Created: 2020-11-22 Sun 11:54</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
