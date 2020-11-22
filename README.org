@@ -1,0 +1,3 @@
+#+TITLE: Pavel's Notes - rendered html files
+
+This branch contains rendered html files so they form website [[https://pavel-popov.github.io][pavel-popov.github.io]].
