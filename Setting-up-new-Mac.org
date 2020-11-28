@@ -4,8 +4,13 @@
 
 Go to Homebrew's website, install it.
 
-* Shell
+* CLI utilities
 
+Unless noted installation happens via =brew install <name>=
+
+- =fd= :: better find
+- =rg= :: ripgrep, better grep / ack / ag / pt
+* Shell
 I use =fish= as a shell, so need to change the default shell from
 =zsh= to =fish=.
 
@@ -124,11 +129,13 @@ brew install openjdk
 
 Add =/usr/local/opt/openjdk/bin= to =PATH=.
 
+* GUI apps
+** Apps from App Store
+*** Tot
+*** Magnet
+*** The unarchiver
+*** Tip
+** Apps from =brew cask=
 
-* Apps from App Store
-
-** Tot
-
-** Magnet
-
-** The unarchiver
+- =brew cask install transmission=
+- =brew cask install vlc=

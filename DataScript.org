@@ -1,1 +1,41 @@
 #+TITLE: DataScript - embedded database for your frontend SPA
+
+* Rationale
+* Setup the project / namespace
+
+Add these dependencies to =shadow-cljs.edn= file:
+
+#+begin_src clojure
+ :dependencies [...
+                [datascript/datascript "1.0.1"]
+                ...]
+#+end_src
+
+and then require it in the file =pp/toy_example/state.cljs=:
+
+#+begin_src clojure
+(ns pp.toy-example.state
+  (:require [datascript.core :as d]))
+#+end_src
+
+* Create database
+
+
+#+begin_src clojure
+(def schema {:hotel/id {:db/unique :db.unique/identity}
+             :offer/id {:db/unique :db.unique/identity}
+             :offer/hotel {:db/type :db.type/ref}})
+
+(defonce conn (d/create-conn schema))
+#+end_src
+
+* Insert some data
+
+#+begin_src clojure
+
+
+
+#+end_src
+* Running some queries
+* Integrate with reagent components
+* Patterns

@@ -9,16 +9,28 @@ make them complete before publishing, they more a scratch notes on a
 subject that I dump out of my brain.
 
 To create a post I create a new Org file in a directory
-=~/Documents/Projects/Blog= and start writing. Upon the file has
-enough content to be published, I export it to =html= using
-=(org-html-export-to-html)= and move the file to the folder
-=~/Documents/Projects/pavel-popov.github.io=, which contains contents
-of [[https://pavel-popov.github.io][pavel-popov.github.io]] website.
+=~/Documents/Projects/Blog= from Template.org file and start writing.
+Upon the file has enough content to be published, I export it to
+=html= using =(org-html-export-to-html)= and move the file to the
+folder =~/Documents/Projects/pavel-popov.github.io=, which contains
+contents of [[https://pavel-popov.github.io][pavel-popov.github.io]] website.
 
-
-- =Blog= directory points to =org= branch in [[https://github.com/pavel-popov/pavel-popov.github.io][pavel-popov.github.io]] repo.
+- =Blog= directory points to [[https://github.com/pavel-popov/pavel-popov.github.io/tree/org][org]] branch in [[https://github.com/pavel-popov/pavel-popov.github.io][pavel-popov.github.io]] repo.
 
 * Styling
 
 I adopted a beautiful =org.css= by Zhitao Gong from his post [[https://gongzhitaao.org/orgcss/][CSS for
 Org-exported HTML]].
+
+* Creating a post
+
+This helper function exports current note as html and moves it to sources
+folder, ready for committing and pushing to Github.
+
+#+begin_src emacs-lisp
+(defun pp/export-to-blog ()
+  "Converts current Org buffer to html and moves it to blog sources folder."
+  (interactive)
+  (let ((filename (org-html-export-to-html)))
+    (rename-file filename "~/Documents/Projects/pavel-popov.github.io/")))
+#+end_src
