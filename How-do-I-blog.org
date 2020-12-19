@@ -23,7 +23,6 @@ I adopted a beautiful =org.css= by Zhitao Gong from his post [[https://gongzhita
 Org-exported HTML]].
 
 * Creating a post
-
 This helper function exports current note as html and moves it to sources
 folder, ready for committing and pushing to Github.
 

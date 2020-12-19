@@ -11,7 +11,6 @@ Castlemacs distribution.
 Literate programming layout is inpired by Protesilaos Stavrou' [[https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/][dotfiles]].
 #+end_abstract
 
-
 #+TOC: headlines 2
 
 * Reference cards / cheatsheets
@@ -41,7 +40,7 @@ https://www.gnu.org/software/emacs/refcards/
 - Needed to edit commit messages from Eshell when running git commands.
 
 #+begin_src emacs-lisp
-  (server-start)
+(server-start)
 #+end_src
 * GUI configuration
 #+begin_src emacs-lisp
@@ -113,7 +112,17 @@ or have some mechanism doing that for us.
 (load "visit-source")
 #+end_src
 
-** TODO Figure out how to download packages from Github url
+** DONE Figure out how to download packages from Github url
+CLOSED: [2020-11-28 Sat 12:41]
+
+[[https://github.com/turbo-cafe/flymake-kondor][Flymake-kondor]] repo has an example how to do it:
+
+#+begin_example
+(el-get-bundle
+ flymake-kondor
+ :url "https://raw.githubusercontent.com/turbo-cafe/flymake-kondor/master/flymake-kondor.el"
+ (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
+#+end_example
 
 * Getting help, documentation
 - =C-h=, =F1= :: open help key drawer
@@ -222,9 +231,17 @@ Keyboard preferences in macOS.
   (run-at-time "5 min" 300 'pp/recentf-save-list)
   :config
   (setq
+    create-lockfiles nil
     recentf-max-menu-items 20
     recentf-max-saved-items 1000))
 #+end_src
+
+** When switching to Emacs a Warning issued "recentf mode: Non-character input-event"
+<2020-12-08 Tue>
+https://github.com/syl20bnr/spacemacs/issues/5554
+
+- I added =setq create-lockfiles nil=, let's see if it helps - looks
+  like not really.
 
 ** Opening files
 I use =pp/visit-or-open= function, bound to =s-o= globally.
@@ -353,7 +370,7 @@ Source: https://news.ycombinator.com/item?id=22131815"
 (visual-line-mode 1)
 #+end_example
 
-* File management / Dired                                             :Dired:
+* File management / Dired
 
 [[https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf][Cheatsheet]]
 
@@ -422,17 +439,8 @@ Source: https://news.ycombinator.com/item?id=22131815"
 (global-hl-line-mode -1)
 
 (use-package all-the-icons :ensure t)
-#+end_src
 
-* Automatic Dark Mode in macOS
-
-#+begin_src emacs-lisp
-;; ;; emacs-mac-port does have this built-in.
-;; ;; emacs-plus doesn't, so as a workaround there's a package 'auto-dark-emacs.el
-;; ;; doing this.
-;; (if (and (version<= "27.0" emacs-version)
-;;       (version< emacs-version "28.0"))
-;;     (require 'auto-dark-emacs))
+(use-package rainbow-mode :ensure t)
 #+end_src
 
 * Mode line, mode-line, Status Bar
@@ -486,11 +494,8 @@ Source: https://news.ycombinator.com/item?id=22131815"
 #+end_src
 
 #+begin_example emacs-lisp
-
 (message mode-name)
-
 (message mode-line-modes)
-
 #+end_example
 
 *** TODO mode-line resets when locally
@@ -559,15 +564,16 @@ Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
 
 (setq-default line-spacing 2)
 
-;; (use-package ayu-theme)
+(use-package ayu-theme :ensure t)
 ;; (use-package solarized-theme)
 ;; (use-package doom-themes)
-;; (use-package ample-theme)
-;; (use-package quasi-monochrome-theme)
-;; (use-package monochrome-theme)
-;; (use-package modus-operandi-theme :ensure t)
-;; (use-package modus-vivendi-theme :ensure t)
-;; (use-package faff-theme :ensure t)
+(use-package ample-theme :ensure t)
+(use-package quasi-monochrome-theme :ensure t)
+(use-package monochrome-theme :ensure t)
+(use-package modus-operandi-theme :ensure t)
+(use-package modus-vivendi-theme :ensure t)
+(use-package faff-theme :ensure t)
+;; (use-package horizon-theme :ensure t)
 
 ;; 256 colors in term
 (use-package eterm-256color
@@ -590,7 +596,7 @@ Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
 (pp/load-theme 'faff)
 
 ;; dark themes
-(pp/load-theme 'ayu-dark) ;; favourite dark theme
+(pp/load-theme 'ayu-dark)
 (pp/load-theme 'wombat)
 (pp/load-theme 'tsdh-dark)
 (pp/load-theme 'ayu-grey)
@@ -604,32 +610,65 @@ Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
 #+end_example
 
 #+begin_example emacs-lisp
-(setq-default header-line-format
-              (list
-               "  "
-               '(:eval (let ((name (buffer-name)))
-                         (cond ((not buffer-file-truename)
-                                (propertize name 'face 'bold))
-                               ((equal name (file-name-nondirectory buffer-file-truename))
-                                (concat (propertize
-                                         (f-filename buffer-file-truename)
-                                         'face 'bold)
-                                        " "
-                                        (f-dirname buffer-file-truename)
-                                        "/…"))
-                               (t
-                                (concat (propertize name 'face 'bold)
-                                        " "
-                                        buffer-file-truename)))))
+(setq-default
+ header-line-format
+ (list
+  "  "
+  '(:eval (let ((name (buffer-name)))
+            (cond ((not buffer-file-truename)
+                   (propertize name 'face 'bold))
+                  ((equal name (file-name-nondirectory buffer-file-truename))
+                   (concat (propertize
+                            (f-filename buffer-file-truename)
+                            'face 'bold)
+                           " "
+                           (f-dirname buffer-file-truename)
+                           "/…"))
+                  (t
+                   (concat (propertize name 'face 'bold)
+                           " "
+                           buffer-file-truename)))))
 
-               ;; Right aligned
-               '(:eval (let* ((right-text (format-mode-line mode-name)))
-                         (concat (propertize
-                                  " " 'display
-                                  `((space :align-to (- (+ right right-fringe right-margin)
-                                                        ,(+ 3 (string-width right-text))))))
-                                 right-text)))))
+  ;; Right aligned
+  '(:eval (let* ((right-text (format-mode-line mode-name)))
+            (concat (propertize
+                     " " 'display
+                     `((space :align-to (- (+ right right-fringe right-margin)
+                                           ,(+ 3 (string-width right-text))))))
+                    right-text)))))
 #+end_example
+
+** Faff theme changed highlighting of Org headers
+
+On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-theme/commit/8bf375a218cb242fa6fad9804001f213bc2f9d56][8bf375a]] in faff theme the
+
+** Switch between dark and light mode in macOS
+<2020-12-12 Sat>
+
+[[https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change][System appearance change]] in Emacs Plus.
+
+=emacs-mac-port= does have this built-in.
+=emacs-plus= allows to add hook on changing system appearance.
+
+#+begin_src emacs-lisp
+(defun pp/apply-appearance (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (progn (setq modus-operandi-theme-no-mixed-fonts t)
+                   (load-theme 'modus-operandi t)))
+    ('dark (progn (setq modus-vivendi-theme-no-mixed-fonts t)
+                   (load-theme 'modus-vivendi t))))
+  (pp/set-font "PragmataPro" 14))
+
+(add-hook 'ns-system-appearance-change-functions #'pp/apply-appearance)
+#+end_src
+
+#+begin_example emacs-lisp
+(pp/apply-appearance 'dark)
+(pp/apply-appearance 'light)
+#+end_example
+
 * Line numbers
 #+begin_src emacs-lisp
 
@@ -690,7 +729,7 @@ Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
   "s-t" 'eshell
   "C-s-b" 'ivy-resume  ;; Ctrl+Cmd+B resume whatever Ivy was doing
   "C-s" 'swiper-isearch   ;; Replace ISearch
-  "C-;" 'avy-goto-word-1
+  "C-;" 'avy-goto-char
   ;; smartparens
   "<s-down>" 'sp-down-sexp
   "<s-up>" 'sp-up-sexp
@@ -704,7 +743,6 @@ Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
   ;; projectile
   "s-p" 'project-find-file
   "s-f" 'counsel-projectile-rg ;; fuzzy search in the current project
-  ; "C-s-p" 'projectile-command-map ; never used it so turned off
   ;; function keys
   "<f5>" 'deadgrep
   "<f6>" 'flymake-show-diagnostics-buffer
@@ -818,19 +856,60 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
 ;; e.g. description of commands in M-x, meta info when switching
 ;; buffers, etc.
 (use-package ivy-rich :ensure t
-  :init (ivy-rich-mode 1)
-  :config (setq ivy-rich-path-style 'abbrev)) ;; replace “/home/username” with “~”
+  :config
+  (setq
+   ivy-rich-path-style 'abbrev ;; replace “/home/username” with “~”
+   ivy-rich-display-transformers-list
+   (plist-put ivy-rich-display-transformers-list
+              'ivy-switch-buffer
+              '(:columns
+                ((ivy-switch-buffer-transformer
+                  (:width 0.2))
+                 (ivy-rich-switch-buffer-size
+                  (:width 7))
+                 (ivy-rich-switch-buffer-indicators
+                  (:width 4 :face error :align right))
+                 (ivy-rich-switch-buffer-major-mode
+                  (:width 20 :face warning))
+                 (ivy-rich-switch-buffer-project
+                  (:width 0.10 :face success))
+                 (ivy-rich-switch-buffer-path
+                  (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.6))))))
+                :predicate (lambda (cand) (get-buffer cand))))
+   ivy-rich-display-transformers-list
+   (plist-put ivy-rich-display-transformers-list
+              'counsel-M-x
+              '(:columns
+                ((counsel-M-x-transformer (:width 0.2))
+                 (ivy-rich-counsel-function-docstring
+                  (:face font-lock-doc-face)))))
+   ivy-rich-display-transformers-list
+   (plist-put ivy-rich-display-transformers-list
+              'counsel-recentf
+              '(:columns
+                ((ivy-rich-candidate
+                  (:width 0.5))
+                 (ivy-rich-file-last-modified-time
+                  (:face font-lock-comment-face))))))
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (ivy-rich-mode 1))
 #+end_src
+
+#+begin_example emacs-lisp
+(progn
+  (ivy-rich-mode -1)
+  (ivy-rich-mode 1))
+#+end_example
 
 ** TODO Home directory abbreviation doesn't work with =councel-recentf=
 <2020-11-20 Fri>
 
-* Swiper, an Ivy-enhanced alternative to isearch
+** Swiper, an Ivy-enhanced alternative to isearch
 #+begin_src emacs-lisp
 (use-package swiper :ensure t)
 #+end_src
 
-* Counsel, a collection of Ivy-enhanced versions of common commands
+** Counsel, a collection of Ivy-enhanced versions of common commands
 
 #+begin_src emacs-lisp
 (use-package counsel :ensure t)
@@ -916,6 +995,7 @@ Useful keybindings:
    org-src-fontify-natively t
    org-log-into-drawer t
    org-log-done 'time
+   org-export-backends '(html md)
    org-support-shift-select t
    org-directory "~/Documents/Notes"
    org-agenda-files '("~/Documents/Notes/pavel.org"
@@ -927,15 +1007,12 @@ Useful keybindings:
 
 (use-package org-bullets :ensure t
   :hook (org-mode-hook . org-bullets-mode))
-
 #+end_src
 
-
 ** Org-babel, Babel, Org Babel                                    :OrgBabel:
+<2020-11-23 Mon> <2020-12-06 Sun>
 
-
-
-For literate programming in Org-mode files.
+Babel enables literate programming in Org Mode.
 
 - =<s-TAB= :: start source block
 - =<e-TAB= :: start example block
@@ -943,24 +1020,16 @@ For literate programming in Org-mode files.
 - =C-c '= :: edit this block in a separate buffer
 
 #+begin_src emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((clojure . t)
-   (emacs-lisp . t)
-   (shell . t)
-   (calc . t)))
-#+end_src
-
-<2020-11-23 Mon>
-
-Babel enables literate programming in Org Mode.
-
-#+begin_src emacs-lisp
 (setq-default org-confirm-babel-evaluate nil)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((restclient . t)))
+ '((clojure . t)
+   (emacs-lisp . t)
+   (plantuml . t)
+   (shell . t)
+   (restclient . t)
+   (calc . t)))
 #+end_src
 
 *** TODO Setup org-mode-babel for sql files
@@ -1032,7 +1101,6 @@ but for some reason it didn't work for me, so I stick with =C-c C-,=
 and also bind it to =SPC ,= in Evil Normal mode. As of
 [2020-11-23 Mon] =<s= works again.
 
-
 ** Org-agenda, Ora Agenda                                        :OrgAgenda:
 :PROPERTIES:
 :CATEGORY: til
@@ -1064,7 +1132,6 @@ https://www.gnu.org/software/emacs/manual/html_node/eintr/See-variable-current-v
 <2020-11-22 Sun>
 https://github.com/alphapapa/org-super-agenda
 https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/
-
 
 
 ** DONE How to automatically add creation metadata timestamp to Org-mode entry?
@@ -1109,10 +1176,12 @@ amount of undo changes.
 (use-package emacs
   :config
   (defun pp/outline-minor-mode-hook ()
-     (general-define-key :keymaps 'local
-       "<tab>" 'org-cycle))
+    (general-define-key
+     :keymaps 'local
+     "<tab>" 'org-cycle
+     "M-p" 'outline-previous-heading
+     "M-n" 'outline-next-heading))
   (add-hook 'outline-minor-mode-hook #'pp/outline-minor-mode-hook))
-
 #+end_src
 
 #+begin_example emacs-lisp
@@ -1189,7 +1258,7 @@ Another alternative - Elisp package https://github.com/tkf/emacs-request.
 (use-package anybar :ensure t)
 #+end_src
 
-* Searching in multiple files
+* DeadGrep - Searching in multiple files / project
 
 grep / ripgrep / ag / ack / pt
 
@@ -1205,6 +1274,12 @@ grep / ripgrep / ag / ack / pt
               ("v" . pp/deadgrep-view-file)))
 ;; TODO: maybe setup next-error-follow-minor-mode as a hook?
 #+end_src
+
+** Keybindings in Deadgrep buffer
+- =M-n=, =M-p= :: move to next/previous file
+- =n=, =C-n=, =C-p= :: move to next/previous line
+- =o= :: open matched file on matched line
+- =v= :: view matched file on matched line (keeping focus in Deadgrep buffer)
 
 * Formatting code
 #+begin_src emacs-lisp
@@ -1300,10 +1375,16 @@ Two main packages providing minor mode for error checks:
 - flymake :: built-in into Emacs
 - flycheck :: competitor that gained lots of popularity recently
 
+** Flymake
+
+I found this configuration in [[https://github.com/turbo-cafe/flymake-kondor][flymake-kondor]]'s README:
 #+begin_src emacs-lisp
-(remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+(use-package flymake
+  :hook (prog-mode . (lambda () (flymake-mode t)))
+  :config (remove-hook 'flymake-diagnostic-functions #'flymake-proc-legacy-flymake))
 #+end_src
 
+** Flycheck
 #+begin_src emacs-lisp
 ;;(use-package flycheck
 ;;  :init (global-flycheck-mode))
@@ -1469,13 +1550,10 @@ clojure.string/includes? ["cider" "nrepl" "clojure"]))
 ** Linter - clj-kondo
 
 #+begin_src emacs-lisp
-(use-package flymake-kondor
-  :ensure t
-  :hook (clojure-mode . flymake-kondor-setup))
+(use-package flymake-quickdef :ensure t)
 
-(defun pp/flymake-kondor-setup ()
-  (interactive)
-  (flymake-kondor-setup))
+(use-package flymake-kondor :ensure flymake-quickdef
+  :hook (clojure-mode-hook . flymake-kondor-setup))
 #+end_src
 
 #+begin_example emacs-lisp
@@ -1486,9 +1564,11 @@ clojure.string/includes? ["cider" "nrepl" "clojure"]))
 *** TODO Try re-jump for re-frame
 https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
 ** 4Clojure
-<2020-09-23 Wed>
+<2020-09-23 Wed> <2020-11-28 Sat>
 
 #+begin_src emacs-lisp
+(use-package 4clojure :ensure t)
+
 (defun endless/4clojure-check-and-proceed ()
   "Check the answer and show the next question if it worked."
   (interactive)
@@ -1613,6 +1693,7 @@ https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
 #+END_EXAMPLE
 * Blogging
 <2020-09-27 Sun>
+
 How to run a blog from Emacs with minimum overhead efforts.
 
 Check ./How-do-I-blog.org file for details.
@@ -1824,4 +1905,171 @@ Version 2019-11-04"
         (mapc
          (lambda ($fpath) (let ((process-connection-type nil))
                             (start-process "" nil "xdg-open" $fpath))) $file-list))))))
+#+end_src
+* PlantUML for creating diagrams
+Link: https://github.com/skuro/plantuml-mode
+
+#+begin_src emacs-lisp
+(use-package plantuml-mode :ensure t
+  :config
+  (setq org-plantuml-jar-path "/usr/local/lib/plantuml.jar"
+        plantuml-default-exec-mode 'jar)
+  (org-display-inline-images))
+#+end_src
+
+** Examples
+*** Sequence diagram
+#+begin_example plantuml :file sample-sequence.png
+Bob ->x Alice
+Bob -> Alice
+Bob ->> Alice
+Bob -\ Alice
+Bob \\- Alice
+Bob //-- Alice
+
+Bob ->o Alice
+Bob o\\-- Alice
+
+Bob <-> Alice
+Bob <->o Alice
+
+
+Alice -> Bob: Authentication Request
+
+alt successful case
+
+    Bob -> Alice: Authentication Accepted
+
+else some kind of failure
+
+    Bob -> Alice: Authentication Failure
+    group My own label
+    Alice -> Log : Log attack start
+        loop 1000 times
+            Alice -> Bob: DNS Attack
+        end
+    Alice -> Log : Log attack end
+    end
+
+else Another type of failure
+
+   Bob -> Alice: Please repeat
+
+end
+
+Alice->Bob : hello
+note left: this is a first note
+
+Bob->Alice : ok
+note right: this is another note
+
+Bob->Bob : I am thinking
+note left
+a note
+can also be defined
+on several lines
+end note
+
+
+Alice -> Bob: Authentication Request
+...
+Bob --> Alice: Authentication Response
+...5 minutes later...
+Bob --> Alice: Good Bye !
+
+#+end_example
+
+#+RESULTS:
+[[file:sample-sequence.png]]
+
+*** JSON
+#+begin_example plantuml :file json.png
+@startjson
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "isAlive": true,
+  "age": 27,
+  "address": {
+    "streetAddress": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postalCode": "10021-3100"
+  },
+  "phoneNumbers": [
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    }
+  ],
+  "children": [],
+  "spouse": null
+}
+@endjson
+#+end_example
+* Convert text into Slack's Alphabet Emojis
+<2020-12-09 Wed>
+
+Slack recently released alphabet emojis, meaning we can start writing
+text using them! What a nice idea!
+
+And Emacs will help us with that, so having a function which takes
+plain text and converts it to emojis.
+
+Let's write it:
+
+
+#+begin_src emacs-lisp
+
+#+end_src
+* Autoremoved asked to delete 15 packages that I use
+<2020-12-12 Sat>
+
+#+begin_quote
+Packages to delete: 15 (xref tide rainbow-mode rainbow-delimiters
+project popup paredit flymake flycheck eldoc eglot dumb-jump
+dired-single company color-identifiers-mode), proceed? (y or n) n
+
+Package ‘xref-1.0.4’ deleted.
+Package ‘tide-20201031.539’ deleted.
+Package ‘rainbow-mode-1.0.5’ deleted.
+Package ‘rainbow-delimiters-20200827.321’ deleted.
+Package ‘project-0.5.2’ deleted.
+Package ‘popup-20200610.317’ deleted.
+Package ‘paredit-20191121.2328’ deleted.
+Package ‘flymake-1.0.9’ deleted.
+Package ‘flycheck-20201105.423’ deleted.
+Package ‘eldoc-1.11.0’ deleted.
+Package ‘eglot-20201103.1026’ deleted.
+Package ‘dumb-jump-20201205.1625’ deleted.
+Package ‘dired-single-20200824.708’ deleted.
+Package ‘company-20201120.1115’ deleted.
+Package ‘color-identifiers-mode-20201029.2325’ deleted.
+#+end_quote
+
+Let's see if I actually need those after I remove.
+* Mini frame - display minibuffer at the center of the screen
+<2020-12-12 Sat>
+
+#+begin_src emacs-lisp
+(use-package mini-frame :ensure t
+  :config
+  (setq mini-frame-show-parameters
+        '((left . 0.5)
+          (top . 0.3)
+          (width . 0.75)))
+  (add-to-list 'mini-frame-ignore-commands 'swiper-isearch)
+  (mini-frame-mode 1))
+#+end_src
+* Vega - visualisation grammar
+<2020-12-13 Sun>
+
+https://github.com/applied-science/emacs-vega-view
+
+#+begin_src emacs-lisp
+(use-package vega-view :ensure t)
 #+end_src

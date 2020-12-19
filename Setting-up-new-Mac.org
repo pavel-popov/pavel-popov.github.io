@@ -8,8 +8,10 @@ Go to Homebrew's website, install it.
 
 Unless noted installation happens via =brew install <name>=
 
+- =tmux= :: terminal multiplexor
 - =fd= :: better find
 - =rg= :: ripgrep, better grep / ack / ag / pt
+
 * Shell
 I use =fish= as a shell, so need to change the default shell from
 =zsh= to =fish=.
@@ -121,10 +123,11 @@ check that =npm= and =node= are available.
 
 * Clojure(Script)
 
-Install OpenJDK:
+Install OpenJDK and Planck:
 
 #+begin_src sh
 brew install openjdk
+brew install planck
 #+end_src
 
 Add =/usr/local/opt/openjdk/bin= to =PATH=.
@@ -137,5 +140,6 @@ Add =/usr/local/opt/openjdk/bin= to =PATH=.
 *** Tip
 ** Apps from =brew cask=
 
-- =brew cask install transmission=
-- =brew cask install vlc=
+- =transmission= :: torrent downloader
+- =vlc= :: video player
+- =marta= :: dual panel file manager, [[https://news.ycombinator.com/item?id=16718166][HN: Marta, file manager for macOS, goes beta]]
