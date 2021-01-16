@@ -1,0 +1,5 @@
+#+TITLE: Data Analysis in Emacs
+
+#+begin_src clojure
+(slurp "/Users/pavel/Documents/FindHotel/RAA/sample-response-for-long-stay.json")
+#+end_src

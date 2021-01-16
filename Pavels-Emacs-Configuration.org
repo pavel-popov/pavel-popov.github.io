@@ -1,7 +1,7 @@
 #+TITLE: Pavel's Emacs Configuration
 #+CATEGORY: emacs
 #+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
+
 
 #+begin_abstract
 After trying to use many distributions I finally decided to start mine
@@ -21,6 +21,17 @@ https://www.gnu.org/software/emacs/refcards/
 - [[https://www.gnu.org/software/emacs/refcards/pdf/refcard.pdf][Emacs cheatsheet]]
 - [[https://www.gnu.org/software/emacs/refcards/pdf/survival.pdf][Emacs survival card]]
 - [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org cheatsheet]]
+
+* Package archives
+<2020-12-29 Tue>
+
+In order for =package.el= to download packages they should be
+specified in repository.
+
+#+begin_src emacs-lisp
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+#+end_src
 
 * Regenerating Elisp code from Org code
 #+begin_src emacs-lisp
@@ -103,7 +114,7 @@ https://www.gnu.org/software/emacs/refcards/
 
 * Custom packages
 <2020-09-24 Thu>
-Some packages are not in (M)ELPA, so we need either download them manually
+Some packages are not in MELPA, so we need either download them manually
 or have some mechanism doing that for us.
 
 #+begin_src  emacs-lisp
@@ -163,7 +174,6 @@ Keyboard preferences in macOS.
   mac-command-modifier 'super
   mac-option-modifier 'meta ;; Option or Alt is naturally 'Meta'
   mac-right-option-modifier 'nil) ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
-
 #+end_src
 
 * Sane defaults
@@ -252,7 +262,7 @@ I use =pp/visit-or-open= function, bound to =s-o= globally.
   (interactive)
   (or
     (visit-source)
-    (counsel-find-file)))
+    (find-file)))
 #+end_src
 
 *** TODO Remove trailing dot from text under cursor before trying to =visit-source=
@@ -485,6 +495,9 @@ Source: https://news.ycombinator.com/item?id=22131815"
     (add-to-list 'rm-blacklist " Ind")  ;; org-indent-mode
     (add-to-list 'rm-blacklist " ElDoc") ;; Emacs Lisp documentation
     (add-to-list 'rm-blacklist " fix")  ;; eslintd-fix-mode
+    (add-to-list 'rm-blacklist " s3ed")
+    (add-to-list 'rm-blacklist " counsel")
+    (add-to-list 'rm-blacklist " ivy")
     (rich-minority-mode))
 
 (setq-default echo-bell-background "Gray")
@@ -524,6 +537,7 @@ Now I suspect eglot.
 
 #+begin_src emacs-lisp
 (defun pp/reset-mode-line-format ()
+  "Klll local variable mode-line-format resetting it to the global value."
   (interactive)
   (kill-local-variable 'mode-line-format))
 
@@ -724,11 +738,11 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
   ;; going around
   "s-j" 'previous-buffer
   "s-k" 'next-buffer
-  "s-b" 'ivy-switch-buffer
+  "s-b" 'counsel-ibuffer ;'consult-buffer
   "s-n" 'switch-to-buffer
   "s-t" 'eshell
-  "C-s-b" 'ivy-resume  ;; Ctrl+Cmd+B resume whatever Ivy was doing
-  "C-s" 'swiper-isearch   ;; Replace ISearch
+  "C-s" 'isearch-forward ; 'swiper-isearch ;'consult-line
+  "C-r" 'isearch-backward
   "C-;" 'avy-goto-char
   ;; smartparens
   "<s-down>" 'sp-down-sexp
@@ -738,11 +752,10 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
   ;; counsel
   "M-x" 'counsel-M-x
   "s-o" 'pp/visit-or-open
-  "C-x C-o" 'counsel-find-file
-  "s-r" 'counsel-recentf  ; search recently edited files
-  ;; projectile
+  "s-r" 'counsel-recentf ;'consult-recent-file
+  ;; project management
   "s-p" 'project-find-file
-  "s-f" 'counsel-projectile-rg ;; fuzzy search in the current project
+  "s-f" 'counsel-rg ;'pp/consult-ripgrep ;; fuzzy search in the current project
   ;; function keys
   "<f5>" 'deadgrep
   "<f6>" 'flymake-show-diagnostics-buffer
@@ -757,10 +770,11 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
  :states '(normal)
  "C-k" 'evil-scroll-up
  "C-j" 'evil-scroll-down
- "*" 'swiper-thing-at-point)
+ "C-r" 'isearch-backward
+ ;"*" 'swiper-thing-at-point
+)
 
 (general-define-key :states '(normal) :prefix "SPC"
-  "SPC" 'counsel-M-x
   "1" 'pp/switch-to-scratch-buffer
   "2" 'lispy-arglist-inline
   "a" 'org-agenda
@@ -776,6 +790,9 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
   "l" 'lispy-mode
   "w" 'visual-line-mode
   "t" 'projectile-test-project)
+
+(general-define-key :states '(normal) :prefix "C-x"
+  "C-o" 'find-file)
 
 (general-define-key :states '(visual)
  "SPC" 'er/expand-region
@@ -842,100 +859,110 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
     (projectile-mode +1))
 #+end_src
 
-* Ivy, a generic completion mechanism
+* Improving M-x
 #+begin_src emacs-lisp
-(use-package ivy :ensure t
-  :diminish (ivy-mode . "")  ;; don't show Ivy in minor mode list
-  :init (ivy-mode 1)
-  :config (setq
-           ivy-use-virtual-buffers t ;; show bookmarks and recent files in buffer list
-           ivy-count-format "%d/%d "
-    enable-recursive-minibuffers t))
-
-;; Turns Ivy a bit more friendly by adding information to ivy buffers,
-;; e.g. description of commands in M-x, meta info when switching
-;; buffers, etc.
-(use-package ivy-rich :ensure t
-  :config
-  (setq
-   ivy-rich-path-style 'abbrev ;; replace “/home/username” with “~”
-   ivy-rich-display-transformers-list
-   (plist-put ivy-rich-display-transformers-list
-              'ivy-switch-buffer
-              '(:columns
-                ((ivy-switch-buffer-transformer
-                  (:width 0.2))
-                 (ivy-rich-switch-buffer-size
-                  (:width 7))
-                 (ivy-rich-switch-buffer-indicators
-                  (:width 4 :face error :align right))
-                 (ivy-rich-switch-buffer-major-mode
-                  (:width 20 :face warning))
-                 (ivy-rich-switch-buffer-project
-                  (:width 0.10 :face success))
-                 (ivy-rich-switch-buffer-path
-                  (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.6))))))
-                :predicate (lambda (cand) (get-buffer cand))))
-   ivy-rich-display-transformers-list
-   (plist-put ivy-rich-display-transformers-list
-              'counsel-M-x
-              '(:columns
-                ((counsel-M-x-transformer (:width 0.2))
-                 (ivy-rich-counsel-function-docstring
-                  (:face font-lock-doc-face)))))
-   ivy-rich-display-transformers-list
-   (plist-put ivy-rich-display-transformers-list
-              'counsel-recentf
-              '(:columns
-                ((ivy-rich-candidate
-                  (:width 0.5))
-                 (ivy-rich-file-last-modified-time
-                  (:face font-lock-comment-face))))))
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-  (ivy-rich-mode 1))
+(use-package smex :ensure t)
 #+end_src
+
+* Ivy, Counsel, Swiper
+
+#+begin_src emacs-lisp
+(use-package ivy :ensure t :straight t
+  :init (ivy-mode))
+
+(use-package counsel :ensure t :straight t
+  :init (counsel-mode))
+
+;(use-package swiper :ensure t :straight t)
+
+(use-package ivy-rich :ensure t :straight t
+  :init (ivy-rich-mode))
+#+end_src
+
+* Selectrum, Marginalia, Consult for completion
+<2020-12-20 Sun> <2021-01-14 Thu>
+
+Replaces Ivy+Counsel.
+
+** Selectrum
+
+#+begin_example emacs-lisp
+(use-package selectrum :ensure t
+  :straight (selectrum :type git :host github :repo "raxod502/selectrum")
+  :init (selectrum-mode))
+
+(use-package selectrum-prescient :ensure t
+  :init (selectrum-prescient-mode +1))
+
+(use-package completing-read-xref
+  :straight (completing-read-xref :type git :host github :repo "travitch/completing-read-xref.el")
+  :commands (completing-read-xref-show-xrefs completing-read-xref-show-xrefs)
+  :init (setq xref-show-definitions-function 'completing-read-xref-show-defs))
+#+end_example
+
+** Prescient - Frecency-based candidate sorting, also offers filtering
+
+#+begin_example emacs-lisp
+(use-package prescient :ensure t
+  :config
+  (prescient-persist-mode +1))
+#+end_example
+
+** Marginalia - additional information on completion
+<2021-01-04 Mon>
+
+#+begin_example emacs-lisp
+(use-package marginalia :ensure t
+  :init
+  (marginalia-mode)
+  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light)
+        marginalia-truncate-width 300
+        marginalia-separator-threshold 3000
+        marginalia-margin-threshold 135))
+#+end_example
+
+*** TODO Fix wrong indentation in =M-x= when Emacs frame is full-screen on 27" display
+<2021-01-13 Wed>
+
+Can't make it working on both 27" display and on MacBook display.
 
 #+begin_example emacs-lisp
 (progn
-  (ivy-rich-mode -1)
-  (ivy-rich-mode 1))
+  (marginalia-mode -1)
+  (setq marginalia-truncate-width 300
+        marginalia-separator-threshold 3000
+        marginalia-margin-threshold 165)
+  (marginalia-mode))
 #+end_example
+** Consult
 
-** TODO Home directory abbreviation doesn't work with =councel-recentf=
-<2020-11-20 Fri>
-
-** Swiper, an Ivy-enhanced alternative to isearch
-#+begin_src emacs-lisp
-(use-package swiper :ensure t)
-#+end_src
-
-** Counsel, a collection of Ivy-enhanced versions of common commands
-
-#+begin_src emacs-lisp
-(use-package counsel :ensure t)
-
-;; Integrate Projectile with Counsel
-(use-package counsel-projectile :ensure t
-  :init (counsel-projectile-mode 1)
-  :config (setq projectile-completion-system 'ivy)) ;; Use Ivy in Projectile
-#+end_src
-
-Counsel [[https://www.reddit.com/r/emacs/comments/ar4yxd/is_there_a_way_to_make_counselmx_remember_last/egl1xw3/][uses]] =smex= for showing recently used interactive functions in
-=counsel-M-x=.
-
-#+begin_src emacs-lisp
-(use-package smex :ensure t
-  :after counsel)
-#+end_src
-
-
-These were bindings for counsel, but I never used those hence removed.
 #+begin_example emacs-lisp
-:bind
-  (("M-y" . counsel-yank-pop)
-   :map ivy-minibuffer-map
-   ("M-y" . ivy-next-line))
+(use-package consult :ensure t
+  :straight (consult :type git :host github :repo "minad/consult"))
+
+;(use-package icomplete-vertical :ensure t
+;  :init (icomplete-vertical-mode))
+
+(defun pp/consult-ripgrep ()
+  "Launches ripgrep in the current project root."
+  (interactive)
+  (consult-ripgrep (project-root (project-current))))
 #+end_example
+
+*** Consult is broken after upgrade
+<2021-01-14 Thu>
+
+- =consult-selectrum= is not longer exists, bundled inside consult,
+  but it not symlinked when installing with straight.
+
+#+begin_quote
+Error in post-command-hook (selectrum--minibuffer-post-command-hook):
+(wrong-type-argument number-or-marker-p nil)
+
+
+Error in post-command-hook (icomplete-post-command-hook):
+(wrong-type-argument number-or-marker-p nil)
+#+end_quote
 
 * git, version control system
 #+begin_src emacs-lisp
@@ -1077,6 +1104,7 @@ printf "Done!\n"
 #+RESULTS[9c49a4c4bceaab737086d07a2ebb9f8e0a0a3125]:
 : Please wait (this can take a while)...
 : Done!
+
 *** TODO Try ob-async
 Asynchronous src_block execution for org-babel
 https://github.com/astahlman/ob-async
@@ -1133,6 +1161,10 @@ https://www.gnu.org/software/emacs/manual/html_node/eintr/See-variable-current-v
 https://github.com/alphapapa/org-super-agenda
 https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/
 
+** Org-QL, a query language for Org files  :OrgQL:
+https://github.com/alphapapa/org-ql
+
+*** TODO Try org-ql
 
 ** DONE How to automatically add creation metadata timestamp to Org-mode entry?
 CLOSED: [2020-09-24 Thu 09:51]
@@ -1289,8 +1321,8 @@ grep / ripgrep / ag / ack / pt
 ** Lispy - working with lisp s-expressions
 Useful keybindings in Lispy:
 - =S=, =lispy-stringify= :: turn s-expr to string, useful fur turning JSON to string
+- =C-u "=, =lispy-quotes= :: when inside quote string - unquote
 
-- =C-u "= :: when inside quote string - unquote
 - =C-8= :: lispy-parens-down
 
 - =C-2=, =SPC-2=, =lispy-arglist-inline= :: C-2 doesn't work, so I bound it to =SPC-2=
@@ -1394,7 +1426,8 @@ I found this configuration in [[https://github.com/turbo-cafe/flymake-kondor][fl
 * Elisp
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters :ensure t
-  :hook (prog-mode-hook . rainbow-delimiters-mode))
+ ; :hook (prog-mode-hook . rainbow-delimiters-mode)
+)
 
 (show-paren-mode)
 
@@ -1406,6 +1439,8 @@ I found this configuration in [[https://github.com/turbo-cafe/flymake-kondor][fl
 (add-hook 'emacs-lisp-mode-hook 'flymake-mode)
 
 #+end_src
+
+- Libraries for programming :: https://github.com/emacs-tw/awesome-emacs#programming
 
 ** Dash - A modern list api for Emacs
 https://github.com/magnars/dash.el
@@ -1426,9 +1461,97 @@ https://github.com/magnars/s.el
 #+end_src
 
 #+begin_example emacs-lisp
+(s-join "," '("asdf" "qwer" "fdsa"))
+
 (s-split-words "fooBar")
 #+end_example
 
+** HT - working with HashTables
+<2021-01-05 Tue>
+
+
+#+begin_src emacs-lisp
+(use-package ht :ensure t)
+#+end_src
+
+#+begin_example emacs-lisp
+(let ((example (ht ("Foo" "Bar")
+                   ("a" "b"))))
+  (s-join "&" (-map (lambda (kv) (s-join "=" kv))
+                    (ht-items example))))
+#+end_example
+
+** Example using Elisp
+<2021-01-05 Tue>
+
+#+begin_example emacs-lisp
+
+(json-encode
+ (list :requests
+  (let ((params (list (ht ("hitsPerPage" "1")
+                            ("filters" "origin:IND AND anchorId:place-432123"))
+                        (ht ("hitsPerPage" "1")
+                            ("filters" "visitorId:pavel"))
+                        (ht ("hitsPerPage" "1")
+                            ("filters" "userAgent:googlebot"))))
+        (req (lambda (p)
+               (ht (:indexName "prod_banapi_v1")
+                   (:params (url-hexify-string
+                             (s-join "&" (-map (lambda (kv) (s-join "=" kv))
+                                               (ht-items p)))))))))
+    (-map req params))))
+
+
+(object :foo :bar)
+
+(json-encode (ht (:hitsPerPage "1")
+                 (:filters "userAgent:googlebot")))
+
+
+(json-serialize '(:foo 1 :qwer 2))
+
+(json-encode '(:requests (list 1 2 3 4)))
+
+(json-encode '(:requests (list ) :foo :bar (3 4)))
+
+
+(let* ((plus-one (lambda (n) (+ n 1)))
+       (plus-two (lambda (x) (funcall plus-one (funcall plus-one x)))))
+  (funcall plus-two 3))
+
+
+(lexical-let*
+    ((plus-one (lambda (n) (+ n 1)))
+     (plus-two (lambda (x) (plus-one (plus-one x)))))
+  (plus-two 3))
+
+
+(let* ((y 1)
+      (z y))
+  (list y z))
+
+
+(json-encode
+ (list :requests
+  (let ((params (list (ht (:hitsPerPage "1")
+                          (:filters "origin:IND AND anchorId:hotel-12346"))
+                      (ht (:hitsPerPage "1")
+                          (:filters "visitorId:pasha"))))
+        (req (lambda (p)
+               (ht (:indexName "prod_banapi_v1")
+                   (:params (url-encode-url
+                             (s-join "&" (-map (lambda (kv) (s-join "=" kv))
+                                               (ht-items p)))))))))
+    (-map req params))))
+
+
+(ht (:foo :bar)
+    (:fo1 :bar)
+    (:fo2 :bar)
+    (:fo3 :bar))
+
+
+#+end_example
 * Golang
 #+begin_src emacs-lisp
 (defun pp/go-mode-hook ()
@@ -1483,6 +1606,23 @@ be the same as resource type.
 
 Related:
 - https://github.com/p-baleine/jq.el
+
+** Validating if JSON is valid
+<2021-01-12 Tue>
+
+#+begin_src emacs-lisp
+(defun pp/selection-valid-json? (beg end)
+  "Validates selection from BEG to END to be a valid JSON."
+  (interactive "r")
+  (json-read-from-string (buffer-substring-no-properties beg end)))
+#+end_src
+
+#+begin_example emacs-lisp
+(json-read-from-string "{\"a\": 1}")
+#+end_example
+** TODO Try json-pointer
+<2021-01-05 Tue>
+https://github.com/syohex/emacs-json-pointer
 
 * YAML
 #+begin_src emacs-lisp
@@ -1850,11 +1990,14 @@ https://macreports.com/record-face-screen-mac/
     (shell-command (format "sqlc -f %s" url) out-buffer err-buffer-name)))
 #+end_src
 * TODO Typing response
-<2020-11-22 Sun>
+<2020-11-22 Sun> <2021-01-13 Wed>
 
 Sometimes I feel that typing feedback in Emacs is really slow, like
 visually noticable lag when I press the button and a character appears
 on the screen.
+
+It is particularly noticable when opened on 27" display. Turning from
+Org-mode to Fundamental mode doesn't make huge difference.
 
 * Emacs-webkit - using Safari from Emacs
 <2020-11-22 Sun>
@@ -2026,7 +2169,7 @@ Let's write it:
 #+begin_src emacs-lisp
 
 #+end_src
-* Autoremoved asked to delete 15 packages that I use
+* Autoremove asked to delete 15 packages that I use
 <2020-12-12 Sat>
 
 #+begin_quote
@@ -2055,6 +2198,9 @@ Let's see if I actually need those after I remove.
 * Mini frame - display minibuffer at the center of the screen
 <2020-12-12 Sat>
 
+I disabled it temporary due to switch from Ivy+Swiper+Counsel to
+Selectrum+Consult.
+
 #+begin_src emacs-lisp
 (use-package mini-frame :ensure t
   :config
@@ -2062,8 +2208,8 @@ Let's see if I actually need those after I remove.
         '((left . 0.5)
           (top . 0.3)
           (width . 0.75)))
-  (add-to-list 'mini-frame-ignore-commands 'swiper-isearch)
-  (mini-frame-mode 1))
+  ;;(add-to-list 'mini-frame-ignore-commands 'swiper-isearch)
+  (mini-frame-mode))
 #+end_src
 * Vega - visualisation grammar
 <2020-12-13 Sun>
@@ -2072,4 +2218,38 @@ https://github.com/applied-science/emacs-vega-view
 
 #+begin_src emacs-lisp
 (use-package vega-view :ensure t)
+#+end_src
+* Prism.el - highlight code by depth
+<2020-12-28 Mon>
+
+#+begin_src emacs-lisp
+
+(use-package prism :ensure t
+  :straight (prism :type git :host github :repo "alphapapa/prism.el")
+  :hook (prog-mode-hook . prism-mode))
+
+#+end_src
+* Emacs NES emulator
+<2021-01-08 Fri>
+Didn't end having it set up because of reviews from
+the author saying it's painfully slow.
+#+begin_example
+(add-to-list 'load-path "~/.emacs.d/packages/emacs-nes")
+(load-library 'nes)
+#+end_example
+* Working with S3
+<2021-01-15 Fri>
+
+I found =s3ed= mode - https://github.com/mattusifer/s3ed.
+
+#+begin_example emacs-lisp
+(try-and-refresh 's3ed)
+(s3ed-mode)
+(s3ed-find-file)
+#+end_example
+
+#+begin_src emacs-lisp
+(use-package s3ed :ensure t
+  :commands s3ed-find-file
+  :config (s3ed-mode))
 #+end_src

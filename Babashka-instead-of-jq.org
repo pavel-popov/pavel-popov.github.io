@@ -1,0 +1,172 @@
+#+TITLE: Using Babashka instead of JQ
+#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
+
+#+BEGIN_abstract
+After using jq for several year I finally give up in favour of Babashka.
+#+END_abstract
+
+#+TOC: headlines 2
+
+
+This is the response on the post "[[https://sequoia.makes.software/parsing-json-at-the-cli-a-practical-introduction-to-jq-and-more/][Parsing JSON at the CLI: A Practical
+Introduction to jq (and more!)]]" ([[https://news.ycombinator.com/item?id=25498364][discussion on HN]]).
+
+
+* Basics
+
+The most basic use is just tidying & pretty-printing your JSON:
+
+#+name: pretty-print
+#+begin_src sh :results value verbatim
+USERX='{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'
+echo "jq"
+echo $USERX | jq '.'
+echo "bb"
+echo $USERX | bb -i -o '(-> *input* first json/decode (json/encode {:pretty true}) println)'
+#+end_src
+
+#+RESULTS: pretty-print
+#+begin_example
+jq
+{
+  "name": "duchess",
+  "city": "Toronto",
+  "orders": [
+    {
+      "id": "x",
+      "qty": 10
+    },
+    {
+      "id": "y",
+      "qty": 15
+    }
+  ]
+}
+bb
+{
+  "name" : "duchess",
+  "city" : "Toronto",
+  "orders" : [ {
+    "id" : "x",
+    "qty" : 10
+  }, {
+    "id" : "y",
+    "qty" : 15
+  } ]
+}
+#+end_example
+
+
+For such a simple case =jq= is obviously cleaner.
+
+#+name: access-by-name
+#+begin_src sh :results value verbatim
+USERX='{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'
+echo "jq"
+echo $USERX | jq '.name'
+echo "bb"
+echo $USERX | bb -i '(-> *input* first (json/decode true) :name)'
+#+end_src
+
+#+RESULTS: access-by-name
+: jq
+: "duchess"
+: bb
+: "duchess"
+
+#+name: access-by-index
+#+begin_src sh :results value verbatim
+USERX='{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'
+echo "jq"
+echo $USERX | jq '.orders[0]'
+echo "bb"
+echo $USERX | bb -i '(-> *input* first (json/decode true) :orders first)'
+#+end_src
+
+#+RESULTS: access-by-index
+: jq
+: {
+:   "id": "x",
+:   "qty": 10
+: }
+: bb
+: {:id "x", :qty 10}
+
+
+#+name: each-item
+#+begin_src sh :results value verbatim
+USERX='{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'
+echo "jq"
+echo $USERX | jq '.orders[].id'
+echo "bb"
+echo $USERX | bb -i -o '(-> *input* first (json/decode true) (->> :orders (map :id)))'
+#+end_src
+
+#+RESULTS: each-item
+: jq
+: "x"
+: "y"
+: bb
+: x
+: y
+
+#+name: filter-by-value
+#+begin_src sh :results value verbatim
+USERX='{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'
+echo "jq"
+echo $USERX | jq '.orders[]|select(.qty>10)'
+echo "bb"
+echo $USERX | bb -i -o '(-> *input* first (json/decode true) (->> :orders (filter #(> (:qty %) 10))))'
+#+end_src
+
+#+RESULTS: filter-by-value
+: jq
+: {
+:   "id": "y",
+:   "qty": 15
+: }
+: bb
+: {:id y, :qty 15}
+
+
+Starting from filtering by key name I prefer Babashka over jq.
+
+#+name: filter-by-key-name
+#+begin_src sh :results value verbatim
+ORDER='{"user_id":123,"user_name":"duchess","order_id":456,"order_status":"sent","vendor_id":789,"vendor_name":"Abe Books"}'
+echo $ORDER | jq '.'
+echo "jq"
+echo $ORDER | jq 'with_entries(select(.key|match("order_")))'
+echo "bb"
+echo $ORDER | bb -i -o '(-> *input* first (json/decode true) (->> seq (filter (fn [[k _]] (re-matches #"order_.+" (name k)))) (into {})) println)'
+#+end_src
+
+#+RESULTS: filter-by-key-name
+#+begin_example
+{
+  "user_id": 123,
+  "user_name": "duchess",
+  "order_id": 456,
+  "order_status": "sent",
+  "vendor_id": 789,
+  "vendor_name": "Abe Books"
+}
+jq
+{
+  "order_id": 456,
+  "order_status": "sent"
+}
+bb
+{:order_id 456, :order_status sent}
+#+end_example
+
+
+
+
+#+begin_example
+
+#+end_example
+
+
+* A Usecase: Debugging Some Prometheus Metrics

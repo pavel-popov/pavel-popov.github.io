@@ -1,0 +1,15 @@
+#+TITLE: Universal Tip
+#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
+
+#+BEGIN_abstract
+Describing how I use Universal Tip macOS app.
+#+END_abstract
+
+#+TOC: headlines 2
+
+
+* Rewriting Universal Tip provider from Go to Clojure
+<2020-12-22 Tue>
+
+Your content goes here.
