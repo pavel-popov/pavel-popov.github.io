@@ -1,6 +1,7 @@
 #+TITLE: Pavel's Emacs Configuration
 #+CATEGORY: emacs
 #+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
+#+HTML_HEAD: <link rel="stylesheet" href="//writ.cmcenroe.me/1.0.4/writ.min.css" type="text/css">
 
 
 #+begin_abstract
@@ -51,7 +52,8 @@ specified in repository.
 - Needed to edit commit messages from Eshell when running git commands.
 
 #+begin_src emacs-lisp
-(server-start)
+(unless (boundp 'server-process)
+  (server-start))
 #+end_src
 * GUI configuration
 #+begin_src emacs-lisp
@@ -126,6 +128,9 @@ or have some mechanism doing that for us.
 ** DONE Figure out how to download packages from Github url
 CLOSED: [2020-11-28 Sat 12:41]
 
+Use straight.el.
+
+
 [[https://github.com/turbo-cafe/flymake-kondor][Flymake-kondor]] repo has an example how to do it:
 
 #+begin_example
@@ -174,6 +179,11 @@ Keyboard preferences in macOS.
   mac-command-modifier 'super
   mac-option-modifier 'meta ;; Option or Alt is naturally 'Meta'
   mac-right-option-modifier 'nil) ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
+#+end_src
+
+* Tweaking usage on macOS
+#+begin_src emacs-lisp
+(setq ns-use-native-fullscreen nil)
 #+end_src
 
 * Sane defaults
@@ -262,7 +272,7 @@ I use =pp/visit-or-open= function, bound to =s-o= globally.
   (interactive)
   (or
     (visit-source)
-    (find-file)))
+    (call-interactively 'find-file)))
 #+end_src
 
 *** TODO Remove trailing dot from text under cursor before trying to =visit-source=
@@ -496,8 +506,6 @@ Source: https://news.ycombinator.com/item?id=22131815"
     (add-to-list 'rm-blacklist " ElDoc") ;; Emacs Lisp documentation
     (add-to-list 'rm-blacklist " fix")  ;; eslintd-fix-mode
     (add-to-list 'rm-blacklist " s3ed")
-    (add-to-list 'rm-blacklist " counsel")
-    (add-to-list 'rm-blacklist " ivy")
     (rich-minority-mode))
 
 (setq-default echo-bell-background "Gray")
@@ -559,6 +567,7 @@ Source: https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8"
 
 ;; (pp/set-font "JetBrains Mono" 12)
 (pp/set-font "PragmataPro" 14)
+;;(pp/set-font "Iosevka" 14)
 #+end_src
 
 * Color themes
@@ -574,18 +583,19 @@ Found on http://www.greghendershott.com/2017/02/emacs-themes.html."
   (interactive "stheme: ")
   (pp/disable-all-themes)
   (load-theme theme t)
-  (pp/set-font "PragmataPro" 14))
+  (pp/set-font "PragmataPro" 14)
+  ;(pp/set-font "Iosevka" 14)
+)
 
 (setq-default line-spacing 2)
 
-(use-package ayu-theme :ensure t)
+;; (use-package ayu-theme :ensure t)
 ;; (use-package solarized-theme)
 ;; (use-package doom-themes)
-(use-package ample-theme :ensure t)
-(use-package quasi-monochrome-theme :ensure t)
-(use-package monochrome-theme :ensure t)
-(use-package modus-operandi-theme :ensure t)
-(use-package modus-vivendi-theme :ensure t)
+;; (use-package ample-theme :ensure t)
+;; (use-package quasi-monochrome-theme :ensure t)
+;; (use-package monochrome-theme :ensure t)
+(use-package modus-themes :ensure t)
 (use-package faff-theme :ensure t)
 ;; (use-package horizon-theme :ensure t)
 
@@ -738,31 +748,29 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
   ;; going around
   "s-j" 'previous-buffer
   "s-k" 'next-buffer
-  "s-b" 'counsel-ibuffer ;'consult-buffer
+  "s-b" 'consult-buffer
   "s-n" 'switch-to-buffer
-  "s-t" 'eshell
-  "C-s" 'isearch-forward ; 'swiper-isearch ;'consult-line
+  ;; searching
+  "C-s" 'isearch-forward
   "C-r" 'isearch-backward
+  "C-l" 'consult-line
   "C-;" 'avy-goto-char
-  ;; smartparens
-  "<s-down>" 'sp-down-sexp
-  "<s-up>" 'sp-up-sexp
-  ;; magit
-  "s-g" 'magit-status
-  ;; counsel
-  "M-x" 'counsel-M-x
+  "s-r" 'consult-recent-file
   "s-o" 'pp/visit-or-open
-  "s-r" 'counsel-recentf ;'consult-recent-file
-  ;; project management
   "s-p" 'project-find-file
-  "s-f" 'counsel-rg ;'pp/consult-ripgrep ;; fuzzy search in the current project
+  "s-f" 'pp/consult-ripgrep ;; fuzzy search in the current project
+  "s-F" 'deadgrep
+  ;; modes
+  "s-t" 'eshell
+  "s-g" 'magit-status
+  "M-x" 'execute-extended-command
   ;; function keys
   "<f5>" 'deadgrep
   "<f6>" 'flymake-show-diagnostics-buffer
   "<f8>" 'dired-sidebar-toggle-sidebar
   ;; text manipulation
   "s-'" 'er/expand-region
-  "s-\"" 'er/contract-region
+  "s-\\" 'er/contract-region
   "<M-up>" 'move-text-up
   "<M-down>" 'move-text-down)
 
@@ -775,18 +783,18 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
 )
 
 (general-define-key :states '(normal) :prefix "SPC"
-  "1" 'pp/switch-to-scratch-buffer
-  "2" 'lispy-arglist-inline
+  ;"1" 'pp/switch-to-scratch-buffer
+  ;"2" 'lispy-arglist-inline
   "a" 'org-agenda
   "," 'org-insert-structure-template
   "[" 'flymake-goto-previous-error
   "]" 'flymake-goto-next-error
-  "d" 'counsel-projectile-find-dir
+  "d" 'projectile-find-dir ;'counsel-projectile-find-dir
   "j" 'dired-jump
   "k" 'kill-this-buffer
   "n" 'deft ; mnemonics - notes
-  "p" 'counsel-projectile-switch-project
-  "h" 'highlight-symbol ; mnemonics - highlight
+  "p" 'project-switch-project ;'counsel-projectile-switch-project
+  "h" 'highlight-symbol ;; mnemonics - highlight
   "l" 'lispy-mode
   "w" 'visual-line-mode
   "t" 'projectile-test-project)
@@ -864,31 +872,14 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
 (use-package smex :ensure t)
 #+end_src
 
-* Ivy, Counsel, Swiper
-
-#+begin_src emacs-lisp
-(use-package ivy :ensure t :straight t
-  :init (ivy-mode))
-
-(use-package counsel :ensure t :straight t
-  :init (counsel-mode))
-
-;(use-package swiper :ensure t :straight t)
-
-(use-package ivy-rich :ensure t :straight t
-  :init (ivy-rich-mode))
-#+end_src
-
 * Selectrum, Marginalia, Consult for completion
 <2020-12-20 Sun> <2021-01-14 Thu>
-
 Replaces Ivy+Counsel.
 
 ** Selectrum
 
-#+begin_example emacs-lisp
+#+begin_src emacs-lisp
 (use-package selectrum :ensure t
-  :straight (selectrum :type git :host github :repo "raxod502/selectrum")
   :init (selectrum-mode))
 
 (use-package selectrum-prescient :ensure t
@@ -898,20 +889,20 @@ Replaces Ivy+Counsel.
   :straight (completing-read-xref :type git :host github :repo "travitch/completing-read-xref.el")
   :commands (completing-read-xref-show-xrefs completing-read-xref-show-xrefs)
   :init (setq xref-show-definitions-function 'completing-read-xref-show-defs))
-#+end_example
+#+end_src
 
 ** Prescient - Frecency-based candidate sorting, also offers filtering
 
-#+begin_example emacs-lisp
+#+begin_src emacs-lisp
 (use-package prescient :ensure t
   :config
   (prescient-persist-mode +1))
-#+end_example
+#+end_src
 
 ** Marginalia - additional information on completion
 <2021-01-04 Mon>
 
-#+begin_example emacs-lisp
+#+begin_src emacs-lisp
 (use-package marginalia :ensure t
   :init
   (marginalia-mode)
@@ -919,7 +910,7 @@ Replaces Ivy+Counsel.
         marginalia-truncate-width 300
         marginalia-separator-threshold 3000
         marginalia-margin-threshold 135))
-#+end_example
+#+end_src
 
 *** TODO Fix wrong indentation in =M-x= when Emacs frame is full-screen on 27" display
 <2021-01-13 Wed>
@@ -936,9 +927,8 @@ Can't make it working on both 27" display and on MacBook display.
 #+end_example
 ** Consult
 
-#+begin_example emacs-lisp
-(use-package consult :ensure t
-  :straight (consult :type git :host github :repo "minad/consult"))
+#+begin_src emacs-lisp
+(use-package consult :ensure t)
 
 ;(use-package icomplete-vertical :ensure t
 ;  :init (icomplete-vertical-mode))
@@ -947,7 +937,7 @@ Can't make it working on both 27" display and on MacBook display.
   "Launches ripgrep in the current project root."
   (interactive)
   (consult-ripgrep (project-root (project-current))))
-#+end_example
+#+end_src
 
 *** Consult is broken after upgrade
 <2021-01-14 Thu>
@@ -964,7 +954,7 @@ Error in post-command-hook (icomplete-post-command-hook):
 (wrong-type-argument number-or-marker-p nil)
 #+end_quote
 
-* git, version control system
+* git, version control system, magit
 #+begin_src emacs-lisp
 (use-package magit :ensure t
   :hook (magit-mode-hook . turn-off-evil-snipe-override-mode))
@@ -1055,6 +1045,7 @@ Babel enables literate programming in Org Mode.
    (emacs-lisp . t)
    (plantuml . t)
    (shell . t)
+   (python . t)
    (restclient . t)
    (calc . t)))
 #+end_src
@@ -1277,7 +1268,7 @@ Although now I try to use Babashka instead.
 Another alternative - Elisp package https://github.com/tkf/emacs-request.
 
 #+begin_src emacs-lisp
-(use-package restclient
+(use-package restclient :ensure t
   :mode (("\\.http\\'" . restclient-mode)))
 
 (use-package ob-restclient :ensure t) ;; support in org-babel
@@ -1286,9 +1277,9 @@ Another alternative - Elisp package https://github.com/tkf/emacs-request.
 #+end_src
 
 * AnyBar, show circle indicator in macOS menu
-#+begin_src emacs-lisp
+#+begin_example emacs-lisp
 (use-package anybar :ensure t)
-#+end_src
+#+end_example
 
 * DeadGrep - Searching in multiple files / project
 
@@ -1361,6 +1352,10 @@ Turning off smartparens to not interact with lispy.
 ;;  :diminish
 ;;  :config
 ;;    (smartparens-global-mode))
+
+;; smartparens
+;; "<s-down>" 'sp-down-sexp
+;; "<s-up>" 'sp-up-sexp
 
 #+end_src
 
@@ -1692,7 +1687,7 @@ clojure.string/includes? ["cider" "nrepl" "clojure"]))
 #+begin_src emacs-lisp
 (use-package flymake-quickdef :ensure t)
 
-(use-package flymake-kondor :ensure flymake-quickdef
+(use-package flymake-kondor :ensure t
   :hook (clojure-mode-hook . flymake-kondor-setup))
 #+end_src
 
@@ -1787,7 +1782,6 @@ https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
 
 * Highlighting
 #+begin_src emacs-lisp
-(use-package color-identifiers-mode :ensure t)
 
 (defun pp/highlight-symbol-hook ()
   "Hook for highlighting symbols."
@@ -1796,7 +1790,8 @@ https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
 
 (use-package highlight-symbol :ensure t
   :hook ((prog-mode-hook . pp/highlight-symbol-hook)
-         (text-mode-hook . pp/highlight-symbol-hook))
+         (text-mode-hook . pp/highlight-symbol-hook)
+         (org-mode-hook . pp/highlight-symbol-hook))
   :config
   (setq
      highlight-symbol-colors
@@ -1804,6 +1799,13 @@ https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
          ("light goldenrod" "deep sky blue" "light coral" "chocolate" "orange" "red" "orange red"))
      highlight-symbol-foreground-color "black"))
 #+end_src
+
+** Color identifiers mode
+Don't remember what's this.
+
+#+begin_example emacs-lisp
+(use-package color-identifiers-mode :ensure t)
+#+end_example
 
 * Random helper functions
 #+begin_src emacs-lisp
@@ -1845,6 +1847,17 @@ Check ./How-do-I-blog.org file for details.
   (let ((filename (org-html-export-to-html)))
     (rename-file filename "~/Documents/Projects/pavel-popov.github.io/" t)))
 #+end_src
+
+** Weblorg - A Static HTML Generator for Emacs and Org-Mode
+<2021-02-07 Sun>
+
+- [[https://www.reddit.com/r/emacs/comments/l9ohho/weblorg_a_static_html_generator_for_emacs_orgmode/][Announcement on Reddit]]
+- Website :: [[https://emacs.love/weblorg/][emacs.lov/weblorg]]
+
+#+begin_src emacs-lisp
+(use-package weblorg :ensure t)
+#+end_src
+* Notes
 ** Deft - a package for dealing with text notes
 <2020-11-22 Sun>
 
@@ -1949,7 +1962,7 @@ https://macreports.com/record-face-screen-mac/
   (shell-command-on-region
    (region-beginning)
    (region-end)
-   "jet --pretty --from json --to edn --keywordize"
+   "jet --pretty --from json --to edn --keywordize '#((if (str/includes? % \" \") str keyword) %)'"
    (current-buffer)
    t
    "*jet error buffer*"
@@ -2209,7 +2222,7 @@ Selectrum+Consult.
           (top . 0.3)
           (width . 0.75)))
   ;;(add-to-list 'mini-frame-ignore-commands 'swiper-isearch)
-  (mini-frame-mode))
+  (mini-frame-mode -1))
 #+end_src
 * Vega - visualisation grammar
 <2020-12-13 Sun>
@@ -2223,12 +2236,30 @@ https://github.com/applied-science/emacs-vega-view
 <2020-12-28 Mon>
 
 #+begin_src emacs-lisp
-
 (use-package prism :ensure t
   :straight (prism :type git :host github :repo "alphapapa/prism.el")
   :hook (prog-mode-hook . prism-mode))
-
 #+end_src
+
+#+begin_example emacs-lisp
+(prism-set-colors :num 16
+  :desaturations (cl-loop for i from 0 below 16
+                          collect (* i 0.5))
+
+  :lightens (cl-loop for i from 0 below 16
+                     collect (* i 0.1))
+
+  :colors (list "sandy brown" "dodgerblue" "medium sea green")
+
+  :comments-fn
+  (lambda (color)
+    (prism-blend color
+                 (face-attribute 'font-lock-comment-face :foreground) 0.25))
+
+  :strings-fn
+  (lambda (color)
+    (prism-blend color "white" 1.8)))
+#+end_example
 * Emacs NES emulator
 <2021-01-08 Fri>
 Didn't end having it set up because of reviews from
@@ -2252,4 +2283,125 @@ I found =s3ed= mode - https://github.com/mattusifer/s3ed.
 (use-package s3ed :ensure t
   :commands s3ed-find-file
   :config (s3ed-mode))
+#+end_src
+* TRAMP
+<2021-01-16 Sat>
+
+The method part of remote file names is mandatory now.
+A valid remote file name starts with "/method:host:" or
+"/method:user@host:".
+
+#+begin_src emacs-lisp
+(setq tramp-default-method "ssh")
+#+end_src
+* Finda
+<2021-01-19 Tue>
+
+https://keminglabs.com/finda/setup/
+
+#+begin_src emacs-lisp
+(load "~/.finda/integrations/emacs/finda.el")
+#+end_src
+* Testing how built-in calc works with Babel
+<2021-01-26 Tue>
+
+Documentation:
+https://www.gnu.org/software/emacs/manual/html_mono/calc.html
+
+#+begin_src calc
+fsolve(x*2+x=4,x)
+#+end_src
+
+#+RESULTS:
+: x = 1.33333333333
+
+#+begin_src calc :results verbatim
+30*1024*1024
+#+end_src
+
+#+RESULTS:
+: 31457280
+
+#+begin_src calc
+date(<Sun Aug 11, 2013>)
+#+end_src
+
+#+RESULTS:
+: 735091
+
+#+begin_src calc
+unixtime(1498640400)
+#+end_src
+
+#+RESULTS:
+: <11:00am Wed Jun 28, 2017>
+
+#+begin_src calc :var x=5 :var y=2
+x + y
+#+end_src
+
+#+RESULTS:
+: 7
+
+#+begin_src calc
+6918 * 12
+#+end_src
+
+#+RESULTS:
+: 83016
+* Toggle function
+
+Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_small_lisp_functions_in_my/][One of the most useful small lisp functions in my config]]
+
+#+begin_src emacs-lisp
+(setq lexical-binding t)
+
+(defun make-toggle-function (buffer-name buffer-create-fn &optional switch-cont)
+  "Makes a toggle-function to have raise-or-create behaviour.
+
+Creates a toggle-function that executes BUFFER-CREATE-FN if a
+buffer named BUFFER-NAME doesn't exist, switches to the buffer
+named BUFFER-NAME if it exists, and switches to the previous
+buffer if we are currently visiting buffer BUFFER-NAME.
+
+The SWITCH-CONT argument is a function which, if given, is called
+after the buffer has been created or switched to.  This allows
+running further actions that setup the state of the buffer or
+modify it."
+  (lambda ()
+    (interactive)
+    (let ((target-buf (get-buffer buffer-name)))
+     (if target-buf
+	 (if (eq (current-buffer) target-buf)
+	     (progn
+	       (message "switching to other buffer")
+	       (switch-to-buffer nil))
+	     (progn
+	       (message "switching back...")
+	       (switch-to-buffer buffer-name)
+	       (when switch-cont (funcall switch-cont))))
+       (message "creating buffer...")
+       (funcall buffer-create-fn)
+       (when switch-cont (funcall switch-cont))))))
+
+(global-set-key (kbd "C-h SPC") (make-toggle-function "*scratch*" (lambda ())))
+#+end_src
+
+#+begin_example emacs-lisp
+(funcall ((lambda (arg1) (lambda () (message "foo: %s" arg1))) "bar"))
+#+end_example
+
+* Beginend - go to meaningful begin/end of the buffer
+<2021-02-06 Sat>
+
+Found it on a [[http://emacslife.com/emacs-chats/chat-magnar-sveen.html][Emacs Chat notes]] between Sacha Chua and Magnar Sveen,
+the creator of the [[http://emacsrocks.com][Emacs Rocks]] screencast series.
+
+#+begin_src emacs-lisp
+(use-package beginend
+  :ensure t
+  :demand t
+  :diminish beginend-global-mode
+  :config
+  (beginend-global-mode))
 #+end_src

@@ -18,7 +18,7 @@ and then require it in the file =pp/toy_example/state.cljs=:
   (:require [datascript.core :as d]))
 #+end_src
 
-* Create database
+* Create a database
 
 
 #+begin_src clojure
