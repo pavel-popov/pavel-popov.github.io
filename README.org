@@ -1,3 +1,41 @@
-#+TITLE: Pavel's Notes - rendered html files
+#+TITLE: Pavel's Notes
 
-This branch contains rendered html files so they form website [[https://pavel-popov.github.io][pavel-popov.github.io]].
+Sources of website [[https://pavel-popov.github.io][pavel-popov.github.io]].
+
+
+To publish a blog, run that code:
+
+#+begin_src emacs-lisp
+(progn
+  (weblorg-route
+   :name "index"
+   :input-pattern "index.org"
+   :template "index.html"
+   :output "index.html"
+   :url "/")
+
+  (weblorg-route
+   :name "note"
+   :input-pattern "blog/*.org"
+   :template "post.html"
+   :output "note/{{ slug }}.html"
+   :url "/note/{{ slug }}.html")
+
+  (weblorg-route
+   :name "rss"
+   :input-pattern "blog/*.org"
+   :input-aggregate #'weblorg-input-aggregate-all-desc
+   :template "rss.xml"
+   :output "note/rss.xml"
+   :url "/note/rss.xml")
+
+  (weblorg-route
+   :name "categories"
+   :input-pattern "blog/*.org"
+   :input-aggregate #'weblorg-input-aggregate-by-category-desc
+   :template "category.html"
+   :output "note/{{ name }}/index.html"
+   :url "/note/{{ name }}")
+
+  (weblorg-export))
+#+end_src

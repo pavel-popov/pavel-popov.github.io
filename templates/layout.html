@@ -1,10 +1,20 @@
+{# layout.html --- Base template for all other templates -*- Mode: Jinja2; -*-
 
+The blocks available in this file are:
+
+* title: What will show within the HTML <title> tag.
+* description: What will show within the HTML <meta> description tag.
+* nav: Navigation bar with Links, a default is provided
+* body: Main content which starts empty
+* footer: Bottom links, default is provided
+
+#}
 <!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="utf-8">
-    <title>clarete &mdash; Home</title>
-    <meta name="description" content="">
+    <title>clarete &mdash; {% block title %}Home{% endblock %}</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/media/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -12,7 +22,7 @@
     <link rel="alternate" type="application/rss+xml" href="/blog/rss.xml">
   </head>
   <body>
-    
+    {% block nav %}
       <div class="social">
         <div class="container">
           <ul class="badges">
@@ -38,35 +48,16 @@
           </a>
         </div>
       </div>
-    
+    {% endblock %}
 
     <div class="post">
       <div class="container">
-        
-  <h1>Hi! I&#39;m Pavel</h1>
-
-  <p>
-My name is Pavel, I'm saving my notes here.
-</p>
-
-<hr />
-
-<div class="outline-2">
-<h2 id="links">Links</h2>
-<div class="outline-text-2">
-<ul class="org-ul">
-<li><a href="https://github.com/pavel-popov">GitHub</a></li>
-<li><a href="">Blog</a></li>
-</ul>
-</div>
-</div>
-
-
+        {% block body %}{% endblock %}
       </div>
     </div>
 
     <div class="footer">
-      
+      {% block footer %}
         <div class="bg">
           <div class="container">
             &#169; Lincoln Clarete &mdash; All written content on this
@@ -74,7 +65,7 @@ My name is Pavel, I'm saving my notes here.
             under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>
           </div>
         </div>
-      
+      {% endblock %}
     </div>
   </body>
 </html>
