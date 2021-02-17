@@ -1,6 +1,4 @@
 #+TITLE: Amazon State Language
-#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
-#+HTML_HEAD: <link rel="stylesheet" href="//writ.cmcenroe.me/1.0.4/writ.min.css" type="text/css">
 
 * Language specification
 

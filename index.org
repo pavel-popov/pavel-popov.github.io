@@ -1,5 +1,0 @@
-#+TITLE: Pavel's Notes
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
-
-- [[./Pavels-Emacs-Configuration.html][Pavels Emacs Configuration]] - [2020-11-22 Sun]
-- [[./How-do-I-blog.html][How do I blog]] - [2020-11-22 Sun]

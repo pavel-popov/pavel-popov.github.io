@@ -1,8 +1,6 @@
 #+TITLE: Pavel's Emacs Configuration
 #+CATEGORY: emacs
-#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
-#+HTML_HEAD: <link rel="stylesheet" href="//writ.cmcenroe.me/1.0.4/writ.min.css" type="text/css">
-
+#+DATE: <2021-02-07 Sun>
 
 #+begin_abstract
 After trying to use many distributions I finally decided to start mine
@@ -12,7 +10,6 @@ Castlemacs distribution.
 Literate programming layout is inpired by Protesilaos Stavrou' [[https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/][dotfiles]].
 #+end_abstract
 
-#+TOC: headlines 2
 
 * Reference cards / cheatsheets
 
@@ -82,14 +79,9 @@ specified in repository.
 #+end_src
 
 * Working with Buffers
-** Ibuffer
-*** TODO Stop confirmation when killing non-edited buffers
-@Prot showed example in one of his videos.
 ** Bufler
 #+begin_src emacs-lisp
-
 (use-package bufler :ensure t)
-
 #+end_src
 
 ** Minibuffer
@@ -128,7 +120,7 @@ or have some mechanism doing that for us.
 ** DONE Figure out how to download packages from Github url
 CLOSED: [2020-11-28 Sat 12:41]
 
-Use straight.el.
+Use =straight.el=.
 
 
 [[https://github.com/turbo-cafe/flymake-kondor][Flymake-kondor]] repo has an example how to do it:
@@ -139,6 +131,18 @@ Use straight.el.
  :url "https://raw.githubusercontent.com/turbo-cafe/flymake-kondor/master/flymake-kondor.el"
  (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 #+end_example
+
+** Toggle function
+ Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_small_lisp_functions_in_my/][One of the most useful small lisp functions in my config]]
+
+ #+begin_src emacs-lisp
+ (load "toggle-function")
+ (global-set-key (kbd "C-h SPC") (make-toggle-function "*scratch*" (lambda ())))
+ #+end_src
+
+ #+begin_example emacs-lisp
+ (funcall ((lambda (arg1) (lambda () (message "foo: %s" arg1))) "bar"))
+ #+end_example
 
 * Getting help, documentation
 - =C-h=, =F1= :: open help key drawer
@@ -338,12 +342,18 @@ https://www.emacswiki.org/emacs/CalendarLocalization
 <2020-11-19 Thu>
 - =go-translate= - for translating word under cursor (with prompt)
 - =C-n=, =C-p= - to change language sequences when prompted
+
+Alternative to proprietary Google Translate is https://libretranslate.com.
+https://github.com/uav4geo/LibreTranslate
+
 #+begin_src emacs-lisp
 (use-package go-translate :ensure t
   :config
-  (setq go-translate-local-language "en"
-        go-translate-target-language "ru"
-        go-translate-extra-directions '(("nl" . "en"))))
+  (setq
+   go-translate-token-current (cons 430675 2721866130)
+   go-translate-local-language "ru"
+   go-translate-target-language "en"
+   go-translate-extra-directions '(("nl" . "en"))))
 #+end_src
 
 ** Text Editing
@@ -497,17 +507,6 @@ Source: https://news.ycombinator.com/item?id=22131815"
 ;;  :config
  ;;   (when (eq system-type 'darwin) (ns-auto-titlebar-mode)))
 
-;; Hide minor modes from modeline.
-(use-package rich-minority :ensure t
-  :config
-    (add-to-list 'rm-blacklist " $") ;; rich-minority itself
-    (add-to-list 'rm-blacklist " WE")
-    (add-to-list 'rm-blacklist " Ind")  ;; org-indent-mode
-    (add-to-list 'rm-blacklist " ElDoc") ;; Emacs Lisp documentation
-    (add-to-list 'rm-blacklist " fix")  ;; eslintd-fix-mode
-    (add-to-list 'rm-blacklist " s3ed")
-    (rich-minority-mode))
-
 (setq-default echo-bell-background "Gray")
 (load "echo-bell")
 (echo-bell-mode)
@@ -519,7 +518,22 @@ Source: https://news.ycombinator.com/item?id=22131815"
 (message mode-line-modes)
 #+end_example
 
-*** TODO mode-line resets when locally
+** Rich minority - disable minor-mode indicators in modeline
+
+#+begin_src emacs-lisp
+(use-package rich-minority :ensure t
+  :config
+    (add-to-list 'rm-blacklist " $") ;; rich-minority itself
+    (add-to-list 'rm-blacklist " WE")
+    (add-to-list 'rm-blacklist " Ind")  ;; org-indent-mode
+    (add-to-list 'rm-blacklist " ElDoc") ;; Emacs Lisp documentation
+    (add-to-list 'rm-blacklist " fix")  ;; eslintd-fix-mode
+    (add-to-list 'rm-blacklist " s3ed")
+    (add-to-list 'rm-blacklist " be")  ;; beginend
+    (rich-minority-mode))
+#+end_src
+
+** TODO mode-line resets when locally
 For some reason mode-line turns to contain only buffer name
 after some time, probably some package/mode sets it.
 The example below resets it to default original value.
@@ -785,6 +799,7 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
 (general-define-key :states '(normal) :prefix "SPC"
   ;"1" 'pp/switch-to-scratch-buffer
   ;"2" 'lispy-arglist-inline
+  "SPC" (make-toggle-function "*scratch*" (lambda ()))
   "a" 'org-agenda
   "," 'org-insert-structure-template
   "[" 'flymake-goto-previous-error
@@ -797,20 +812,28 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
   "h" 'highlight-symbol ;; mnemonics - highlight
   "l" 'lispy-mode
   "w" 'visual-line-mode
+  "e" (make-toggle-function "*eshell*" 'eshell)
   "t" 'projectile-test-project)
 
-(general-define-key :states '(normal) :prefix "C-x"
-  "C-o" 'find-file)
+(general-define-key
+ :states '(visual) :prefix "C-h"
+ "t" 'go-translate-popup-current)
 
-(general-define-key :states '(visual)
+(general-define-key
+ :states '(normal) :prefix "C-x"
+ "C-o" 'find-file)
+
+(general-define-key
+ :states '(visual)
  "SPC" 'er/expand-region
  "DEL" 'er/contract-region)
 
-(general-define-key :states '(insert)
-  "C-a" 'beginning-of-line
-  "C-e" 'end-of-line
-  "C-n" 'next-line
-  "C-p" 'previous-line)
+(general-define-key
+ :states '(insert)
+ "C-a" 'beginning-of-line
+ "C-e" 'end-of-line
+ "C-n" 'next-line
+ "C-p" 'previous-line)
 #+end_src
 
 ** Commenting/uncommenting
@@ -1017,9 +1040,6 @@ Useful keybindings:
    org-directory "~/Documents/Notes"
    org-agenda-files '("~/Documents/Notes/pavel.org"
                       "~/.emacs.d/emacs-init.org"
-                      "~/Documents/Projects/Blog/Clojure.org"
-                      "~/code/fh/search-api/README.org"
-                      "~/code/fh/hotel-explorer/README.org"
                       "~/Documents/FindHotel/fh.org")))
 
 (use-package org-bullets :ensure t
@@ -1120,6 +1140,7 @@ but for some reason it didn't work for me, so I stick with =C-c C-,=
 and also bind it to =SPC ,= in Evil Normal mode. As of
 [2020-11-23 Mon] =<s= works again.
 
+
 ** Org-agenda, Ora Agenda                                        :OrgAgenda:
 :PROPERTIES:
 :CATEGORY: til
@@ -1147,15 +1168,14 @@ There is such configuration from Castlemacs which did that damage:
 
 https://emacs.stackexchange.com/questions/39034/prefer-vertical-splits-over-horizontal-ones
 https://www.gnu.org/software/emacs/manual/html_node/eintr/See-variable-current-value.html
-*** TODO Alphapapa published org-super-agenda package to bring it to the next level
+*** TODO u/alphapapa published org-super-agenda package to bring it to the next level
 <2020-11-22 Sun>
 https://github.com/alphapapa/org-super-agenda
 https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/
+*** TODO Write a function to add current buffer to org-agenda-files
 
-** Org-QL, a query language for Org files  :OrgQL:
+** TODO Org-QL, a query language for Org files                       :OrgQL:
 https://github.com/alphapapa/org-ql
-
-*** TODO Try org-ql
 
 ** DONE How to automatically add creation metadata timestamp to Org-mode entry?
 CLOSED: [2020-09-24 Thu 09:51]
@@ -1318,8 +1338,8 @@ Useful keybindings in Lispy:
 
 - =C-2=, =SPC-2=, =lispy-arglist-inline= :: C-2 doesn't work, so I bound it to =SPC-2=
 
-- =G=, =special-lispy-goto-local :: go to local def
-- =M=.= :: go to symbol definition
+- =G=, =special-lispy-goto-local= :: go to local def
+- =M-.= :: go to symbol definition
 
 - =d= :: go to other side of sexp
 
@@ -2214,7 +2234,7 @@ Let's see if I actually need those after I remove.
 I disabled it temporary due to switch from Ivy+Swiper+Counsel to
 Selectrum+Consult.
 
-#+begin_src emacs-lisp
+#+begin_example emacs-lisp
 (use-package mini-frame :ensure t
   :config
   (setq mini-frame-show-parameters
@@ -2223,7 +2243,7 @@ Selectrum+Consult.
           (width . 0.75)))
   ;;(add-to-list 'mini-frame-ignore-commands 'swiper-isearch)
   (mini-frame-mode -1))
-#+end_src
+#+end_example
 * Vega - visualisation grammar
 <2020-12-13 Sun>
 
@@ -2349,48 +2369,6 @@ x + y
 
 #+RESULTS:
 : 83016
-* Toggle function
-
-Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_small_lisp_functions_in_my/][One of the most useful small lisp functions in my config]]
-
-#+begin_src emacs-lisp
-(setq lexical-binding t)
-
-(defun make-toggle-function (buffer-name buffer-create-fn &optional switch-cont)
-  "Makes a toggle-function to have raise-or-create behaviour.
-
-Creates a toggle-function that executes BUFFER-CREATE-FN if a
-buffer named BUFFER-NAME doesn't exist, switches to the buffer
-named BUFFER-NAME if it exists, and switches to the previous
-buffer if we are currently visiting buffer BUFFER-NAME.
-
-The SWITCH-CONT argument is a function which, if given, is called
-after the buffer has been created or switched to.  This allows
-running further actions that setup the state of the buffer or
-modify it."
-  (lambda ()
-    (interactive)
-    (let ((target-buf (get-buffer buffer-name)))
-     (if target-buf
-	 (if (eq (current-buffer) target-buf)
-	     (progn
-	       (message "switching to other buffer")
-	       (switch-to-buffer nil))
-	     (progn
-	       (message "switching back...")
-	       (switch-to-buffer buffer-name)
-	       (when switch-cont (funcall switch-cont))))
-       (message "creating buffer...")
-       (funcall buffer-create-fn)
-       (when switch-cont (funcall switch-cont))))))
-
-(global-set-key (kbd "C-h SPC") (make-toggle-function "*scratch*" (lambda ())))
-#+end_src
-
-#+begin_example emacs-lisp
-(funcall ((lambda (arg1) (lambda () (message "foo: %s" arg1))) "bar"))
-#+end_example
-
 * Beginend - go to meaningful begin/end of the buffer
 <2021-02-06 Sat>
 
@@ -2398,10 +2376,31 @@ Found it on a [[http://emacslife.com/emacs-chats/chat-magnar-sveen.html][Emacs C
 the creator of the [[http://emacsrocks.com][Emacs Rocks]] screencast series.
 
 #+begin_src emacs-lisp
-(use-package beginend
-  :ensure t
+(use-package beginend :ensure t
   :demand t
   :diminish beginend-global-mode
   :config
   (beginend-global-mode))
+#+end_src
+
+* Reading EPUB books in Emacs
+<2021-02-12 Fri>
+
+Apple Books stopped downloading books stored in iCloud, and overall experience had been quite terrible.
+
+Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
+
+
+#+begin_src emacs-lisp
+(use-package visual-fill-column :ensure t)
+
+(use-package nov :ensure t
+  :config
+  (defun pp/nov-mode-hook ()
+    (setq visual-fill-column-center-text t)
+    (visual-line-mode)
+    (visual-fill-column-mode))
+  (setq nov-text-width 60)
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  :hook ((nov-mode-hook . pp/nov-mode-hook)))
 #+end_src

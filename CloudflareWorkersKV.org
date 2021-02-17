@@ -1,6 +1,5 @@
 #+TITLE: Cloudflare Workers KV
 #+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
 
 #+BEGIN_abstract
 Exploring Cloudflare Workers KV serverless product.
@@ -12,6 +11,9 @@ Exploring Cloudflare Workers KV serverless product.
 Your content goes here.
 
 * HTTP API and limits
+
+- All calls through the Cloudflare Client API are rate-limited by
+  Cloudflare account to 1200 requests every 5 minutes.
 
 ** Writing
 
@@ -30,16 +32,3 @@ https://api.cloudflare.com/#workers-kv-namespace-write-multiple-key-value-pairs
 #+begin_src http
 PUT accounts/:account_identifier/storage/kv/namespaces/:namespace_identifier/bulk
 #+end_src
-
-# note the ignore tag
-* Refrences                                                          :ignore:
-
-# prints out bibliograph, if any, with bibtex2html.  The first parameter is the
-# bibliograph file name without .bib extension, the second is the reference
-# style.  The rest parameters are parsed to `bibtex2html'.  Refer to the
-# ox-bibtex document for further information.
-
-#+BIBLIOGRAPHY: ref plain limit:t option:-nokeywords
-
-# This is an automatically generated section if you use footnote.
-* Footnotes

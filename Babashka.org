@@ -1,10 +1,9 @@
+#+TITLE: Babashka
+
 * Babashka and Small Clojure Interpreter: Clojure in new contexts
 
 [[https://www.youtube.com/watch?v=Nw8aN-nrdEk][On Youtube]].
 
-
 #+begin_src bash
-
 time bb '(+ 1 2 3)'
-
 #+end_src

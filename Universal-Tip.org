@@ -1,15 +1,18 @@
 #+TITLE: Universal Tip
-#+OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
 
 #+BEGIN_abstract
 Describing how I use Universal Tip macOS app.
 #+END_abstract
 
-#+TOC: headlines 2
-
-
 * Rewriting Universal Tip provider from Go to Clojure
 <2020-12-22 Tue>
 
 Your content goes here.
+
+* TODO Add parsing of Clubhouse ticket reference (like ch28897)
+
+* TODO Add parsing of timestamps
+
+* TODO Create a link to go to State Machine from text
+
+https://eu-west-1.console.aws.amazon.com/states/home?region=eu-west-1#/statemachines/view/arn:aws:states:eu-west-1:531820706523:stateMachine:rate-scouter-dev

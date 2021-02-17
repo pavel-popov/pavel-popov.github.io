@@ -21,6 +21,12 @@ This file contains manual how to live with Clojure.
 
 - https://betweentwoparens.com/
 
+* Generate documentation for your project
+
+- [[https://github.com/weavejester/codox][Dynadoc]] ::
+- [[https://github.com/weavejester/codox][Codox]] :: A tool for generating API documentation from Clojure or
+  ClojureScript source code.
+
 * Notes on talks/books/posts
 
 ** What Sucks about Clojure and Why You'll Love It Anyway Chas Emerick

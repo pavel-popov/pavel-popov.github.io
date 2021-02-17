@@ -1,0 +1,19 @@
+#+TITLE: Python programming language
+
+I've been occasionally using Python since around 2005, and have
+several big projects implemented using it, mostly in relation to test
+and job orchestration.
+
+* Python2 vs Python3
+
+- In macOS Big Sur the default is still Python 2.
+
+* GIL
+
+Global Interpreter Lock
+
+* Running a web-server for serving static files
+
+#+begin_src sh
+python3 -m http.server 8000
+#+end_src
