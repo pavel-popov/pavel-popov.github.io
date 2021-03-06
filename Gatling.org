@@ -1,0 +1,63 @@
+#+TITLE: Gatling - load-testing tool using Scala as DSL
+
+* References
+
+- Docs :: https://gatling.io/docs/current/
+- Cheat sheet :: https://gatling.io/docs/current/cheat-sheet/
+
+- Websocket :: https://gatling.io/docs/3.5/http/websocket/
+- Scenario :: https://gatling.io/docs/current/general/scenario/#loop-statements
+
+- FAQ :: https://gatling.io/docs/current/project/faq/#faq
+
+- https://www.james-willett.com/gatling-load-testing-complete-guide/
+- https://www.james-willett.com/gatling-proxy-example/
+
+
+* =gatling.sh='s help
+
+#+begin_src text
+❯ ./gatling.sh --help
+GATLING_HOME is set to /Users/pavel/Downloads/gatling-charts-highcharts-bundle-3.5.1
+Usage: compiler [options]
+
+  -h, --help
+  -sf, --simulations-folder <value>
+
+  -bf, --binaries-folder <value>
+
+  -eso, --extra-scalac-options <value>
+
+Usage: gatling [options]
+
+  -h, --help               Show help (this message) and exit
+  -nr, --no-reports        Runs simulation but does not generate reports
+  -ro, --reports-only <directoryName>
+                           Generates the reports for the simulation in <directoryName>
+  -rsf, --resources-folder <directoryPath>
+                           Uses <directoryPath> as the absolute path of the directory where resources are stored
+  -rf, --results-folder <directoryPath>
+                           Uses <directoryPath> as the absolute path of the directory where results are stored
+  -sf, --simulations-folder <directoryPath>
+                           Uses <directoryPath> to discover simulations that could be run
+  -bf, --binaries-folder <directoryPath>
+                           Uses <directoryPath> as the absolute path of the directory where Gatling should produce compiled binaries
+  -s, --simulation <className>
+                           Runs <className> simulation
+  -rd, --run-description <description>
+                           A short <description> of the run to include in the report
+
+#+end_src
+
+* Running our first simulation
+
+Based on help and a sample Websocket simulation script, let's try to run it:
+
+
+#+begin_src sh :result verbatim
+cd ~/Downloads/gatling-charts-highcharts-bundle-3.5.1/bin
+
+./gatling.sh compiler --simulations-folder ~/tmp/gatling --binaries-folder ~/tmp/gatling/target
+#+end_src
+
+#+RESULTS:

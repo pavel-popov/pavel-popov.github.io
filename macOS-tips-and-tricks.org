@@ -1,0 +1,8 @@
+#+TITLE: macOS tips and tricks
+
+
+* Keybindings
+<2021-02-18 Thu>
+
+- =C-w= :: delete word backward
+- =M-c= :: capitalize word

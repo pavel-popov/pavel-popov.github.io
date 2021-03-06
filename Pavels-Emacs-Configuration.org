@@ -869,6 +869,10 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
 #+end_src
 
 ** Moving back
+Default shortcuts
+- =g ;= :: go to last change
+- =g ,= :: go to last change reverse
+
 #+begin_src emacs-lisp
 (use-package goto-last-change
   :ensure
@@ -1204,6 +1208,18 @@ CLOSED: [2020-11-13 Fri 23:25]
 
 The problem was in =undo-tree= mode which overtime grew significant
 amount of undo changes.
+
+** TODO Full-width inline displaying images
+<2021-03-01 Mon>
+
+When I enable inline images using =M-x org-toggle-inline-images=, they
+often are very wide and go beyond the width of the buffer. How to make
+them fit to the width of the buffer?
+
+#+begin_src emacs-lisp
+(setq-default org-image-actual-width 720) ; half of MacBook's 1440 width
+
+#+end_src
 
 * Outline-mode - folding and unfolding in Org-mode style
 
@@ -1780,7 +1796,7 @@ https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
   (general-define-key :states '(normal) :prefix "g"
     "h" 'eglot-help-at-point))
 
-(use-package scala-mode
+(use-package scala-mode :ensure t
   :mode "\\.s\\(cala\\|bt\\)$"
   :hook (scala-mode-hook . pp/scala-mode-hook))
 
@@ -2083,6 +2099,7 @@ Version 2019-11-04"
                             (start-process "" nil "xdg-open" $fpath))) $file-list))))))
 #+end_src
 * PlantUML for creating diagrams
+<2021-02-18 Thu>
 Link: https://github.com/skuro/plantuml-mode
 
 #+begin_src emacs-lisp
@@ -2404,3 +2421,7 @@ Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   :hook ((nov-mode-hook . pp/nov-mode-hook)))
 #+end_src
+* Repeat last command run via M-x
+<2021-02-18 Thu>
+
+http://ergoemacs.org/emacs/emacs_repeat_command.html
