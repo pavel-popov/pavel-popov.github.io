@@ -79,23 +79,62 @@ specified in repository.
 #+end_src
 
 * Working with Buffers
+<2021-03-07 Sun>
+
+- =C-x b= :: Switch to buffer
+- =S-b=, =consult-buffer= :: Consult interface for switching buffers
+- =C-x C-b=, =list-buffers= :: Open a list of buffers in a separate buffer
+
 ** Bufler
+<2021-03-07 Sun>
+
+Creates a tree-organised list of buffers, nodes are bound to projects/buffer types.
+
+- =bufler= :: open Bufler buffer
+
 #+begin_src emacs-lisp
 (use-package bufler :ensure t)
 #+end_src
 
-** Minibuffer
+** Going around in a buffer
+<2021-03-07 Sun>
 
-** Navigation in a buffer
+- =C-;=, =evil-avy-goto-char= :: provide =char= that will be
+  highlighted to a quick jump to a point
+- =s-m=, =consult-mark= :: open a fuzzy selector to jump to a mark
+
+*** Marks
+<2021-03-07 Sun>
+
+Evil-marks are clones of vim marks, and work like this:
+1. Create a mark via =m <char>=
+2. Jump to a mark via =` <char>=
+
+Emacs marks use =mark-ring=, and works like this:
+1. Create a mark via =C-SPC C-SPC= (or in Evil mode using =v v=) - so
+   it is "start selection", "stop selection"
+2. Go to previous mark using =C-u C-SPC=, or using =consult-mark= command.
+
+
+*** Evil-Snipe - two-char jumps
+<2021-03-07 Sun>
+
+- =s= :: prompt for two chars, jumps there forward, subsequent =;=
+  jumps to the next match
+- =S= :: prompt for two chars, jumps there backward, subsequent =;=
+  jumps to the next match
+
 #+begin_src emacs-lisp
-
-;; Activates by typing s or S then two arbitrary chars and it will
-;; jump the cursor to the position.
 (use-package evil-snipe :ensure t
   :diminish evil-snipe-local-mode
   :init (evil-snipe-mode +1)
   :config (setq evil-snipe-scope 'visible))
+#+end_src
 
+*** Avy - single-char jumps
+<2021-03-07 Sun>
+
+#+begin_src emacs-lisp
 (use-package avy :ensure t)
 #+end_src
 
@@ -108,8 +147,9 @@ specified in repository.
 
 * Custom packages
 <2020-09-24 Thu>
-Some packages are not in MELPA, so we need either download them manually
-or have some mechanism doing that for us.
+
+Some packages are not in MELPA, so we need either download them
+manually or have some mechanism doing that for us.
 
 #+begin_src  emacs-lisp
 ;; Load custom packages
@@ -145,8 +185,9 @@ Use =straight.el=.
  #+end_example
 
 * Getting help, documentation
+
 - =C-h=, =F1= :: open help key drawer
-- =F1 v=, =describe-varriable= :: Describe variable
+- =F1 v=, =describe-variable= :: Describe variable
 - =F1 f=, =describe-function= :: Describe function
 
 ** Info mode
@@ -232,7 +273,8 @@ Keyboard preferences in macOS.
 
 #+end_src
 
-* Recent files
+* Working with files
+** Recent files
 #+begin_src emacs-lisp
 
 ;; (defmacro with-suppressed-message (&rest body)
@@ -260,7 +302,7 @@ Keyboard preferences in macOS.
     recentf-max-saved-items 1000))
 #+end_src
 
-** When switching to Emacs a Warning issued "recentf mode: Non-character input-event"
+*** When switching to Emacs a Warning issued "recentf mode: Non-character input-event"
 <2020-12-08 Tue>
 https://github.com/syl20bnr/spacemacs/issues/5554
 
@@ -339,9 +381,10 @@ https://www.emacswiki.org/emacs/CalendarLocalization
 
 * Working with text
 ** Google Translate
-<2020-11-19 Thu>
-- =go-translate= - for translating word under cursor (with prompt)
-- =C-n=, =C-p= - to change language sequences when prompted
+<2020-11-19 Thu> <2021-03-07 Sun>
+
+- =go-translate= :: for translating word under cursor (with prompt)
+- =C-n=, =C-p= :: to change language sequences when prompted
 
 Alternative to proprietary Google Translate is https://libretranslate.com.
 https://github.com/uav4geo/LibreTranslate
@@ -357,8 +400,10 @@ https://github.com/uav4geo/LibreTranslate
 #+end_src
 
 ** Text Editing
-- =fill-paragraph=, =M-q= - wraps long-lined paragraph at 80 points
-- =transpose-word=, =M-t= - moves word under cursor to the right,
+<2021-03-07 Sun>
+
+- =M-q=, =fill-paragraph= :: wraps long-lined paragraph at 80 points
+- =M-t=, =transpose-word= :: moves word under cursor to the right,
   respecting non-word symbolñs
 
 #+begin_src emacs-lisp
@@ -726,6 +771,12 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
 #+end_src
 
 * Keybindings
+
+I found it works better if all the keybindings defined in a single
+subtree instead of being configured in =use-package= import. The main
+reason is that I can review them and find those I forget about and
+either try using them or eventually remove entirely.
+
 #+begin_src emacs-lisp
 
 ;; Use ESC as universal get me out of here command
@@ -764,6 +815,7 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
   "s-k" 'next-buffer
   "s-b" 'consult-buffer
   "s-n" 'switch-to-buffer
+  "s-m" 'consult-mark
   ;; searching
   "C-s" 'isearch-forward
   "C-r" 'isearch-backward
