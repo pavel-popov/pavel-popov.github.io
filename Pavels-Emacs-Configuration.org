@@ -81,12 +81,15 @@ specified in repository.
 * Working with Buffers
 <2021-03-07 Sun>
 
-- =C-x b= :: Switch to buffer
+- =C-x b=, =switch-to-buffer= :: Switch to buffer
 - =S-b=, =consult-buffer= :: Consult interface for switching buffers
+- =bufler-switch-buffer= :: Bufler interface for switching buffers
 - =C-x C-b=, =list-buffers= :: Open a list of buffers in a separate buffer
 
 ** Bufler
 <2021-03-07 Sun>
+
+by Alphapapa.
 
 Creates a tree-organised list of buffers, nodes are bound to projects/buffer types.
 
@@ -115,6 +118,42 @@ Emacs marks use =mark-ring=, and works like this:
    it is "start selection", "stop selection"
 2. Go to previous mark using =C-u C-SPC=, or using =consult-mark= command.
 
+- =C-x C-SPC=, =pop-global-mark= :: Move cursor to previous marked
+  position (may be in another buffer). Works if you run =isearch=
+  (=C-s=) and moved somewhere and then you need to get back to your
+  previous position.
+
+Links:
+- http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html
+
+*** Jumping
+<2021-03-07 Sun>
+
+It's needed when you moved coursor to some position in the buffer
+without ISearch, but using =avy=, =evil-snipe= or evil motions, like
+=5j= (move 5 lines down) and want to get back to where you've been
+before.
+
+I'm trying to use [[https://github.com/gilbertw1/better-jumper][better-jumper]] to get back to previous position
+after jumps.
+
+- =s-[=, =better-jumper-jump-backward= :: jump backwards
+- =s-]=, =better-jumper-jump-forward= :: jump forwards
+
+#+begin_src emacs-lisp
+(use-package better-jumper :ensure t
+  :config
+  (setq better-jumper-context 'buffer
+        better-jumper-add-jump-behavior 'append
+        better-jumper-max-length 16)
+  (better-jumper-mode 1))
+#+end_src
+
+Another alternative is Evil's =evil-jump=, which is turned on in Evil
+mode:
+
+- =C-o=, =evil-jump-backward= :: jump backward
+- =TAB=, =evil-jump-forward= :: jump forward
 
 *** Evil-Snipe - two-char jumps
 <2021-03-07 Sun>
@@ -811,10 +850,12 @@ either try using them or eventually remove entirely.
   "s-3" 'split-window-right
   "s-w" 'delete-window
   ;; going around
+  "s-[" 'better-jumper-jump-backward
+  "s-]" 'better-jumper-jump-forward
   "s-j" 'previous-buffer
   "s-k" 'next-buffer
-  "s-b" 'consult-buffer
-  "s-n" 'switch-to-buffer
+  "s-b" 'bufler-switch-buffer
+  "s-n" 'consult-buffer
   "s-m" 'consult-mark
   ;; searching
   "C-s" 'isearch-forward
