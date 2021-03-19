@@ -160,3 +160,38 @@ Found this snippet in ClojureDocs on =into=
 
 - =C-c C-d C-d=, =cider-doc=, within CIDER buffer - open documentation
 - Then within *cider-doc* buffer - =cider-clojuredocs= - open ClojureDocs examples
+
+* Reading "Clojure Design Patterns"
+<2021-03-07 Sun>
+
+Things I learn while reading beatiful "[[http://mishadoff.com/blog/clojure-design-patterns/][Clojure Design Patterns]]" post.
+
+- [[https://clojuredocs.org/clojure.core/juxt][juxt]] :: Takes a set of functions and returns a fn that is the
+  juxtaposition of those fns. The returned fn takes a variable number
+  of args, and returns a vector containing the result of applying each
+  fn to the args (left-to-right).
+
+  =((juxt a b c) x) => [(a x) (b x) (c x)]=
+
+- [[https://clojuredocs.org/clojure.core/complement][complement]] :: =(complement f)= Takes a fn f and returns a fn that
+  takes the same arguments as f, has the same effects, if any, and
+  returns the opposite truth value.
+
+
+- [[https://clojuredocs.org/clojure.core/defmulti][defmulti]] :: pattern matching on steroids
+
+
+- [[https://clojuredocs.org/clojure.core/add-watch][add-watch]] :: add watcher to an agent/atom/var/ref reference.
+
+
+- prepost-map? :: optional ={:pre [] :post []}= map in =defn= that
+  goes after params vector and makes assertions on entering or exiting
+  from the function
+
+
+Conclusions:
+
+- *Command* is just a function
+- *Strategy* is just a function passed to another function.
+- if a language support multiple dispatch, you don’t need *Visitor* pattern
+- if your function has side-effects, memoization is bad idea

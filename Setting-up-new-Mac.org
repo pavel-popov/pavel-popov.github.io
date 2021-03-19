@@ -1,27 +1,57 @@
-#+TITLE: Setting up new Mac for development
+#+TITLE: Setting up new Mac M1 for development
+
 
 * Install Homebrew
 
-Go to Homebrew's website, install it.
+Go to [[https://brew.sh][Homebrew's website]], install it.
+
+You would need to add =/opt/homebrew/bin= to =$PATH=. Since now the default
+shell in macOS is =zsh=, you need to add the following to =~/.zshrc=:
+
+#+begin_example sh
+export PATH="/opt/homebrew/bin:$PATH"
+#+end_example
 
 * CLI utilities
 
 Unless noted installation happens via =brew install <name>=
 
-- =tmux= :: terminal multiplexor
 - =fd= :: better find
 - =rg= :: ripgrep, better grep / ack / ag / pt
+- =openjdk= :: Open JDK
+- =clojure= :: Clojure
 
 * Shell
-I use =fish= as a shell, so need to change the default shell from
-=zsh= to =fish=.
+I use =fish= as a default shell, so need to change the default shell
+from =zsh= to =fish=.
 
-1. Install fish via brew
+1. Install fish via =brew install fish=
+
 2. Add fish to known shells
-3. Run =chsh= command
+   #+begin_src sh
+   sudo echo /opt/homebrew/bin/fish >> /etc/shells
+   #+end_src
+
+3. Change your default shell from =zsh= to =fish= (my preference)
+
+   #+begin_src sh
+   chsh -s /opt/homebrew/bin/fish
+   #+end_src
+
+   To have an effect, you need to logout and login to the system.
+
 4. Install fisher for managing plugins
+
 5. Install =z= plugin
+   #+begin_src sh
+   fisher install jethrokuan/z
+   #+end_src
+
 6. Install plugin for command prompt
+   #+begin_src sh
+   fisher install jorgebucaran/hydro
+   #+end_src
+
 7. Set universal variables that set PATH variable
 
 ** Adding items to =PATH= and setting env variables
@@ -55,79 +85,73 @@ cd ~/.ssh && chmod 600 *
 #+end_src
 
 * Emacs
-
 I use Emacs as a text editor and IDE.
 
-* Go
+In order for Emacs to pick up env variables from your login shell (=fish= in
+my case), there's a package =exec-path-from-shell= which I configured
+to pick up various universal env variables.
 
-1. Set =GOPATH= to where the all non-gomodule Go-code will live
-
-   #+begin_src fish
-   set --universal -x GOPATH /Users/pavel/code/go
-   #+end_src
-
-2. Install =gopls=
-
-   #+begin_src sh
-   go get golang.org/x/tools/gopls
-   #+end_src
-
-3. Try running =(eglot)= in Emacs
-
-* NPM
-Unfortunately I need to deal with NPM.
-
-The easiest way is to use NVM (Node Version Manager), but it's a bash script,
-so we'd need to drop to bash to install nvm.
-
-#+begin_src bash
-# install nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
-
-# add these lines to ~/.bashrc
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-
-# start bash and verify that nvm is configured
-❯ bash
-
-bash-3.2$ env | grep NVM
-NVM_RC_VERSION=
-NVM_CD_FLAGS=
-NVM_DIR=/Users/pavel/.nvm
-
-# install node
-bash-3.2$ nvm install 10.17.0
-Downloading and installing node v10.17.0...
-Downloading https://nodejs.org/dist/v10.17.0/node-v10.17.0-darwin-x64.tar.xz...
-Computing checksum with shasum -a 256
-Checksums matched!
-Now using node v10.17.0 (npm v6.11.3)
-Creating default alias: default -> 10.17.0 (-> v10.17.0)
+#+begin_src emacs-lisp
+(use-package exec-path-from-shell :ensure t
+  :config
+  (setq exec-path-from-shell-variables '("PATH" "MANPATH" "GOPATH" "JAVA_HOME" "AWS_REGION"))
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize)))
 #+end_src
 
-Now return back to fish and add
-=/Users/pavel/.nvm/versions/node/v10.17.0/bin= folder to PATH and
-check that =npm= and =node= are available.
+
+* Go programming language
+
+1. Install Go using Brew
+
+   #+begin_src sh
+   brew install go
+   #+end_src
+
+2. Set =GOPATH= to where the all non-gomodule Go-code will live
+
+   #+begin_src fish
+   set --universal -x GOPATH ~/code/go
+   #+end_src
+
+3. Install utilities
+
+   #+begin_src sh
+   go get golang.org/x/tools/gopls  # LSP server
+   go get golang.org/x/tools/cmd/goimports # Code formatter
+   #+end_src
+
+   #+RESULTS:
+
+4. Try running =(eglot)= in Emacs
+
+* Node
+
+The easiest way is to use NVM (Node Version Manager), but it's a bash script,
+from fish there's a plugin.
+
+#+begin_src fish
+fisher install jorgebucaran/nvm.fish
+#+end_src
+
+Now return back to fish and add =~/.local/share/nvm/v15.11.0/bin=
+folder to PATH and check that =npm= and =node= are available.
 
 #+begin_src bash
-❯ which npm
-/Users/pavel/.nvm/versions/node/v10.17.0/bin/npm
-
-❯ which node
-/Users/pavel/.nvm/versions/node/v10.17.0/bin/node
-
-❯ which npx
-/Users/pavel/.nvm/versions/node/v10.17.0/bin/npx
+~ ❱ which node
+/Users/pavel/.local/share/nvm/v15.11.0/bin/node
+~ ❱ which npm
+/Users/pavel/.local/share/nvm/v15.11.0/bin/npm
+~ ❱ which npx
+/Users/pavel/.local/share/nvm/v15.11.0/bin/npx#+end_src
 #+end_src
 
 * Clojure(Script)
 
-Install OpenJDK and Planck:
+Install OpenJDK:
 
 #+begin_src sh
 brew install openjdk
-brew install planck
 #+end_src
 
 Add =/usr/local/opt/openjdk/bin= to =PATH=.
@@ -143,3 +167,7 @@ Add =/usr/local/opt/openjdk/bin= to =PATH=.
 - =transmission= :: torrent downloader
 - =vlc= :: video player
 - =marta= :: dual panel file manager, [[https://news.ycombinator.com/item?id=16718166][HN: Marta, file manager for macOS, goes beta]]
+
+** Manual installation
+
+- =LICEcap= :: create GIFs from screen capture. @stas_kulesh [[https://twitter.com/stas_kulesh/status/1369779208017170432?s=20][tweeted]] about it

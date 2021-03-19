@@ -34,15 +34,15 @@ specified in repository.
 * Regenerating Elisp code from Org code
 #+begin_src emacs-lisp
 (use-package emacs
+
   :config
-  (defun prot/delete-emacs-init ()
+  (defun pp/delete-emacs-init ()
+    "Delete emacs-init.el file."
     (interactive)
-    (let ((configs "~/.emacs.d/emacs-init.el"))
-      (when configs
-        (delete-file configs))))
-  :hook ((kill-emacs-hook . prot/delete-emacs-init)
-       ;;  (kill-emacs-hook . package-quickstart-refresh)
-        ))
+    (delete-file "~/.emacs.d/emacs-init.el"))
+
+  :hook ((kill-emacs-hook . pp/delete-emacs-init))) ;;  (kill-emacs-hook . package-quickstart-refresh)
+
 #+end_src
 
 * Server mode
@@ -69,7 +69,9 @@ specified in repository.
   :after use-package)
 
 (use-package exec-path-from-shell :ensure t
-  :config (when (memq window-system '(mac ns x))
+  :config
+  (setq exec-path-from-shell-variables '("PATH" "MANPATH" "GOPATH" "JAVA_HOME" "AWS_REGION"))
+  (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
 ;; adding directories with binaries.
@@ -82,14 +84,15 @@ specified in repository.
 <2021-03-07 Sun>
 
 - =C-x b=, =switch-to-buffer= :: Switch to buffer
-- =S-b=, =consult-buffer= :: Consult interface for switching buffers
-- =bufler-switch-buffer= :: Bufler interface for switching buffers
 - =C-x C-b=, =list-buffers= :: Open a list of buffers in a separate buffer
+
+- =consult-buffer= :: Consult interface for switching buffers
+- =bufler-switch-buffer= :: Bufler interface for switching buffers
 
 ** Bufler
 <2021-03-07 Sun>
 
-by Alphapapa.
+by u/alphapapa.
 
 Creates a tree-organised list of buffers, nodes are bound to projects/buffer types.
 
@@ -123,6 +126,11 @@ Emacs marks use =mark-ring=, and works like this:
   (=C-s=) and moved somewhere and then you need to get back to your
   previous position.
 
+#+begin_src emacs-lisp
+(setq mark-ring-max 128)
+
+#+end_src
+
 Links:
 - http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html
 
@@ -154,6 +162,18 @@ mode:
 
 - =C-o=, =evil-jump-backward= :: jump backward
 - =TAB=, =evil-jump-forward= :: jump forward
+
+*** Moving back
+<2021-03-07 Sun>
+
+I found this tiny helper to move back to last change, will try to use it.
+
+- =g ;=, =goto-last-change= :: go to last change
+- =g ,= :: go to last change reverse
+
+#+begin_src emacs-lisp
+(use-package goto-last-change :ensure t)
+#+end_src
 
 *** Evil-Snipe - two-char jumps
 <2021-03-07 Sun>
@@ -607,14 +627,24 @@ Source: https://news.ycombinator.com/item?id=22131815"
 #+begin_src emacs-lisp
 (use-package rich-minority :ensure t
   :config
-    (add-to-list 'rm-blacklist " $") ;; rich-minority itself
-    (add-to-list 'rm-blacklist " WE")
-    (add-to-list 'rm-blacklist " Ind")  ;; org-indent-mode
-    (add-to-list 'rm-blacklist " ElDoc") ;; Emacs Lisp documentation
-    (add-to-list 'rm-blacklist " fix")  ;; eslintd-fix-mode
-    (add-to-list 'rm-blacklist " s3ed")
-    (add-to-list 'rm-blacklist " be")  ;; beginend
-    (rich-minority-mode))
+  (rich-minority-mode 1))
+
+(setq rm-blacklist
+        (format
+         "^ \\(%s\\)$"
+         (mapconcat
+          #'identity
+          '(
+            "\\$"             ;; rich-minority itself
+            "WE"
+            "Ind"             ;; org-indent-mode
+            "ElDoc"           ;; Emacs Lisp documentation
+            "fix"             ;; eslintd-fix-mode
+            "s3ed"
+            "better-jumper"
+            "be"              ;; beginend
+            )
+          "\\|")))
 #+end_src
 
 ** TODO mode-line resets when locally
@@ -665,7 +695,7 @@ Source: https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8"
 
 ;; (pp/set-font "JetBrains Mono" 12)
 (pp/set-font "PragmataPro" 14)
-;;(pp/set-font "Iosevka" 14)
+;; (pp/set-font "Iosevka" 14)
 #+end_src
 
 * Color themes
@@ -817,7 +847,6 @@ reason is that I can review them and find those I forget about and
 either try using them or eventually remove entirely.
 
 #+begin_src emacs-lisp
-
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
@@ -831,55 +860,69 @@ either try using them or eventually remove entirely.
           which-key-idle-delay 0.5))
 #+end_src
 
-** General, package for setting keybindings
+To define keybinding I use =general.el= package:
+
 #+begin_src emacs-lisp
 (use-package general :ensure t)
 
 (general-define-key
-  ;;"<tab>" 'org-cycle
-  "s-s" 'save-buffer
-  "s-S" 'write-file              ;; save as
-  "s-a" 'mark-whole-buffer       ;; select all
-  "s-z" 'undo-tree-undo
-  "s-Z" 'undo-tree-redo
-  "s-;" 'comment-line
-  "s-." 'company-complete
-  ;; windows
-  "s-1" 'delete-other-windows
-  "s-2" 'split-window-below
-  "s-3" 'split-window-right
-  "s-w" 'delete-window
-  ;; going around
-  "s-[" 'better-jumper-jump-backward
-  "s-]" 'better-jumper-jump-forward
-  "s-j" 'previous-buffer
-  "s-k" 'next-buffer
-  "s-b" 'bufler-switch-buffer
-  "s-n" 'consult-buffer
-  "s-m" 'consult-mark
-  ;; searching
-  "C-s" 'isearch-forward
-  "C-r" 'isearch-backward
-  "C-l" 'consult-line
-  "C-;" 'avy-goto-char
-  "s-r" 'consult-recent-file
-  "s-o" 'pp/visit-or-open
-  "s-p" 'project-find-file
-  "s-f" 'pp/consult-ripgrep ;; fuzzy search in the current project
-  "s-F" 'deadgrep
-  ;; modes
-  "s-t" 'eshell
-  "s-g" 'magit-status
-  "M-x" 'execute-extended-command
-  ;; function keys
-  "<f5>" 'deadgrep
-  "<f6>" 'flymake-show-diagnostics-buffer
-  "<f8>" 'dired-sidebar-toggle-sidebar
-  ;; text manipulation
-  "s-'" 'er/expand-region
-  "s-\\" 'er/contract-region
-  "<M-up>" 'move-text-up
-  "<M-down>" 'move-text-down)
+ ;;"<tab>" 'org-cycle
+ "s-s" 'save-buffer
+ "s-S" 'write-file        ;; save as
+ "s-a" 'mark-whole-buffer ;; select all
+ "s-z" 'undo-tree-undo
+ "s-Z" 'undo-tree-redo
+ "s-;" 'comment-line
+ "s-." 'company-complete
+
+ ;; windows
+ "s-1" 'delete-other-windows
+ "s-2" 'split-window-below
+ "s-3" 'split-window-right
+ "s-w" 'delete-window
+
+ ;; going around
+ "s-[" 'better-jumper-jump-backward
+ "s-]" 'better-jumper-jump-forward
+ "<s-backspace>" 'goto-last-change
+ "s-j" 'previous-buffer
+ "s-k" 'next-buffer
+ "s-b" 'consult-buffer
+ "s-m" 'consult-mark
+ "C-;" 'avy-goto-char
+
+ ;; searching
+ "C-s" 'isearch-forward
+ "C-S-s" 'isearch-forward-symbol-at-point
+ "C-r" 'isearch-backward
+ "C-l" 'consult-line
+ "s-r" 'consult-recent-file
+ "s-o" 'pp/visit-or-open
+ "s-p" 'project-find-file
+ "s-f" 'pp/consult-ripgrep ;; fuzzy search in the current project
+ "s-F" 'deadgrep
+
+ ;; modes
+ "s-t" 'eshell
+ "s-g" 'magit-status
+
+ ;"M-x" 'execute-extended-command ;; this is the default
+ ;; function keys
+ "<f2>" 'dired-sidebar-toggle-sidebar
+ "<f3>" (make-toggle-function "*scratch*" (lambda ()))
+ "<f4>" 'bufler
+ "<f5>" 'deadgrep
+ "<f6>" 'flymake-show-diagnostics-buffer
+ "<f7>" 'goto-last-change
+ "<f8>" 'repeat
+ "<f9>" 'dired-jump
+ "<f10>" (make-toggle-function "*eshell*" 'eshell)
+
+ ;; text manipulation
+ "s-'" 'er/expand-region
+ "s-\\" 'er/contract-region
+ "<M-up>" 'move-text-up
+ "<M-down>" 'move-text-down)
 
 (general-define-key
  :states '(normal)
@@ -936,8 +979,9 @@ either try using them or eventually remove entirely.
 
 Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim.html.
 
-* Moving around
-** Evil
+* Evil - vim keybindings
+<2021-03-07 Sun>
+
 #+begin_src emacs-lisp
 (use-package evil
   ;; :init (setq evil-want-C-u-scroll t)  ;; I'm using C-u as universal argument instead.
@@ -950,27 +994,14 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
   (global-evil-surround-mode 1))
 #+end_src
 
+Notable differences from vim:
+- =C-u= is a universal argument in Emacs (changes the following
+  command), in vim it's "scroll up a screen, PageUp". I bound =C-k= to
+  =evil-scroll-up= for those purposes.
+
+Links:
 - [[https://wikemacs.org/index.php/Evil#Enter_an_emacs_mode_in_a_given_state][Enter an Emacs mode in a given state]]
 
-** Xah Fly Keys
-#+begin_src emacs-lisp
-(use-package xah-fly-keys
-  :commands xah-fly-keys
-  :config
-    ;; (xah-fly-keys 1)
-    (xah-fly-keys-set-layout 'qwerty))
-#+end_src
-
-** Moving back
-Default shortcuts
-- =g ;= :: go to last change
-- =g ,= :: go to last change reverse
-
-#+begin_src emacs-lisp
-(use-package goto-last-change
-  :ensure
-  :bind ("<s-backspace>" . goto-last-change))
-#+end_src
 * Window management
 #+begin_src emacs-lisp
 (setq
@@ -994,6 +1025,7 @@ Default shortcuts
 
 * Selectrum, Marginalia, Consult for completion
 <2020-12-20 Sun> <2021-01-14 Thu>
+
 Replaces Ivy+Counsel.
 
 ** Selectrum
@@ -1059,7 +1091,7 @@ Can't make it working on both 27" display and on MacBook display.
   (consult-ripgrep (project-root (project-current))))
 #+end_src
 
-*** Consult is broken after upgrade
+*** DONE Consult is broken after upgrade
 <2021-01-14 Thu>
 
 - =consult-selectrum= is not longer exists, bundled inside consult,
@@ -1074,16 +1106,13 @@ Error in post-command-hook (icomplete-post-command-hook):
 (wrong-type-argument number-or-marker-p nil)
 #+end_quote
 
-* git, version control system, magit
+* git
+
+Search terms: version control system, vcs, magit
+
 #+begin_src emacs-lisp
 (use-package magit :ensure t
   :hook (magit-mode-hook . turn-off-evil-snipe-override-mode))
-
-(use-package forge :ensure t
-  :after magit)
-
-(use-package ghub :ensure t
-  :after magit)
 
 (use-package git-gutter :ensure t
   :diminish
@@ -1098,6 +1127,23 @@ Error in post-command-hook (icomplete-post-command-hook):
     (set-face-background 'git-gutter:deleted "red")
     (set-face-foreground 'git-gutter:added "white")
     (set-face-foreground 'git-gutter:deleted "white"))
+#+end_src
+
+** magit-todos - show TODO items from the repo
+#+begin_src emacs-lisp
+(use-package magit-todos :ensure t
+  :config
+  (magit-todos-mode))
+#+end_src
+
+** Forge - interface that powers magit
+
+#+begin_src emacs-lisp
+(use-package forge :ensure t
+  :after magit)
+
+(use-package ghub :ensure t
+  :after magit)
 #+end_src
 
 #+begin_example emacs-lisp
@@ -1115,7 +1161,6 @@ Error in post-command-hook (icomplete-post-command-hook):
 * Org-mode                                                          :OrgMode:
 - [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org cheatsheet]]
 
-Useful keybindings:
 - =C-c C-l=, =org-insert-link= :: if on url - uses it and prompts for description. [[https://orgmode.org/manual/Handling-Links.html#Handling-Links][Docs]]
 
 #+begin_example emacs-lisp
@@ -1155,6 +1200,7 @@ Babel enables literate programming in Org Mode.
 
 #+begin_src emacs-lisp
 (setq-default org-confirm-babel-evaluate nil)
+(use-package ob-restclient :ensure t) ;; support restclient in org-babel
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -1237,7 +1283,6 @@ but for some reason it didn't work for me, so I stick with =C-c C-,=
 and also bind it to =SPC ,= in Evil Normal mode. As of
 [2020-11-23 Mon] =<s= works again.
 
-
 ** Org-agenda, Ora Agenda                                        :OrgAgenda:
 :PROPERTIES:
 :CATEGORY: til
@@ -1271,6 +1316,20 @@ https://github.com/alphapapa/org-super-agenda
 https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/
 *** TODO Write a function to add current buffer to org-agenda-files
 
+** Org-table
+<2021-03-09 Tue>
+
+- =C-c |=, =(org-table-create-or-convert-from-region)= :: copy-paste
+  HTML table, insert and run this to convert to Org table
+
+** org-make-toc - create Table of Contents
+<2021-03-09 Tue>
+
+#+begin_src emacs-lisp
+(use-package org-make-toc :ensure t
+  :hook (org-mode-hook . org-make-toc-mode))
+#+end_src
+
 ** TODO Org-QL, a query language for Org files                       :OrgQL:
 https://github.com/alphapapa/org-ql
 
@@ -1302,7 +1361,7 @@ CLOSED: [2020-11-13 Fri 23:25]
 The problem was in =undo-tree= mode which overtime grew significant
 amount of undo changes.
 
-** TODO Full-width inline displaying images
+** Full-width inline displaying images
 <2021-03-01 Mon>
 
 When I enable inline images using =M-x org-toggle-inline-images=, they
@@ -1311,7 +1370,6 @@ them fit to the width of the buffer?
 
 #+begin_src emacs-lisp
 (setq-default org-image-actual-width 720) ; half of MacBook's 1440 width
-
 #+end_src
 
 * Outline-mode - folding and unfolding in Org-mode style
@@ -1400,7 +1458,6 @@ Another alternative - Elisp package https://github.com/tkf/emacs-request.
 (use-package restclient :ensure t
   :mode (("\\.http\\'" . restclient-mode)))
 
-(use-package ob-restclient :ensure t) ;; support in org-babel
 
 ;(load "restclient-jq") - haven't manage to make it working, using Clojure instead for dealing with JSON
 #+end_src
@@ -1676,7 +1733,7 @@ https://github.com/magnars/s.el
 
 
 #+end_example
-* Golang
+* Go programming language, Golang
 #+begin_src emacs-lisp
 (defun pp/go-mode-hook ()
   "Hook for 'go-mode'."
@@ -1701,7 +1758,7 @@ https://github.com/magnars/s.el
 
 (use-package gotest :ensure t
   :config
-  (setq-default go-test-args "-timeout 2s"))
+  (setq-default go-test-args "-timeout 10s"))
 #+end_src
 
 * Terraform
@@ -1715,6 +1772,20 @@ be the same as resource type.
   :config (setq terraform--resource-name-face 'terraform--resource-type-face)
   :hook (terraform-mode-hook . terraform-format-on-save-mode))
 #+end_src
+
+* Makefile
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun pp/makefile-mode-hook ()
+    "Hook for Makefiles."
+    (setq tab-width 4))
+
+  :hook
+  (makefile-mode-hook . pp/makefile-mode-hook))
+#+end_src
+
 
 * JSON
 #+begin_src emacs-lisp
@@ -2203,6 +2274,18 @@ Link: https://github.com/skuro/plantuml-mode
   (org-display-inline-images))
 #+end_src
 
+The below function is from [[https://gist.github.com/rpl/547521][planuml_helpers.el]] file:
+
+#+begin_src emacs-lisp
+(defun pp/plantuml-render-buffer ()
+  "Render current buffer in planuml, saves to the buffer's directory."
+  (interactive)
+  (message "PLANTUML Start rendering")
+  (shell-command (concat "java -jar /usr/local/lib/plantuml.jar "
+                         buffer-file-name))
+  (message (concat "PLANTUML Rendered:  " (buffer-name))))
+#+end_src
+
 ** Examples
 *** Sequence diagram
 #+begin_example plantuml :file sample-sequence.png
@@ -2362,8 +2445,10 @@ https://github.com/applied-science/emacs-vega-view
 #+begin_src emacs-lisp
 (use-package vega-view :ensure t)
 #+end_src
-* Prism.el - highlight code by depth
+* prism.el - highlight code by depth
 <2020-12-28 Mon>
+
+by u/alphapapa.
 
 #+begin_src emacs-lisp
 (use-package prism :ensure t
@@ -2430,7 +2515,7 @@ A valid remote file name starts with "/method:host:" or
 https://keminglabs.com/finda/setup/
 
 #+begin_src emacs-lisp
-(load "~/.finda/integrations/emacs/finda.el")
+;(load "~/.finda/integrations/emacs/finda.el")
 #+end_src
 * Testing how built-in calc works with Babel
 <2021-01-26 Tue>
@@ -2496,7 +2581,8 @@ the creator of the [[http://emacsrocks.com][Emacs Rocks]] screencast series.
 * Reading EPUB books in Emacs
 <2021-02-12 Fri>
 
-Apple Books stopped downloading books stored in iCloud, and overall experience had been quite terrible.
+Apple Books stopped downloading books stored in iCloud, and overall
+experience had been quite terrible.
 
 Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
 
@@ -2507,6 +2593,7 @@ Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
 (use-package nov :ensure t
   :config
   (defun pp/nov-mode-hook ()
+    "Hook for nov-mode (reading EPUBs)."
     (setq visual-fill-column-center-text t)
     (visual-line-mode)
     (visual-fill-column-mode))
@@ -2518,3 +2605,76 @@ Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
 <2021-02-18 Thu>
 
 http://ergoemacs.org/emacs/emacs_repeat_command.html
+
+* Vim for advanced users
+<2021-03-07 Sun>
+
+https://thevaluable.dev/vim-advanced/
+
+Let's try to see how we'd do this in Emacs (Evil).
+
+** The Types of Registers
+
+1. The unnamed register ="=
+
+2. The numbered registers =0= to =9=
+
+3. The small delete register =-=
+
+  Contains any deleted or changed content smaller than one line.
+  It’s not written if you specified a register with ".
+
+4. The named registers (range from =a= to =z=)
+
+   - aren't used unless you don’t specify them with the keystroke ="=
+   - You can use the uppercase name of each register to append to it
+     (instead of overwriting it)
+
+5. The read-only registers (=.=, =%= and =:=)
+
+   - =.= :: in vim it contains the last inserted text, doesn't work in Emacs
+   - =%= :: contains the full path of the current file, if it's a file
+   - =:= :: in vim it contains the last executed command, doesn't work in Emacs
+
+6.
+
+7.
+
+8.
+
+9.
+
+10. The last search pattern register (=/=)
+
+    This register contains your last search.
+* Reading RSS with elfeed
+<2021-03-16 Tue>
+
+#+begin_src emacs-lisp
+(use-package elfeed :ensure t
+  :config
+  (setq elfeed-feeds
+      '("https://daringfireball.net/feeds/main"
+        "https://avva.livejournal.com/data/rss")))
+#+end_src
+* Preparing tweets
+
+#+begin_src emacs-lisp
+
+(defun pp/count-words-region (posBegin posEnd)
+  "Print number of words and chars in region."
+  (interactive "r")
+  (message "Counting …")
+  (save-excursion
+    (let (wordCount charCount)
+      (setq wordCount 0)
+      (setq charCount (- posEnd posBegin))
+      (goto-char posBegin)
+      (while (and (< (point) posEnd)
+                  (re-search-forward "\\w+\\W*" posEnd t))
+        (setq wordCount (1+ wordCount)))
+
+      (message "Words: %d. Chars: %d." wordCount charCount)
+      )))
+
+#+end_src
