@@ -10,7 +10,6 @@ Castlemacs distribution.
 Literate programming layout is inpired by Protesilaos Stavrou' [[https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/][dotfiles]].
 #+end_abstract
 
-
 * Reference cards / cheatsheets
 
 https://www.gnu.org/software/emacs/refcards/
@@ -108,6 +107,8 @@ Creates a tree-organised list of buffers, nodes are bound to projects/buffer typ
 - =C-;=, =evil-avy-goto-char= :: provide =char= that will be
   highlighted to a quick jump to a point
 - =s-m=, =consult-mark= :: open a fuzzy selector to jump to a mark
+- =M-r=, =move-to-window-line-top-bottom= :: moves cursor to the
+  middle, then top, then bottom of the screen
 
 *** Marks
 <2021-03-07 Sun>
@@ -127,8 +128,9 @@ Emacs marks use =mark-ring=, and works like this:
   previous position.
 
 #+begin_src emacs-lisp
-(setq mark-ring-max 128)
-
+(setq
+  mark-ring-max 128
+  set-mark-command-repeat-pop t)
 #+end_src
 
 Links:
@@ -202,6 +204,16 @@ I found this tiny helper to move back to last change, will try to use it.
 #+begin_src emacs-lisp
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
+#+end_src
+
+* Working with Windows
+
+#+begin_src emacs-lisp
+
+(use-package ace-window :ensure t
+  :config
+  (setq aw-keys '(?h ?j ?k ?l ?f ?g ?d ?s ?a)))
+
 #+end_src
 
 * Custom packages
@@ -433,9 +445,7 @@ Shortcuts:
 https://www.emacswiki.org/emacs/CalendarLocalization
 
 #+begin_src emacs-lisp
-
 (setq calendar-week-start-day 1)
-
 #+end_src
 
 * Working with text
@@ -539,7 +549,12 @@ Source: https://news.ycombinator.com/item?id=22131815"
 (use-package all-the-icons-dired :ensure t
   :diminish)
 
-(use-package treemacs :ensure t)
+;(use-package treemacs :ensure t)
+
+(use-package dired-subtree :ensure t
+  :bind (:map dired-mode-map
+              (("i" . dired-subtree-insert)
+               ("." . dired-subtree-remove))))
 
 
 ;; Delete trailing spaces and add new line in the end of a file on save.
@@ -578,20 +593,23 @@ Source: https://news.ycombinator.com/item?id=22131815"
 #+end_src
 
 * Mode line, mode-line, Status Bar
+<2021-03-19 Fri>
+
 [[http://ergoemacs.org/emacs/modernization_mode_line.html][Xah Lee's post on Mode line.]]
 
 #+begin_src emacs-lisp
-;; (use-package smart-mode-line :ensure t
-;;   :config
-;;   (setq sml/theme 'light
-;;         sml/name-width 40
-;;         sml/mode-width 'full
-;;         sml/no-confirm-load-theme t
-;;         sml/not-modified-char " "
-;;         sml/numbers-separator "")
-;;   (add-to-list 'sml/replacer-regexp-list '("^~/go/src/github.com/FindHotel/" ":GoFH:") t)
-;;   (add-to-list 'sml/replacer-regexp-list '("^~/repos/dotfiles/emacs.d/" ":ED:") t)
-;;   (sml/setup))
+(use-package smart-mode-line :ensure t
+  :config
+  (setq sml/theme 'light
+        ; sml/name-width 40
+        ; sml/mode-width 'full
+        sml/no-confirm-load-theme t
+        ; sml/not-modified-char " "
+        ; sml/numbers-separator ""
+        sml/replacer-regexp-list '(("^~/code/src/github.com/FindHotel/" ":FH:")
+                                   ("^~/Documents/Projects/Blog/" ":B:")
+                                   ("^~/Documents/" ":Doc:")))
+  (sml/setup))
 
 ;; (use-package mood-line
 ;;   :config
@@ -647,7 +665,7 @@ Source: https://news.ycombinator.com/item?id=22131815"
           "\\|")))
 #+end_src
 
-** TODO mode-line resets when locally
+** mode-line resets when locally
 For some reason mode-line turns to contain only buffer name
 after some time, probably some package/mode sets it.
 The example below resets it to default original value.
@@ -846,6 +864,8 @@ subtree instead of being configured in =use-package= import. The main
 reason is that I can review them and find those I forget about and
 either try using them or eventually remove entirely.
 
+I use =general.el= package for managing keybindings.
+
 #+begin_src emacs-lisp
 ;; Use ESC as universal get me out of here command
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -876,6 +896,7 @@ To define keybinding I use =general.el= package:
  "s-." 'company-complete
 
  ;; windows
+ "s-y" 'ace-window
  "s-1" 'delete-other-windows
  "s-2" 'split-window-below
  "s-3" 'split-window-right
@@ -890,6 +911,7 @@ To define keybinding I use =general.el= package:
  "s-b" 'consult-buffer
  "s-m" 'consult-mark
  "C-;" 'avy-goto-char
+ "s-e" 'pp/open-in-eww
 
  ;; searching
  "C-s" 'isearch-forward
@@ -903,20 +925,20 @@ To define keybinding I use =general.el= package:
  "s-F" 'deadgrep
 
  ;; modes
- "s-t" 'eshell
+ "s-t" (make-toggle-function "*eshell*" 'eshell)
  "s-g" 'magit-status
 
  ;"M-x" 'execute-extended-command ;; this is the default
  ;; function keys
  "<f2>" 'dired-sidebar-toggle-sidebar
- "<f3>" (make-toggle-function "*scratch*" (lambda ()))
- "<f4>" 'bufler
+ "<f3>" 'ace-window
+ "<f4>" (make-toggle-function "*scratch*" (lambda ()))
  "<f5>" 'deadgrep
- "<f6>" 'flymake-show-diagnostics-buffer
+ ;"<f6>" 'flymake-show-diagnostics-buffer
  "<f7>" 'goto-last-change
  "<f8>" 'repeat
  "<f9>" 'dired-jump
- "<f10>" (make-toggle-function "*eshell*" 'eshell)
+ ;"<f10>" (make-toggle-function "*eshell*" 'eshell)
 
  ;; text manipulation
  "s-'" 'er/expand-region
@@ -926,6 +948,7 @@ To define keybinding I use =general.el= package:
 
 (general-define-key
  :states '(normal)
+ "§" 'other-window
  "C-k" 'evil-scroll-up
  "C-j" 'evil-scroll-down
  "C-r" 'isearch-backward
@@ -948,6 +971,7 @@ To define keybinding I use =general.el= package:
   "h" 'highlight-symbol ;; mnemonics - highlight
   "l" 'lispy-mode
   "w" 'visual-line-mode
+  "f" 'fundamental-mode
   "e" (make-toggle-function "*eshell*" 'eshell)
   "t" 'projectile-test-project)
 
@@ -979,7 +1003,7 @@ To define keybinding I use =general.el= package:
 
 Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim.html.
 
-* Evil - vim keybindings
+* Evil mode - vim keybindings
 <2021-03-07 Sun>
 
 #+begin_src emacs-lisp
@@ -993,6 +1017,9 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
   :config
   (global-evil-surround-mode 1))
 #+end_src
+
+#+RESULTS:
+: t
 
 Notable differences from vim:
 - =C-u= is a universal argument in Emacs (changes the following
@@ -1108,7 +1135,9 @@ Error in post-command-hook (icomplete-post-command-hook):
 
 * git
 
-Search terms: version control system, vcs, magit
+Search terms: version control system, vcs, magit, Magit
+
+- =C-c C-a= :: when on a patch file, apply hunk at point
 
 #+begin_src emacs-lisp
 (use-package magit :ensure t
@@ -1133,6 +1162,7 @@ Search terms: version control system, vcs, magit
 #+begin_src emacs-lisp
 (use-package magit-todos :ensure t
   :config
+  (setq magit-todos-exclude-globs '("*.map" "node_modules" "public"))
   (magit-todos-mode))
 #+end_src
 
@@ -1160,12 +1190,20 @@ Search terms: version control system, vcs, magit
 
 * Org-mode                                                          :OrgMode:
 - [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org cheatsheet]]
+- [[https://orgmode.org/guide/Hyperlinks.html][Hyperlinks]]
 
 - =C-c C-l=, =org-insert-link= :: if on url - uses it and prompts for description. [[https://orgmode.org/manual/Handling-Links.html#Handling-Links][Docs]]
+- =C-c C-o= :: Open link at point
 
 #+begin_example emacs-lisp
 (describe-variable 'org-version)
+
+(setq
+   browse-url-browser-function 'browse-url-default-browser
+   ;; browse-url-browser-function 'eww-browse-url
+)
 #+end_example
+
 
 #+begin_src emacs-lisp
 (use-package org
@@ -1255,7 +1293,7 @@ sleep 5
 printf "Done!\n"
 #+end_src
 
-#+RESULTS[9c49a4c4bceaab737086d07a2ebb9f8e0a0a3125]:
+#+RESULTS:
 : Please wait (this can take a while)...
 : Done!
 
@@ -1427,14 +1465,19 @@ them fit to the width of the buffer?
   (interactive)
   (eshell 'N))
 
+(defalias 'ff 'find-file)
+(defalias 'ffo 'find-file-other-window)
+#+end_src
+
+#+begin_example emacs-lisp
+
+;; syntax highlighting slows down eshell, so I don't use it anymore
 (use-package eshell-syntax-highlighting :ensure t
   :after esh-mode
   :config
   ;; Disable in all Eshell buffers by default.
   (eshell-syntax-highlighting-global-mode -1))
-#+end_src
 
-#+begin_example emacs-lisp
   (eshell-syntax-highlighting-global-mode -1)
 
   (eshell-syntax-highlighting-global-mode +1)
@@ -1491,14 +1534,26 @@ grep / ripgrep / ag / ack / pt
 - =v= :: view matched file on matched line (keeping focus in Deadgrep buffer)
 
 * Formatting code
+<2021-03-22 Mon>
+
 #+begin_src emacs-lisp
 (use-package format-all :ensure t)
 #+end_src
+
+** Working with S-expressions:
+- =C-M f= :: forward
+- =C-M b= :: backward
+- =C-M n= :: next
+- =C-M p= :: previous
+- =C-M u= :: up
+- =C-M d= :: down
 
 ** Lispy - working with lisp s-expressions
 Useful keybindings in Lispy:
 - =S=, =lispy-stringify= :: turn s-expr to string, useful fur turning JSON to string
 - =C-u "=, =lispy-quotes= :: when inside quote string - unquote
+
+- =[=, =]= :: goto previous/next parenthesis
 
 - =C-8= :: lispy-parens-down
 
@@ -1605,6 +1660,9 @@ I found this configuration in [[https://github.com/turbo-cafe/flymake-kondor][fl
 #+end_src
 
 * Elisp
+
+- [[http://ergoemacs.org/emacs/inline_doc.html][Doc String Markup]]
+
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters :ensure t
  ; :hook (prog-mode-hook . rainbow-delimiters-mode)
@@ -1758,8 +1816,32 @@ https://github.com/magnars/s.el
 
 (use-package gotest :ensure t
   :config
-  (setq-default go-test-args "-timeout 10s"))
+  (setq-default go-test-args "-timeout 30s"))
 #+end_src
+
+** variable binding depth exceeds max-specpdl-size error
+<2021-04-16 Fri> <2021-04-17 Sat>
+
+[[https://www.reddit.com/r/emacs/comments/9jp9zt/anyone_know_what_variable_binding_depth_exceeds/][Discussion on Reddit]]
+
+As I know, its gopls returning a huge list of vendored path when
+importing a big package (like AWS SDK or Google Cloud SDK).
+
+#+begin_src emacs-lisp
+(setq max-specpdl-size 16000) ; after setting to 13000 eglot starts lagging
+#+end_src
+
+** Eglot throws to *Messages* that Diagnostics contains extra fields
+<2021-04-17 Sat>
+
+[[https://github.com/joaotavora/eglot/issues/628][Issue eglot#628 on Github]]
+
+I added manually :codeDescription and :tags, recompiled file, then it was gone.
+
+#+begin_example diff
+-(Diagnostic (:range :message) (:severity :code :source :relatedInformation))
++(Diagnostic (:range :message) (:severity :code :source :relatedInformation :codeDescription :tags))
+#+end_example
 
 * Terraform
 
@@ -1785,7 +1867,6 @@ be the same as resource type.
   :hook
   (makefile-mode-hook . pp/makefile-mode-hook))
 #+end_src
-
 
 * JSON
 #+begin_src emacs-lisp
@@ -1826,10 +1907,11 @@ https://github.com/syohex/emacs-json-pointer
 
 * Ledger, double-entry plain text accounting system
 #+begin_src emacs-lisp
-;(use-package ledger-mode :ensure t)
+(use-package ledger-mode :ensure t)
 #+end_src
 
 * Clojure
+
 #+begin_src emacs-lisp
 (use-package clojure-mode :ensure t
   :config
@@ -1851,6 +1933,14 @@ CIDER Docs: https://docs.cider.mx/cider/index.html
 
 - =cider-clojuredocs= (=C-c C-d C-c=) :: open documentation from
   ClojureDocs. Default search term is that under cursor
+
+
+Keybindings in Inspector:
+
+- =l= :: go to previous page
+- =RET= :: inspect
+- =TAB= :: go to next inspectable item
+- =S-TAB= :: go to previous inspectable item
 
 #+begin_src emacs-lisp
 (use-package cider :ensure t)
@@ -2129,7 +2219,7 @@ for now.
 <2020-09-22 Tue>
 https://macreports.com/record-face-screen-mac/
 
-* Jet - transforms between JSON, EDN and Transit       :json:edn:clojure:clj:
+* Jet - transforms between JSON, EDN and Transit
 <2020-09-21 Mon>
 #+begin_src  emacs-lisp
 (defun pp/jet-edn-prettify ()
@@ -2202,7 +2292,7 @@ https://macreports.com/record-face-screen-mac/
     (with-current-buffer err-buffer (erase-buffer))
     (shell-command (format "sqlc -f %s" url) out-buffer err-buffer-name)))
 #+end_src
-* TODO Typing response
+* Typing response
 <2020-11-22 Sun> <2021-01-13 Wed>
 
 Sometimes I feel that typing feedback in Emacs is really slow, like
@@ -2211,6 +2301,8 @@ on the screen.
 
 It is particularly noticable when opened on 27" display. Turning from
 Org-mode to Fundamental mode doesn't make huge difference.
+
+There's no problem on MacBook Pro M1 which I use nowadays.
 
 * Emacs-webkit - using Safari from Emacs
 <2020-11-22 Sun>
@@ -2223,8 +2315,8 @@ emacs-webkit requires at least Emacs 28
 * TODO How to explicitly record the mental stack?
 <2020-11-22 Sun>
 https://www.reddit.com/r/emacs/comments/jxvm1h/how_to_explicitly_record_the_mental_stack/
-* Xah Lee's functions
-** Opening file in External App
+* Opening file in External App
+<2021-03-20 Sat>
 
 #+begin_src emacs-lisp
 (defun xah-open-in-external-app (&optional @fname)
@@ -2458,22 +2550,11 @@ by u/alphapapa.
 
 #+begin_example emacs-lisp
 (prism-set-colors :num 16
-  :desaturations (cl-loop for i from 0 below 16
-                          collect (* i 0.5))
-
-  :lightens (cl-loop for i from 0 below 16
-                     collect (* i 0.1))
-
-  :colors (list "sandy brown" "dodgerblue" "medium sea green")
-
-  :comments-fn
-  (lambda (color)
-    (prism-blend color
-                 (face-attribute 'font-lock-comment-face :foreground) 0.25))
-
-  :strings-fn
-  (lambda (color)
-    (prism-blend color "white" 1.8)))
+  :desaturations (cl-loop for i from 0 below 16 collect (* i 0.95))
+  :lightens (cl-loop for i from 0 below 16 collect (* i 0.05))
+  :colors (list "sandy brown" "dodgerblue" "medium sea green" "red")
+  :comments-fn (lambda (color) (prism-blend color (face-attribute 'font-lock-comment-face :foreground) 0.25))
+  :strings-fn (lambda (color) (prism-blend color "white" 1.7)))
 #+end_example
 * Emacs NES emulator
 <2021-01-08 Fri>
@@ -2578,34 +2659,6 @@ the creator of the [[http://emacsrocks.com][Emacs Rocks]] screencast series.
   (beginend-global-mode))
 #+end_src
 
-* Reading EPUB books in Emacs
-<2021-02-12 Fri>
-
-Apple Books stopped downloading books stored in iCloud, and overall
-experience had been quite terrible.
-
-Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
-
-
-#+begin_src emacs-lisp
-(use-package visual-fill-column :ensure t)
-
-(use-package nov :ensure t
-  :config
-  (defun pp/nov-mode-hook ()
-    "Hook for nov-mode (reading EPUBs)."
-    (setq visual-fill-column-center-text t)
-    (visual-line-mode)
-    (visual-fill-column-mode))
-  (setq nov-text-width 60)
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
-  :hook ((nov-mode-hook . pp/nov-mode-hook)))
-#+end_src
-* Repeat last command run via M-x
-<2021-02-18 Thu>
-
-http://ergoemacs.org/emacs/emacs_repeat_command.html
-
 * Vim for advanced users
 <2021-03-07 Sun>
 
@@ -2636,33 +2689,19 @@ Let's try to see how we'd do this in Emacs (Evil).
    - =%= :: contains the full path of the current file, if it's a file
    - =:= :: in vim it contains the last executed command, doesn't work in Emacs
 
-6.
-
-7.
-
-8.
-
-9.
-
-10. The last search pattern register (=/=)
+10. The last search pattern register =/=
 
     This register contains your last search.
-* Reading RSS with elfeed
-<2021-03-16 Tue>
 
-#+begin_src emacs-lisp
-(use-package elfeed :ensure t
-  :config
-  (setq elfeed-feeds
-      '("https://daringfireball.net/feeds/main"
-        "https://avva.livejournal.com/data/rss")))
-#+end_src
 * Preparing tweets
 
-#+begin_src emacs-lisp
 
+
+#+begin_src emacs-lisp
 (defun pp/count-words-region (posBegin posEnd)
-  "Print number of words and chars in region."
+  "Print number of words and chars in region.
+
+URL `http://ergoemacs.org/emacs/elisp_count-region.html'"
   (interactive "r")
   (message "Counting …")
   (save-excursion
@@ -2674,7 +2713,110 @@ Let's try to see how we'd do this in Emacs (Evil).
                   (re-search-forward "\\w+\\W*" posEnd t))
         (setq wordCount (1+ wordCount)))
 
-      (message "Words: %d. Chars: %d." wordCount charCount)
-      )))
-
+      (message "Words: %d. Chars: %d." wordCount charCount))))
 #+end_src
+
+* Reading EPUB books in Emacs
+<2021-02-12 Fri>
+
+Apple Books stopped downloading books stored in iCloud, and overall
+experience had been quite terrible.
+
+Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
+
+
+#+begin_src emacs-lisp
+(use-package visual-fill-column :ensure t)
+
+(use-package nov :ensure t
+  :config
+  (defun pp/nov-mode-hook ()
+    "Hook for nov-mode (reading EPUBs)."
+    (setq visual-fill-column-center-text t)
+    (visual-line-mode)
+    (visual-fill-column-mode))
+  (setq nov-text-width 60)
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  :hook ((nov-mode-hook . pp/nov-mode-hook)))
+#+end_src
+* Repeat last command run via M-x
+<2021-02-18 Thu>
+
+[[http://ergoemacs.org/emacs/emacs_repeat_command.html][Emacs Repeat Command]]
+
+- =repeat= :: repeat last
+
+* Reading RSS with elfeed
+<2021-03-16 Tue>
+
+#+begin_src emacs-lisp
+(use-package elfeed :ensure t
+  :config
+  (setq elfeed-feeds
+      '("https://daringfireball.net/feeds/main"
+        "https://avva.livejournal.com/data/rss"
+        "https://kieranhealy.org/index.xml")))
+#+end_src
+
+* EWW - Web browser inside Emacs
+<2021-03-20 Sat>
+
+- =s-e= :: Open URL at point using EWW
+
+#+begin_src emacs-lisp
+(require 'thingatpt)
+
+(defun pp/open-in-eww ()
+  "Opens url at point using `eww'"
+  (interactive)
+  (eww (thing-at-point 'url)))
+
+;; Source - https://stackoverflow.com/a/66670455
+(eval-after-load 'ol
+  '(dolist (scheme '("http" "https"))
+     (org-link-set-parameters
+      scheme :follow (lambda (url) (eww (substring url 2))))))
+#+end_src
+
+#+begin_example emacs-lisp
+((lambda (url)
+   (message "hello from %s" url)
+   url) "some url")
+
+
+(general-define-key
+  "M-1" '(lambda () (interactive) (message "M-1")))
+#+end_example
+
+** TODO Check [[https://github.com/milkypostman/org-eww][org-eww]]
+A minor mode for previewing Org documents using eww.
+
+* Popper - manage popup windows
+<2021-03-20 Sat>
+
+Link: https://www.reddit.com/r/emacs/comments/m5ibyh/
+
+
+- =C-x ^= :: make current window taller, =.= to repeat
+
+On <2021-04-13 Tue> I disabled the package as *eshell* windows it
+manages are too short.
+
+#+begin_example emacs-lisp
+(use-package popper :ensure t
+  :bind (("C-§"   . popper-toggle-latest)
+         ("M-§"   . popper-cycle)
+         ("C-M-§" . popper-toggle-type))
+  :init
+  (setq
+   popper-reference-buffers '("\\*Messages\\*"
+                              "\\*Warnings\\*"
+                              "\\*Backtrace\\*"
+                              ".*eshell\\*"
+                              "Output\\*$"
+                              help-mode
+                              compilation-mode))
+  (popper-mode -1))
+
+(setq popper-group-function #'popper-group-by-project)
+#+end_example
