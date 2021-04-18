@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="utf-8">
+    <title>My personal weblorg - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    
+  </head>
+  <body>
+    
+
+    
+    <header>
+      <h1>
+        <a href="http://localhost:8000/">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="http://localhost:8000/about">about</a>
+        </p>
+      </nav>
+    </header>
+    
+
+    
+    <main id="main">
+      
+<article class="post">
+  <h1 class="post__title">
+    Setting up new Mac for development
+  </h1>
+  <section class="post__meta">
+    nil
+  </section>
+  <section>
+    <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#install-homebrew">1. Install Homebrew</a></li>
+<li><a href="#cli-utilities">2. CLI utilities</a></li>
+<li><a href="#shell">3. Shell</a>
+<ul>
+<li><a href="#adding-items-to-path-and-setting-env-variables">3.1. Adding items to <code>PATH</code> and setting env variables</a></li>
+</ul>
+</li>
+<li><a href="#ssh-keys-and-other-credentials">4. SSH keys and other credentials</a></li>
+<li><a href="#emacs">5. Emacs</a></li>
+<li><a href="#go">6. Go</a></li>
+<li><a href="#npm">7. NPM</a></li>
+<li><a href="#clojure-script">8. Clojure(Script)</a></li>
+<li><a href="#gui-apps">9. GUI apps</a>
+<ul>
+<li><a href="#apps-from-app-store">9.1. Apps from App Store</a>
+<ul>
+<li><a href="#tot">9.1.1. Tot</a></li>
+<li><a href="#magnet">9.1.2. Magnet</a></li>
+<li><a href="#the-unarchiver">9.1.3. The unarchiver</a></li>
+<li><a href="#tip">9.1.4. Tip</a></li>
+</ul>
+</li>
+<li><a href="#apps-from-brew-cask">9.2. Apps from <code>brew cask</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="install-homebrew"><span class="section-number-2">1</span> Install Homebrew</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Go to Homebrew's website, install it.
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="cli-utilities"><span class="section-number-2">2</span> CLI utilities</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Unless noted installation happens via <code>brew install &lt;name&gt;</code>
+</p>
+
+<dl class="org-dl">
+<dt><code>tmux</code></dt><dd>terminal multiplexor</dd>
+<dt><code>fd</code></dt><dd>better find</dd>
+<dt><code>rg</code></dt><dd>ripgrep, better grep / ack / ag / pt</dd>
+</dl>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="shell"><span class="section-number-2">3</span> Shell</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+I use <code>fish</code> as a shell, so need to change the default shell from
+<code>zsh</code> to <code>fish</code>.
+</p>
+
+<ol class="org-ol">
+<li>Install fish via brew</li>
+<li>Add fish to known shells</li>
+<li>Run <code>chsh</code> command</li>
+<li>Install fisher for managing plugins</li>
+<li>Install <code>z</code> plugin</li>
+<li>Install plugin for command prompt</li>
+<li>Set universal variables that set PATH variable</li>
+</ol>
+</div>
+
+<div class="outline-3">
+<h3 id="adding-items-to-path-and-setting-env-variables"><span class="section-number-3">3.1</span> Adding items to <code>PATH</code> and setting env variables</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+This will be referenced later in the manual, but to set env variables
+and adding items to path, I maintain a single script under git, which
+I execute manually once after change.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-fish">#!/usr/bin/env fish
+
+set --universal -x GOPATH /Users/pavel/code/go
+
+set --universal fish_user_paths \
+  /usr/local/opt/openjdk/bin \
+  $GOPATH/bin \
+  /Users/pavel/code/dotfiles/bin
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="ssh-keys-and-other-credentials"><span class="section-number-2">4</span> SSH keys and other credentials</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+I store SSH keys and other secrets in iCloud in a folder <code>Documents/keys</code>,
+so symlinking them works just fine
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span class="org-builtin">cd</span> ~/Documents/keys
+ln -s (<span class="org-builtin">pwd</span>)/ssh ~/.ssh
+ln -s (<span class="org-builtin">pwd</span>)/aws ~/.aws
+
+<span class="org-builtin">cd</span> ~/.ssh &amp;&amp; chmod 600 *
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="emacs"><span class="section-number-2">5</span> Emacs</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+I use Emacs as a text editor and IDE.
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="go"><span class="section-number-2">6</span> Go</h2>
+<div class="outline-text-2" id="text-6">
+<ol class="org-ol">
+<li><p>
+Set <code>GOPATH</code> to where the all non-gomodule Go-code will live
+</p>
+
+<div class="org-src-container">
+<pre class="src src-fish">set --universal -x GOPATH /Users/pavel/code/go
+</pre>
+</div></li>
+
+<li><p>
+Install <code>gopls</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">go get golang.org/x/tools/gopls
+</pre>
+</div></li>
+
+<li>Try running <code>(eglot)</code> in Emacs</li>
+</ol>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="npm"><span class="section-number-2">7</span> NPM</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Unfortunately I need to deal with NPM.
+</p>
+
+<p>
+The easiest way is to use NVM (Node Version Manager), but it's a bash script,
+so we'd need to drop to bash to install nvm.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span class="org-comment-delimiter"># </span><span class="org-comment">install nvm</span>
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add these lines to ~/.bashrc</span>
+<span class="org-builtin">export</span> <span class="org-variable-name">NVM_DIR</span>=<span class="org-string">"$HOME/.nvm"</span>
+[ -s <span class="org-string">"$NVM_DIR/nvm.sh"</span> ] &amp;&amp; <span class="org-string">\.</span> <span class="org-string">"$NVM_DIR/nvm.sh"</span>  <span class="org-comment-delimiter"># </span><span class="org-comment">This loads nvm</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">start bash and verify that nvm is configured</span>
+&#10095; bash
+
+bash-3.2$ env | grep NVM
+<span class="org-variable-name">NVM_RC_VERSION</span>=
+<span class="org-variable-name">NVM_CD_FLAGS</span>=
+<span class="org-variable-name">NVM_DIR</span>=/Users/pavel/.nvm
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">install node</span>
+bash-3.2$ nvm install 10.17.0
+Downloading and installing node v10.17.0...
+Downloading https://nodejs.org/dist/v10.17.0/node-v10.17.0-darwin-x64.tar.xz...
+Computing checksum with shasum -a 256
+Checksums matched!
+Now using node v10.17.0 (npm v6.11.3)
+Creating default alias: default -&gt; 10.17.0 (-&gt; v10.17.0)
+</pre>
+</div>
+
+<p>
+Now return back to fish and add
+<code>/Users/pavel/.nvm/versions/node/v10.17.0/bin</code> folder to PATH and
+check that <code>npm</code> and <code>node</code> are available.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">&#10095; which npm
+/Users/pavel/.nvm/versions/node/v10.17.0/bin/npm
+
+&#10095; which node
+/Users/pavel/.nvm/versions/node/v10.17.0/bin/node
+
+&#10095; which npx
+/Users/pavel/.nvm/versions/node/v10.17.0/bin/npx
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="clojure-script"><span class="section-number-2">8</span> Clojure(Script)</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Install OpenJDK and Planck:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">brew install openjdk
+brew install planck
+</pre>
+</div>
+
+<p>
+Add <code>/usr/local/opt/openjdk/bin</code> to <code>PATH</code>.
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="gui-apps"><span class="section-number-2">9</span> GUI apps</h2>
+<div class="outline-text-2" id="text-gui-apps">
+</div>
+<div class="outline-3">
+<h3 id="apps-from-app-store"><span class="section-number-3">9.1</span> Apps from App Store</h3>
+<div class="outline-text-3" id="text-apps-from-app-store">
+</div>
+<div class="outline-4">
+<h4 id="tot"><span class="section-number-4">9.1.1</span> Tot</h4>
+</div>
+<div class="outline-4">
+<h4 id="magnet"><span class="section-number-4">9.1.2</span> Magnet</h4>
+</div>
+<div class="outline-4">
+<h4 id="the-unarchiver"><span class="section-number-4">9.1.3</span> The unarchiver</h4>
+</div>
+<div class="outline-4">
+<h4 id="tip"><span class="section-number-4">9.1.4</span> Tip</h4>
+</div>
+</div>
+<div class="outline-3">
+<h3 id="apps-from-brew-cask"><span class="section-number-3">9.2</span> Apps from <code>brew cask</code></h3>
+<div class="outline-text-3" id="text-9-2">
+<dl class="org-dl">
+<dt><code>transmission</code></dt><dd>torrent downloader</dd>
+<dt><code>vlc</code></dt><dd>video player</dd>
+<dt><code>marta</code></dt><dd>dual panel file manager, <a href="https://news.ycombinator.com/item?id=16718166">HN: Marta, file manager for macOS, goes beta</a></dd>
+</dl>
+</div>
+</div>
+</div>
+
+  </section>
+</article>
+
+    </main>
+
+
+    
+    
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    
+
+  </body>
+</html>

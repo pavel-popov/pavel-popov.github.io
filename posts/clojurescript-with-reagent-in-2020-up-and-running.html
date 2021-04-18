@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="utf-8">
+    <title>My personal weblorg - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    
+  </head>
+  <body>
+    
+
+    
+    <header>
+      <h1>
+        <a href="http://localhost:8000/">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="http://localhost:8000/about">about</a>
+        </p>
+      </nav>
+    </header>
+    
+
+    
+    <main id="main">
+      
+<article class="post">
+  <h1 class="post__title">
+    ClojureScript with Reagent in 2020: Up and running
+  </h1>
+  <section class="post__meta">
+    Sep 27, 2020
+  </section>
+  <section>
+    <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#starting-new-application-from-scratch">1. Starting new application from scratch</a>
+<ul>
+<li><a href="#first-section">1.1. First section</a></li>
+</ul>
+</li>
+<li><a href="#second-chapter">2. Second chapter</a></li>
+</ul>
+</div>
+</div>
+<p>
+I'm trying to learn how to use Clojure and ClojureScript for web development in 2020.
+</p>
+
+<p>
+My non-functional requirements:
+</p>
+
+<ul class="org-ul">
+<li>Use <code>clj</code>, no Leningen or Boot</li>
+<li>Use React, hence Reagent</li>
+<li>The app should communicate with external world via HTTP APIs</li>
+<li>If backend needed, it should be written in Clojure</li>
+<li>Deployment on Netlify or Heroku (if backend)</li>
+<li>Logging, CI, monitoring, metrics</li>
+<li>Ability to import JavaScript modules, like Leaflet for rendering maps</li>
+</ul>
+
+
+<div class="outline-2">
+<h2 id="starting-new-application-from-scratch"><span class="section-number-2">1</span> Starting new application from scratch</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+I've checked several guides and books on ClojureScript and the one
+which uses <code>clj</code> and seems to be working fine is <a href="https://betweentwoparens.com/start-a-clojurescript-app-from-scratch">Start a ClojureScript
+App from Scratch</a>, so will follow it.
+</p>
+
+<p>
+I'm on macOS and assume that you have <code>brew</code> and Clojure Tools installed.
+</p>
+
+<p>
+Configure <code>~/.clojure/deps.edn</code> by adding alias to create reagent app:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span class="org-clojure-keyword">:aliases</span>
+ {<span class="org-clojure-keyword">:create-reagent-app</span>
+  {<span class="org-clojure-keyword">:extra-deps</span> {<span class="org-type">seancorfield</span>/clj-new {<span class="org-clojure-keyword">:</span><span class="org-type">mvn</span><span class="org-default">/</span><span class="org-clojure-keyword">version</span> <span class="org-string">"1.1.216"</span>}}
+   <span class="org-clojure-keyword">:main-opts</span>  [<span class="org-string">"-m"</span> <span class="org-string">"clj-new.create"</span>
+               <span class="org-string">"https://github.com/tkjone/create-reagent-app@b43cc62fbe08608017146df4571ac825371d6e65"</span>]}}}
+</pre>
+</div>
+
+<p>
+and then create new application (but not from Emacs' eshell, from
+Terminal.app please):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">clj -A:create-reagent-app fh/hotel-explorer
+</pre>
+</div>
+
+
+<p>
+It will generate the following structure in the folder:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">&#10095; tree
+.
+&#9500;&#9472;&#9472; README.md
+&#9500;&#9472;&#9472; deps.edn
+&#9500;&#9472;&#9472; dev.cljs.edn
+&#9500;&#9472;&#9472; prod.cljs.edn
+&#9500;&#9472;&#9472; resources
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; public
+&#9474;&#160;&#160;     &#9500;&#9472;&#9472; index.html
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; style.css
+&#9500;&#9472;&#9472; src
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; fh
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; hotel_explorer.cljs
+&#9492;&#9472;&#9472; test
+    &#9492;&#9472;&#9472; fh
+        &#9492;&#9472;&#9472; hotel_explorer_test.cljs
+</pre>
+</div>
+
+<p>
+I updated versions of dependencies to the latest and here is the
+content of <code>deps.edn</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span class="org-clojure-keyword">:paths</span>   [<span class="org-string">"src"</span> <span class="org-string">"test"</span> <span class="org-string">"resources"</span> <span class="org-string">"target"</span>]
+ <span class="org-clojure-keyword">:deps</span>    {<span class="org-type">org.clojure</span>/clojurescript {<span class="org-clojure-keyword">:</span><span class="org-type">mvn</span><span class="org-default">/</span><span class="org-clojure-keyword">version</span> <span class="org-string">"1.10.773"</span>}
+           <span class="org-type">com.bhauman</span>/figwheel-main {<span class="org-clojure-keyword">:</span><span class="org-type">mvn</span><span class="org-default">/</span><span class="org-clojure-keyword">version</span> <span class="org-string">"0.2.6"</span>}
+           reagent                   {<span class="org-clojure-keyword">:</span><span class="org-type">mvn</span><span class="org-default">/</span><span class="org-clojure-keyword">version</span> <span class="org-string">"0.10.0"</span>}}
+ <span class="org-clojure-keyword">:aliases</span> {<span class="org-clojure-keyword">:dev</span>  {<span class="org-clojure-keyword">:main-opts</span> [<span class="org-string">"-m"</span> <span class="org-string">"figwheel.main"</span>
+                              <span class="org-string">"--build"</span> <span class="org-string">"dev"</span>
+                              <span class="org-string">"--repl"</span>]}
+           <span class="org-clojure-keyword">:prod</span> {<span class="org-clojure-keyword">:main-opts</span> [<span class="org-string">"-m"</span> <span class="org-string">"figwheel.main"</span>
+                              <span class="org-string">"--optimizations"</span> <span class="org-string">"advanced"</span>
+                              <span class="org-string">"--build-once"</span> <span class="org-string">"prod"</span>]}}}
+
+</pre>
+</div>
+
+
+<p>
+Now we can run the application and check the rendered results:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">clj -A:dev
+</pre>
+</div>
+</div>
+
+
+<div class="outline-3">
+<h3 id="first-section"><span class="section-number-3">1.1</span> First section</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-clojure">(+ 2 3)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="second-chapter"><span class="section-number-2">2</span> Second chapter</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-clojure">(+ 2 3)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(+ 2 3)
+</pre>
+</div>
+</div>
+</div>
+
+  </section>
+</article>
+
+    </main>
+
+
+    
+    
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    
+
+  </body>
+</html>

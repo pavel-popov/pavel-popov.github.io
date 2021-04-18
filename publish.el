@@ -1,29 +1,14 @@
-;;; publish.el --- Generate Static HTML -*- lexical-binding: t -*-
-;;
-;; Author: Pavel Popov <pavelpopov@outlook.com>
-;;
-;; Copyright (C) 2021  Pavel Popov
-;;
-;; This program is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-;;
+;;; publish.el --- Generate a simple static HTML blog
 ;;; Commentary:
 ;;
-;; How my blog is generated
+;;    Define the routes of the static website.  Each of which
+;;    containing the pattern for finding Org-Mode files, which HTML
+;;    template to be used, as well as their output path and URL.
 ;;
 ;;; Code:
 
-;; Initialize packaging system
+
+;; Setup package management
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -31,67 +16,41 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; Install dependencies
-(use-package htmlize :config :ensure t)
-;; (use-package rainbow-delimiters :config :ensure t)
-(use-package weblorg :config :ensure t)
-
-;; Local packages this blog depends on
-;; (add-to-list 'load-path "~/src/github.com/clarete/langlang/extra/")
-;; (add-to-list 'load-path "~/src/github.com/clarete/effigy/extras/")
-;; (add-to-list 'load-path "~/src/github.com/clarete/templatel/")
-
-;; Configure dependencies
-(require 'ox-html)
-
-;; Output HTML with syntax highlight with css classes instead of
-;; directly formatting the output.
+;; Install and configure dependencies
+(use-package templatel :ensure t)
+(use-package htmlize)
 (setq org-html-htmlize-output-type 'css)
 
-;; For syntax highlight of blocks containing these types of code
-;; (require 'effigy-mode)
-;; (require 'peg-mode)
-;; (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(use-package weblorg :ensure t)
 
-;; Static site generation
-;; Site wide configuration
-(if (string= (getenv "ENV") "prod")
-    (setq weblorg-default-url "https://pavel-popov.github.io"))
-(if (string= (getenv "ENV") "local")
-    (setq weblorg-default-url "http://localhost:8000"))
+;; Generate blog posts
+(weblorg-route
+ :name "posts"
+ :input-pattern "org/*.org"
+ :template "post.html"
+ :output "posts/{{ slug }}.html"
+ :url "/posts/{{ slug }}.html")
 
+;; Generate pages
+(weblorg-route
+ :name "pages"
+ :input-pattern "pages/*.org"
+ :template "page.html"
+ :output "pages/{{ slug }}/index.html"
+ :url "/{{ slug }}")
+
+;; Generate posts summary
 (weblorg-route
  :name "index"
- :input-pattern "index.org"
- :template "index.html"
+ :input-pattern "org/*.org"
+ :input-aggregate #'weblorg-input-aggregate-all-desc
+ :template "blog.html"
  :output "index.html"
  :url "/")
 
-(weblorg-route
- :name "note"
- :input-pattern "~/Documents/Projects/Blog/*.org"
- :template "post.html"
- :output "note/{{ slug }}.html"
- :url "/note/{{ slug }}.html")
-
-(weblorg-route
- :name "rss"
- :input-pattern "~/Documents/Projects/Blog/*.org"
- :input-aggregate #'weblorg-input-aggregate-all-desc
- :template "rss.xml"
- :output "note/rss.xml"
- :url "/note/rss.xml")
-
-(weblorg-route
- :name "categories"
- :input-pattern "~/Documents/Projects/Blog/*.org"
- :input-aggregate #'weblorg-input-aggregate-by-category-desc
- :template "category.html"
- :output "note/{{ name }}/index.html"
- :url "/note/{{ name }}")
-
-(setq debug-on-error t)
+(weblorg-copy-static
+ :output "output/static/{{ file }}"
+ :url "/static/{{ file }}")
 
 (weblorg-export)
-
 ;;; publish.el ends here

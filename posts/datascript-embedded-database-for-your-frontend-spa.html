@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="utf-8">
+    <title>My personal weblorg - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    
+  </head>
+  <body>
+    
+
+    
+    <header>
+      <h1>
+        <a href="http://localhost:8000/">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="http://localhost:8000/about">about</a>
+        </p>
+      </nav>
+    </header>
+    
+
+    
+    <main id="main">
+      
+<article class="post">
+  <h1 class="post__title">
+    DataScript - embedded database for your frontend SPA
+  </h1>
+  <section class="post__meta">
+    nil
+  </section>
+  <section>
+    <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#rationale">1. Rationale</a></li>
+<li><a href="#setup-the-project-namespace">2. Setup the project / namespace</a></li>
+<li><a href="#create-a-database">3. Create a database</a></li>
+<li><a href="#insert-some-data">4. Insert some data</a></li>
+<li><a href="#running-some-queries">5. Running some queries</a></li>
+<li><a href="#integrate-with-reagent-components">6. Integrate with reagent components</a></li>
+<li><a href="#patterns">7. Patterns</a></li>
+</ul>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="rationale"><span class="section-number-2">1</span> Rationale</h2>
+</div>
+<div class="outline-2">
+<h2 id="setup-the-project-namespace"><span class="section-number-2">2</span> Setup the project / namespace</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Add these dependencies to <code>shadow-cljs.edn</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span class="org-clojure-keyword">:dependencies</span> [...
+               [<span class="org-type">datascript</span>/datascript <span class="org-string">"1.0.1"</span>]
+               ...]
+</pre>
+</div>
+
+<p>
+and then require it in the file <code>pp/toy_example/state.cljs</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(<span class="org-keyword">ns</span> <span class="org-type">pp.toy-example.state</span>
+  (<span class="org-clojure-keyword">:require</span> [datascript.core <span class="org-clojure-keyword">:as</span> d]))
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="create-a-database"><span class="section-number-2">3</span> Create a database</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-clojure">(<span class="org-keyword">def</span> <span class="org-variable-name">schema</span> {<span class="org-clojure-keyword">:</span><span class="org-type">hotel</span><span class="org-default">/</span><span class="org-clojure-keyword">id</span> {<span class="org-clojure-keyword">:</span><span class="org-type">db</span><span class="org-default">/</span><span class="org-clojure-keyword">unique</span> <span class="org-clojure-keyword">:</span><span class="org-type">db.unique</span><span class="org-default">/</span><span class="org-clojure-keyword">identity</span>}
+             <span class="org-clojure-keyword">:</span><span class="org-type">offer</span><span class="org-default">/</span><span class="org-clojure-keyword">id</span> {<span class="org-clojure-keyword">:</span><span class="org-type">db</span><span class="org-default">/</span><span class="org-clojure-keyword">unique</span> <span class="org-clojure-keyword">:</span><span class="org-type">db.unique</span><span class="org-default">/</span><span class="org-clojure-keyword">identity</span>}
+             <span class="org-clojure-keyword">:</span><span class="org-type">offer</span><span class="org-default">/</span><span class="org-clojure-keyword">hotel</span> {<span class="org-clojure-keyword">:</span><span class="org-type">db</span><span class="org-default">/</span><span class="org-clojure-keyword">type</span> <span class="org-clojure-keyword">:</span><span class="org-type">db.type</span><span class="org-default">/</span><span class="org-clojure-keyword">ref</span>}})
+
+(<span class="org-keyword">defonce</span> <span class="org-variable-name">conn</span> (<span class="org-type">d</span>/create-conn schema))
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="insert-some-data"><span class="section-number-2">4</span> Insert some data</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-clojure">
+
+
+</pre>
+</div>
+</div>
+</div>
+<div class="outline-2">
+<h2 id="running-some-queries"><span class="section-number-2">5</span> Running some queries</h2>
+</div>
+<div class="outline-2">
+<h2 id="integrate-with-reagent-components"><span class="section-number-2">6</span> Integrate with reagent components</h2>
+</div>
+<div class="outline-2">
+<h2 id="patterns"><span class="section-number-2">7</span> Patterns</h2>
+</div>
+
+  </section>
+</article>
+
+    </main>
+
+
+    
+    
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    
+
+  </body>
+</html>

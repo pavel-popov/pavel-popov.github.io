@@ -1,8 +1,13 @@
-{# index.html --- Template for my website's index page -*- Mode: Jinja2; -*- #}
-{% extends "layout.html" %}
-
-{% block body %}
-  <h1>{{ post.title }}</h1>
-
-  {{ post.html|safe }}
+{% extends "base_layout.html" %} {% block main %}
+<article class="post">
+  <h1 class="post-title">
+    <a href="">{{ post.title }}</a>
+  </h1>
+  <section class="post-meta">
+    {{ post.date }}
+  </section>
+  <section>
+    {{ post.html|safe }}
+  </section>
+</article>
 {% endblock %}

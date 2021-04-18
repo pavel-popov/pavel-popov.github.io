@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <title>My personal weblorg - {% block title %}Home{% endblock %}</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    {% endblock %}
+  </head>
+  <body>
+    {# Top navigation bar #}
+
+    {% block nav %}
+    <header>
+      <h1>
+        <a href="{{ url_for("index") }}">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="{{ url_for("pages", slug="about") }}">about</a>
+        </p>
+      </nav>
+    </header>
+    {% endblock %}
+
+    {# Probably where most of the action will happen #}
+    <main id="main">
+      {% block main %}{% endblock %}
+    </main>
+
+
+    {# Links, copyright notice, etc #}
+    {% block footer %}
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    {% endblock %}
+
+  </body>
+</html>

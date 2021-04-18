@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="utf-8">
+    <title>My personal weblorg - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    
+  </head>
+  <body>
+    
+
+    
+    <header>
+      <h1>
+        <a href="http://localhost:8000/">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="http://localhost:8000/about">about</a>
+        </p>
+      </nav>
+    </header>
+    
+
+    
+    <main id="main">
+      
+<article class="post">
+  <h1 class="post__title">
+    How do I blog?
+  </h1>
+  <section class="post__meta">
+    nil
+  </section>
+  <section>
+    
+<div class="outline-2">
+<h2 id="org-mode-for-everything"><span class="section-number-2">1</span> Org Mode for everything</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Posts are usually about some broad topic, and I have no intention to
+make them complete before publishing, they more a scratch notes on a
+subject that I dump out of my brain.
+</p>
+
+<p>
+To create a post I create a new Org file in a directory
+<code>~/Documents/Projects/Blog</code> from Template.org file and start writing.
+Upon the file has enough content to be published, I export it to
+<code>html</code> using <code>(org-html-export-to-html)</code> and move the file to the
+folder <code>~/Documents/Projects/pavel-popov.github.io</code>, which contains
+contents of <a href="https://pavel-popov.github.io">pavel-popov.github.io</a> website.
+</p>
+
+<ul class="org-ul">
+<li><code>Blog</code> directory points to <a href="https://github.com/pavel-popov/pavel-popov.github.io/tree/org">org</a> branch in <a href="https://github.com/pavel-popov/pavel-popov.github.io">pavel-popov.github.io</a> repo.</li>
+</ul>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="styling"><span class="section-number-2">2</span> Styling</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+I adopted a beautiful <code>org.css</code> by Zhitao Gong from his post <a href="https://gongzhitaao.org/orgcss/">CSS for
+Org-exported HTML</a>.
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="creating-a-post"><span class="section-number-2">3</span> Creating a post</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This helper function exports current note as html and moves it to sources
+folder, ready for committing and pushing to Github.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">defun</span> <span class="org-function-name">pp/export-to-blog</span> ()
+  <span class="org-doc">"Converts current Org buffer to html and moves it to blog sources folder."</span>
+  (<span class="org-keyword">interactive</span>)
+  (<span class="org-keyword">let</span> ((filename (org-html-export-to-html)))
+    (rename-file filename <span class="org-string">"~/Documents/Projects/pavel-popov.github.io/"</span>)))
+</pre>
+</div>
+</div>
+</div>
+
+  </section>
+</article>
+
+    </main>
+
+
+    
+    
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    
+
+  </body>
+</html>

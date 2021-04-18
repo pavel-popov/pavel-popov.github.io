@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="utf-8">
+    <title>My personal weblorg - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    
+  </head>
+  <body>
+    
+
+    
+    <header>
+      <h1>
+        <a href="http://localhost:8000/">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="http://localhost:8000/about">about</a>
+        </p>
+      </nav>
+    </header>
+    
+
+    
+    <main id="main">
+      
+<article class="post">
+  <h1 class="post__title">
+    Using Clojure
+  </h1>
+  <section class="post__meta">
+    nil
+  </section>
+  <section>
+    <div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#linter">1. Linter</a></li>
+<li><a href="#documentation">2. Documentation</a></li>
+<li><a href="#notes-on-talks-books-posts">3. Notes on talks/books/posts</a>
+<ul>
+<li><a href="#what-sucks-about-clojure-and-why-you-ll-love-it-anyway-chas-emerick">3.1. What Sucks about Clojure and Why You'll Love It Anyway Chas Emerick</a></li>
+</ul>
+</li>
+<li><a href="#starting-new-application">4. Starting new application</a></li>
+<li><a href="#style-guide">5. Style guide</a>
+<ul>
+<li><a href="#docstrings">5.1. Docstrings</a></li>
+</ul>
+</li>
+<li><a href="#working-with-files">6. Working with files</a>
+<ul>
+<li><a href="#write-file">6.1. Write file</a></li>
+<li><a href="#read-file">6.2. Read file</a></li>
+</ul>
+</li>
+<li><a href="#working-with-json">7. Working with JSON</a></li>
+<li><a href="#namespaces">8. Namespaces</a></li>
+<li><a href="#destructuring">9. Destructuring</a></li>
+<li><a href="#convert-data-formats">10. Convert data formats</a></li>
+<li><a href="#portal-tool-for-exploring-data-structures-in-web-interface">11. Portal - tool for exploring data structures in web-interface</a></li>
+<li><a href="#dependencies">12. Dependencies</a></li>
+<li><a href="#repl-nrepl">13. REPL/nREPL</a></li>
+<li><a href="#babashka">14. Babashka</a>
+<ul>
+<li><a href="#use-aws-with-babashka">14.1. Use AWS with Babashka</a></li>
+</ul>
+</li>
+<li><a href="#benchmarking">15. Benchmarking</a></li>
+<li><a href="#getting-help-within-emacs">16. Getting help within Emacs</a></li>
+</ul>
+</div>
+</div>
+<p>
+This file contains manual how to live with Clojure.
+</p>
+
+<div class="outline-2">
+<h2 id="linter"><span class="section-number-2">1</span> Linter</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>clj-kondo</code>
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="documentation"><span class="section-number-2">2</span> Documentation</h2>
+<div class="outline-text-2" id="text-2">
+<dl class="org-dl">
+<dt><a href="https://clojuredocs.org">Clojuredocs.org</a></dt><dd>Reference with community-provided examples</dd>
+<dt><a href="https://clojuredocs.org/quickref">Quick reference</a></dt><dd>One page with all functions and their docstrings</dd>
+<dt><a href="http://clojure-doc.org/articles/content.html">clojure-docs.org</a></dt><dd>Community-developed guides (tutorials, cookbooks, manuals)</dd>
+<dt><a href="http://clojure.github.io/clojure/index.html">API overview</a></dt><dd>official api overview, the same as in Dash/DevDocs docset</dd>
+</dl>
+
+<p>
+<b>Cheatsheets</b>
+</p>
+
+<dl class="org-dl">
+<dt><a href="https://jafingerhut.github.io/cheatsheet/clojuredocs/cheatsheet-tiptip-cdocs-summary.html">Clojure cheatsheet with tooltips</a></dt><dd>liks go to Clojuredocs</dd>
+<dt><a href="https://clojure.org/api/cheatsheet">Official cheatsheet</a></dt><dd>links go to Clojuredocs</dd>
+</dl>
+
+<p>
+<b>Blogs</b>
+</p>
+
+<ul class="org-ul">
+<li><a href="https://betweentwoparens.com/">https://betweentwoparens.com/</a></li>
+</ul>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="notes-on-talks-books-posts"><span class="section-number-2">3</span> Notes on talks/books/posts</h2>
+<div class="outline-text-2" id="text-notes-on-talks-books-posts">
+</div>
+<div class="outline-3">
+<h3 id="what-sucks-about-clojure-and-why-you-ll-love-it-anyway-chas-emerick"><span class="section-number-3">3.1</span> What Sucks about Clojure and Why You'll Love It Anyway Chas Emerick</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+<a href="https://www.youtube.com/watch?v=wXgdxCFDjD0">https://www.youtube.com/watch?v=wXgdxCFDjD0</a>
+</p>
+
+<p>
+Objectives:
+</p>
+<ul class="org-ul">
+<li>Present a fair critique of Clojure from a pragmatic user's perspective</li>
+<li>What will you with you knew now?</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="starting-new-application"><span class="section-number-2">4</span> Starting new application</h2>
+<div class="outline-text-2" id="text-4">
+<dl class="org-dl">
+<dt><a href="https://github.com/seancorfield/clj-new">clj-new</a></dt><dd>Generate new projects based on clj, Boot, or Leiningen Templates</dd>
+</dl>
+
+
+<p>
+<b>ClojureScript</b>
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="style-guide"><span class="section-number-2">5</span> Style guide</h2>
+<div class="outline-text-2" id="text-style-guide">
+</div>
+<div class="outline-3">
+<h3 id="docstrings"><span class="section-number-3">5.1</span> Docstrings</h3>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="working-with-files"><span class="section-number-2">6</span> Working with files</h2>
+<div class="outline-text-2" id="text-working-with-files">
+</div>
+<div class="outline-3">
+<h3 id="write-file"><span class="section-number-3">6.1</span> Write file</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+<code>clojure.java.io</code> is your friend here.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(require '[clojure.java.io <span class="org-clojure-keyword">:as</span> io])
+
+(<span class="org-keyword">defn</span> <span class="org-function-name">write-file</span> [name content]
+  (<span class="org-keyword">with-open</span> [w (<span class="org-type">io</span>/writer name)]
+    (.write w content)))
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-3">
+<h3 id="read-file"><span class="section-number-3">6.2</span> Read file</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+<code>slurp</code> to read all as a string from a file.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(require '[clojure.java.io <span class="org-clojure-keyword">:as</span> io])
+
+(<span class="org-keyword">defn</span> <span class="org-function-name">read-file</span> [name]
+  (slurp (<span class="org-type">io</span>/reader name)))
+
+(read-file <span class="org-string">"sqd_offers.env"</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="working-with-json"><span class="section-number-2">7</span> Working with JSON</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+<a href="http://dakrone.github.io/cheshire/">Cheshire documentation</a>.
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="namespaces"><span class="section-number-2">8</span> Namespaces</h2>
+<div class="outline-text-2" id="text-8">
+<div class="org-src-container">
+<pre class="src src-clojure"><span class="org-comment-delimiter">; </span><span class="org-comment">switch to namespace</span>
+(<span class="org-keyword">in-ns</span> 'fh.hotel-explorer.main)
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="destructuring"><span class="section-number-2">9</span> Destructuring</h2>
+<div class="outline-text-2" id="text-9">
+<div class="org-src-container">
+<pre class="src src-clojure">((<span class="org-keyword">fn</span> [{a <span class="org-clojure-keyword">:a</span> b <span class="org-clojure-keyword">:b</span> <span class="org-clojure-keyword">:as</span> full}]
+   [a b full]) {<span class="org-clojure-keyword">:a</span> 1 <span class="org-clojure-keyword">:b</span> 2 <span class="org-clojure-keyword">:c</span> 3})
+<span class="org-comment-delimiter">;; </span><span class="org-comment">=&gt; [1 2 {:c 3, :b 2, :a 1}]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="convert-data-formats"><span class="section-number-2">10</span> Convert data formats</h2>
+<div class="outline-text-2" id="text-10">
+<dl class="org-dl">
+<dt>jet</dt><dd>convert between JSON, END and Transit</dd>
+</dl>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="portal-tool-for-exploring-data-structures-in-web-interface"><span class="section-number-2">11</span> Portal - tool for exploring data structures in web-interface</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+<a href="https://github.com/djblue/portal">https://github.com/djblue/portal</a>
+</p>
+
+<p>
+To Start Babashka with Portal dependency:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">bb -cp $(clj -Spath -Sdeps <span class="org-string">'{:deps {djblue/portal {:mvn/version "0.5.1"}}}'</span>) --nrepl-server 1666
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="dependencies"><span class="section-number-2">12</span> Dependencies</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+Create <code>deps.edn</code> file like this
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">{<span class="org-clojure-keyword">:deps</span> {<span class="org-type">djblue</span>/portal {<span class="org-clojure-keyword">:</span><span class="org-type">mvn</span><span class="org-default">/</span><span class="org-clojure-keyword">version</span> <span class="org-string">"0.5.1"</span>}
+        <span class="org-type">com.google.guava</span>/guava {<span class="org-clojure-keyword">:</span><span class="org-type">mvn</span><span class="org-default">/</span><span class="org-clojure-keyword">version</span> <span class="org-string">"29.0-jre"</span>}}}
+</pre>
+</div>
+
+<p>
+and from the folder with the file run
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">clj -Spath
+</pre>
+</div>
+
+<p>
+it will load specified dependencies and output CLASSPATH.
+</p>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="repl-nrepl"><span class="section-number-2">13</span> REPL/nREPL</h2>
+<div class="outline-text-2" id="text-13">
+<div class="org-src-container">
+<pre class="src src-shell">clj -R:nREPL -m nrepl.cmdline --port 1700
+</pre>
+</div>
+
+<p>
+To change namespace:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure">(<span class="org-keyword">in-ns</span> 'main)
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="babashka"><span class="section-number-2">14</span> Babashka</h2>
+<div class="outline-text-2" id="text-14">
+<div class="org-src-container">
+<pre class="src src-bash">bb -cp (clj -Spath) --nrepl-server 1666
+</pre>
+</div>
+</div>
+
+<div class="outline-3">
+<h3 id="use-aws-with-babashka"><span class="section-number-3">14.1</span> Use AWS with Babashka</h3>
+<div class="outline-text-3" id="text-14-1">
+<p>
+<a href="https://github.com/tzzh/pod-tzzh-aws">https://github.com/tzzh/pod-tzzh-aws</a>
+</p>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="benchmarking"><span class="section-number-2">15</span> Benchmarking</h2>
+<div class="outline-text-2" id="text-15">
+<p>
+<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-11-14 Sat&gt;</span></span>
+Found this snippet in ClojureDocs on <code>into</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-clojure"><span class="org-comment-delimiter">;; </span><span class="org-comment">Let's benchmark, using Criterium (https://github.com/hugoduncan/criterium)</span>
+(require '[criterium.core <span class="org-clojure-keyword">:refer</span> [quick-bench]])
+(quick-bench (into [-1 -2] xform (range 1000000)))
+<span class="org-comment-delimiter">;   </span><span class="org-comment">Execution time lower quantile : 54.368948 ms ( 2.5%)</span>
+<span class="org-comment-delimiter">;   </span><span class="org-comment">Execution time upper quantile : 55.976303 ms (97.5%)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div class="outline-2">
+<h2 id="getting-help-within-emacs"><span class="section-number-2">16</span> Getting help within Emacs</h2>
+<div class="outline-text-2" id="text-16">
+<ul class="org-ul">
+<li><code>C-c C-d C-d</code>, <code>cider-doc</code>, within CIDER buffer - open documentation</li>
+<li>Then within <b>cider-doc</b> buffer - <code>cider-clojuredocs</code> - open ClojureDocs examples</li>
+</ul>
+</div>
+</div>
+
+  </section>
+</article>
+
+    </main>
+
+
+    
+    
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    
+
+  </body>
+</html>

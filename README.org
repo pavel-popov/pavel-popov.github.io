@@ -3,7 +3,7 @@
 Sources of website [[https://pavel-popov.github.io][pavel-popov.github.io]].
 
 
-To publish a blog, run that code:
+To publish a notes, run that code:
 
 #+begin_src emacs-lisp
 (progn
@@ -16,14 +16,14 @@ To publish a blog, run that code:
 
   (weblorg-route
    :name "note"
-   :input-pattern "blog/*.org"
+   :input-pattern "src/*.org"
    :template "post.html"
    :output "note/{{ slug }}.html"
    :url "/note/{{ slug }}.html")
 
   (weblorg-route
    :name "rss"
-   :input-pattern "blog/*.org"
+   :input-pattern "src/*.org"
    :input-aggregate #'weblorg-input-aggregate-all-desc
    :template "rss.xml"
    :output "note/rss.xml"
@@ -31,7 +31,7 @@ To publish a blog, run that code:
 
   (weblorg-route
    :name "categories"
-   :input-pattern "blog/*.org"
+   :input-pattern "src/*.org"
    :input-aggregate #'weblorg-input-aggregate-by-category-desc
    :template "category.html"
    :output "note/{{ name }}/index.html"

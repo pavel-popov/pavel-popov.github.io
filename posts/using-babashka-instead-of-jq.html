@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="utf-8">
+    <title>My personal weblorg - Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Pavel Popov" />
+    <meta name="description" content="my personal blog" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    
+  </head>
+  <body>
+    
+
+    
+    <header>
+      <h1>
+        <a href="http://localhost:8000/">Notes</a>
+      </h1>
+      <nav>
+        <p>
+          <a href="#main">jump to main content</a> /
+          <a href="http://localhost:8000/about">about</a>
+        </p>
+      </nav>
+    </header>
+    
+
+    
+    <main id="main">
+      
+<article class="post">
+  <h1 class="post__title">
+    Using Babashka instead of JQ
+  </h1>
+  <section class="post__meta">
+    nil
+  </section>
+  <section>
+    <div class="abstract">
+<p>
+After using jq for several year I finally give up in favour of Babashka.
+</p>
+
+</div>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4d67249">1. Basics</a></li>
+<li><a href="#orgfd938c9">2. A Usecase: Debugging Some Prometheus Metrics</a></li>
+</ul>
+</div>
+</div>
+
+
+<p>
+This is the response on the post "<a href="https://sequoia.makes.software/parsing-json-at-the-cli-a-practical-introduction-to-jq-and-more/">Parsing JSON at the CLI: A Practical
+Introduction to jq (and more!)</a>" (<a href="https://news.ycombinator.com/item?id=25498364">discussion on HN</a>).
+</p>
+
+
+<div class="outline-2">
+<h2 id="basics"><span class="section-number-2">1</span> Basics</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The most basic use is just tidying &amp; pretty-printing your JSON:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="orgf004ce3"><span class="org-variable-name">USERX</span>=<span class="org-string">'{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"jq"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | jq <span class="org-string">'.'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"bb"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | bb -i -o <span class="org-string">'(-&gt; *input* first json/decode (json/encode {:pretty true}) println)'</span>
+</pre>
+</div>
+
+
+<p>
+For such a simple case <code>jq</code> is obviously cleaner.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org5033e5a"><span class="org-variable-name">USERX</span>=<span class="org-string">'{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"jq"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | jq <span class="org-string">'.name'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"bb"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | bb -i <span class="org-string">'(-&gt; *input* first (json/decode true) :name)'</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org46cb171"><span class="org-variable-name">USERX</span>=<span class="org-string">'{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"jq"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | jq <span class="org-string">'.orders[0]'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"bb"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | bb -i <span class="org-string">'(-&gt; *input* first (json/decode true) :orders first)'</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-sh" id="orgfbd358e"><span class="org-variable-name">USERX</span>=<span class="org-string">'{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"jq"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | jq <span class="org-string">'.orders[].id'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"bb"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | bb -i -o <span class="org-string">'(-&gt; *input* first (json/decode true) (-&gt;&gt; :orders (map :id)))'</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org352a6ec"><span class="org-variable-name">USERX</span>=<span class="org-string">'{"name":"duchess","city":"Toronto","orders":[{"id":"x","qty":10},{"id":"y","qty":15}]}'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"jq"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | jq <span class="org-string">'.orders[]|select(.qty&gt;10)'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"bb"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">USERX</span> | bb -i -o <span class="org-string">'(-&gt; *input* first (json/decode true) (-&gt;&gt; :orders (filter #(&gt; (:qty %) 10))))'</span>
+</pre>
+</div>
+
+
+<p>
+Starting from filtering by key name I prefer Babashka over jq.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org9344314"><span class="org-variable-name">ORDER</span>=<span class="org-string">'{"user_id":123,"user_name":"duchess","order_id":456,"order_status":"sent","vendor_id":789,"vendor_name":"Abe Books"}'</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">ORDER</span> | jq <span class="org-string">'.'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"jq"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">ORDER</span> | jq <span class="org-string">'with_entries(select(.key|match("order_")))'</span>
+<span class="org-builtin">echo</span> <span class="org-string">"bb"</span>
+<span class="org-builtin">echo</span> $<span class="org-variable-name">ORDER</span> | bb -i -o <span class="org-string">'(-&gt; *input* first (json/decode true) (-&gt;&gt; seq (filter (fn [[k _]] (re-matches #"order_.+" (name k)))) (into {})) println)'</span>
+</pre>
+</div>
+
+
+
+
+<pre class="example">
+
+</pre>
+</div>
+</div>
+
+
+<div class="outline-2">
+<h2 id="a-usecase-debugging-some-prometheus-metrics"><span class="section-number-2">2</span> A Usecase: Debugging Some Prometheus Metrics</h2>
+</div>
+
+  </section>
+</article>
+
+    </main>
+
+
+    
+    
+    <footer>
+      <div>
+        Made with &#x2665; by <a href="https://emacs.love/weblorg" target="_blank">weblorg</a>
+      </div>
+    </footer>
+    
+
+  </body>
+</html>

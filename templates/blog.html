@@ -1,20 +1,13 @@
-{# blog.html --- Blog template; -*- Mode: Jinja2; -*- #}
-{% extends "layout.html" %}
+{% extends "base_layout.html" %}
 
-{% block body %}
-  <div class="title">
-    <h1>blog</h1>
-  </div>
+{% block main %}
+  <h1>Posts</h1>
 
-  <div class="content blog">
-    <ul>
-      {% for post in posts %}
-        <li>
-          <a href="{{ url_for("posts", slug=post.slug) }}">
-            {{ post.date|strftime("%b %d, %Y") }}: {{ post.title }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+  <ul class="posts">
+    {% for post in posts %}
+      <li class="post-title">
+        <a href="{{ url_for("posts", slug=post.slug) }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock %}
