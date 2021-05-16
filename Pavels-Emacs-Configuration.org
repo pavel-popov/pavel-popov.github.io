@@ -1,6 +1,5 @@
 #+TITLE: Pavel's Emacs Configuration
 #+CATEGORY: emacs
-#+DATE: <2021-02-07 Sun>
 
 #+begin_abstract
 After trying to use many distributions I finally decided to start mine
@@ -10,14 +9,24 @@ Castlemacs distribution.
 Literate programming layout is inpired by Protesilaos Stavrou' [[https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/][dotfiles]].
 #+end_abstract
 
+* Emacs binary that I use
+
+** Emacs Mac port
+
+- Homebrew formula repository
+- [[https://bitbucket.org/mituharu/emacs-mac/src/master/README-mac][Features]]
+
+** [[https://emacsformacosx.com][emacsformacosx.com]]
+
+** [[https://github.com/d12frosted/homebrew-emacs-plus][Emacs Plus]]
+
+
 * Reference cards / cheatsheets
 
-https://www.gnu.org/software/emacs/refcards/
+[[https://www.gnu.org/software/emacs/refcards/][GNU Emacs Reference Cards]]
 
-- [[https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf][Dired cheatsheet]]
 - [[https://www.gnu.org/software/emacs/refcards/pdf/refcard.pdf][Emacs cheatsheet]]
 - [[https://www.gnu.org/software/emacs/refcards/pdf/survival.pdf][Emacs survival card]]
-- [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org cheatsheet]]
 
 * Package archives
 <2020-12-29 Tue>
@@ -45,7 +54,7 @@ specified in repository.
 #+end_src
 
 * Server mode
-- Needed to edit commit messages from Eshell when running git commands.
+Needed to edit commit messages from Eshell when running git commands.
 
 #+begin_src emacs-lisp
 (unless (boundp 'server-process)
@@ -82,11 +91,11 @@ specified in repository.
 * Working with Buffers
 <2021-03-07 Sun>
 
-- =C-x b=, =switch-to-buffer= :: Switch to buffer
-- =C-x C-b=, =list-buffers= :: Open a list of buffers in a separate buffer
+- =C-x b=, (switch-to-buffer) :: Switch to buffer
+- =C-x C-b=, (list-buffers) :: Open a list of buffers in a separate buffer
 
-- =consult-buffer= :: Consult interface for switching buffers
-- =bufler-switch-buffer= :: Bufler interface for switching buffers
+- (consult-buffer) :: Consult interface for switching buffers
+- (bufler-switch-buffer) :: Bufler interface for switching buffers
 
 ** Bufler
 <2021-03-07 Sun>
@@ -101,13 +110,31 @@ Creates a tree-organised list of buffers, nodes are bound to projects/buffer typ
 (use-package bufler :ensure t)
 #+end_src
 
+** Frog Jump Buffer
+
+#+begin_src emacs-lisp
+(use-package frog-jump-buffer :ensure t
+  :config
+  (setq frog-jump-buffer-default-filters-capital-letters nil
+        frog-menu-avy-keys (append (string-to-list "absdflkjgh")
+                                   (string-to-list "qwerpoiuty")
+                                   (string-to-list "zxcvmn")
+                                   (string-to-list (upcase "asdflkjgh"))
+                                   (string-to-list (upcase "qwerpoiuty"))
+                                   (string-to-list (upcase "zxcvmnb"))
+                                   (number-sequence ?, ?@))))
+#+end_src
+
+*** TODO frog-jump-buffer doesn't work in Emacs 27.1
+<2021-04-30 Fri>
+
 ** Going around in a buffer
 <2021-03-07 Sun>
 
-- =C-;=, =evil-avy-goto-char= :: provide =char= that will be
+- =C-;=, (evil-avy-goto-char) :: provide =char= that will be
   highlighted to a quick jump to a point
-- =s-m=, =consult-mark= :: open a fuzzy selector to jump to a mark
-- =M-r=, =move-to-window-line-top-bottom= :: moves cursor to the
+- =s-m=, (consult-mark) :: open a fuzzy selector to jump to a mark
+- =M-r=, (move-to-window-line-top-bottom) :: moves cursor to the
   middle, then top, then bottom of the screen
 
 *** Marks
@@ -117,15 +144,18 @@ Evil-marks are clones of vim marks, and work like this:
 1. Create a mark via =m <char>=
 2. Jump to a mark via =` <char>=
 
-Emacs marks use =mark-ring=, and works like this:
+Emacs marks use (mark-ring), and works like this:
 1. Create a mark via =C-SPC C-SPC= (or in Evil mode using =v v=) - so
    it is "start selection", "stop selection"
-2. Go to previous mark using =C-u C-SPC=, or using =consult-mark= command.
+2. Go to previous mark using =C-u C-SPC=, or using (consult-mark), =s-m= command.
 
-- =C-x C-SPC=, =pop-global-mark= :: Move cursor to previous marked
-  position (may be in another buffer). Works if you run =isearch=
-  (=C-s=) and moved somewhere and then you need to get back to your
+- =C-x C-SPC=, (pop-global-mark) :: Move cursor to previous marked
+  position (may be in another buffer). Works if you run (isearch),
+  =C-s= and moved somewhere and then you need to get back to your
   previous position.
+
+Update <2021-04-28 Wed>: Watched a video [[https://youtu.be/Dq5UOt63Mms][Efficient Text Selection with
+Emacs Key Bindings]].
 
 #+begin_src emacs-lisp
 (setq
@@ -162,8 +192,8 @@ after jumps.
 Another alternative is Evil's =evil-jump=, which is turned on in Evil
 mode:
 
-- =C-o=, =evil-jump-backward= :: jump backward
-- =TAB=, =evil-jump-forward= :: jump forward
+- =C-o=, (evil-jump-backward) :: jump backward
+- =TAB=, (evil-jump-forward) :: jump forward
 
 *** Moving back
 <2021-03-07 Sun>
@@ -206,14 +236,12 @@ I found this tiny helper to move back to last change, will try to use it.
 (setq uniquify-buffer-name-style 'forward)
 #+end_src
 
-* Working with Windows
+* Working with windows
 
 #+begin_src emacs-lisp
-
 (use-package ace-window :ensure t
   :config
   (setq aw-keys '(?h ?j ?k ?l ?f ?g ?d ?s ?a)))
-
 #+end_src
 
 * Custom packages
@@ -243,17 +271,28 @@ Use =straight.el=.
  (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 #+end_example
 
-** Toggle function
- Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_small_lisp_functions_in_my/][One of the most useful small lisp functions in my config]]
+** Toggle functions
+Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_small_lisp_functions_in_my/][One of the most useful small lisp functions in my config]]
 
- #+begin_src emacs-lisp
- (load "toggle-function")
- (global-set-key (kbd "C-h SPC") (make-toggle-function "*scratch*" (lambda ())))
- #+end_src
+#+begin_src emacs-lisp
+(load "toggle-function")
 
- #+begin_example emacs-lisp
- (funcall ((lambda (arg1) (lambda () (message "foo: %s" arg1))) "bar"))
- #+end_example
+(defun pp/make-toggle-scratch ()
+  "Toggle *scratch* buffer back and forth."
+  (interactive)
+  (make-toggle-function "*scratch*" (lambda ())))
+
+(defun pp/make-toggle-eshell ()
+  "Toggle *eshell* buffer back and forth."
+  (interactive)
+  (make-toggle-function "*eshell*" 'eshell))
+
+(global-set-key (kbd "C-h SPC") (pp/make-toggle-scratch))
+#+end_src
+
+#+begin_example emacs-lisp
+(funcall ((lambda (arg1) (lambda () (message "foo: %s" arg1))) "bar"))
+#+end_example
 
 * Getting help, documentation
 
@@ -291,11 +330,31 @@ Keyboard preferences in macOS.
 
 #+begin_src emacs-lisp
 (setq
-  mac-right-command-modifier 'super  ;; Both command keys are 'Super'
   mac-command-modifier 'super
-  mac-option-modifier 'meta ;; Option or Alt is naturally 'Meta'
-  mac-right-option-modifier 'nil) ;; Right Alt (option) can be used to enter symbols like em dashes '—' and euros '€' and stuff.
+  mac-option-modifier 'meta)
 #+end_src
+
+On <2021-04-28 Wed> I set up Leopold FC700RT keyboard, and remapped
+its Command key to Option, and Option key to Command in macOS
+keyboard-specific settings. But for an unknown reason, its right
+option and left Meta keys became interchanged, so I simplified setup
+to have both left and right command and Option keys serve as Super and
+Meta respectively. Page where I read about Emacs handling of special
+keys is [[https://emacs.stackexchange.com/questions/24902/for-macos-how-to-bind-left-and-right-option-keys-separately][For MacOS: how to bind left and right option keys separately?]]
+
+** DONE How to use Fn key on Leopold FC700RT keyboard?
+CLOSED: [2021-04-28 Wed 18:07]
+:PROPERTIES:
+:CREATED: <2021-04-28 Wed>
+:END:
+
+F1-F4 are repeat rate adjustments, F5 is WinKey lock, F6 is Previous
+Track, F7 is Play/Pause, F8 is Next Track, F9-12 are Stop/Mute/Volume
+Down/Volume Up. Home and End toggle between N-Key and 6-Key rollover.
+That's from
+http://www.leopold.co.kr/?doc=cart/item.php&it_id=1406876444.
+
+
 
 * Tweaking usage on macOS
 #+begin_src emacs-lisp
@@ -441,12 +500,36 @@ Shortcuts:
 #+end_src
 
 * Calendar
+<2021-04-17 Sat>
 
 https://www.emacswiki.org/emacs/CalendarLocalization
+[[https://ftp.gnu.org/old-gnu/Manuals/emacs-20.7/html_chapter/emacs_33.html][The Calendar and the Diary]]
 
 #+begin_src emacs-lisp
-(setq calendar-week-start-day 1)
+(use-package calendar
+  :config
+  (setq calendar-week-start-day 1))
 #+end_src
+
+** DONE Figure out how to select a date from Calendar using keyboard
+<2021-04-18 Sun>
+CLOSED: [2021-04-18 Sun 17:04]
+
+[[https://orgmode.org/manual/The-date_002ftime-prompt.html][Manual - 8.2.1 The date/time prompt]]
+
+- RET :: Choose date at point in calendar.
+- mouse-1 :: Select date by clicking on it.
+- S-RIGHT :: One day forward.
+- S-LEFT :: One day backward.
+- S-DOWN :: One week forward.
+- S-UP :: One week backward.
+- M-S-RIGHT :: One month forward.
+- M-S-LEFT :: One month backward.
+- > :: Scroll calendar forward by one month.
+- < :: Scroll calendar backward by one month.
+- M-v :: Scroll calendar forward by 3 months.
+- C-v :: Scroll calendar backward by 3 months.
+- C-. :: Select today’s date63
 
 * Working with text
 ** Google Translate
@@ -484,9 +567,18 @@ https://github.com/uav4geo/LibreTranslate
 ;; Move-text lines around with meta-up/down.
 (use-package move-text :ensure t)
 
-;; Wrap text, surround text, surround quotes.
-(use-package wrap-region :ensure t)
 #+end_src
+
+
+*** wrap-region - Wrap text, surround text, surround quotes
+
+Update <2021-04-25 Sun>: I found this package installed, but don't
+remember I was using it, checked documentation and tried to use, but
+without luck, so disabling it.
+
+#+begin_example emacs-lisp
+(use-package wrap-region :ensure t)
+#+end_example
 
 ** Join lines
 <2020-09-24 Thu>
@@ -514,9 +606,11 @@ Source: https://news.ycombinator.com/item?id=22131815"
 (visual-line-mode 1)
 #+end_example
 
-* File management / Dired
+* File management / Dired                                             :Dired:
 
-[[https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf][Cheatsheet]]
+Links:
+- [[https://www.gnu.org/software/emacs/refcards/pdf/dired-ref.pdf][Dired Reference Card]]
+- [[https://www.ramitmittal.com/blog/15-days-in-dired/][15 Days in Dired as a file manager]]
 
 #+begin_src emacs-lisp
 (defun pp/dired-sidebar-view-file ()
@@ -535,11 +629,14 @@ Source: https://news.ycombinator.com/item?id=22131815"
 
 (use-package dired
   :init
-    (put 'dired-find-alternate-file 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
+  :config
+  (setq dired-dwim-target t)
   :hook (dired-mode-hook . pp/dired-hook)
   :bind (:map dired-mode-map
               (("RET" . dired-single-buffer)
                ("DEL" . dired-single-up-directory)
+               ("<tab>" . other-window)
                ("s" . evil-snipe-s)
                ("S" . evil-snipe-S))))
 
@@ -643,9 +740,7 @@ Source: https://news.ycombinator.com/item?id=22131815"
 ** Rich minority - disable minor-mode indicators in modeline
 
 #+begin_src emacs-lisp
-(use-package rich-minority :ensure t
-  :config
-  (rich-minority-mode 1))
+(use-package rich-minority :ensure t)
 
 (setq rm-blacklist
         (format
@@ -664,6 +759,17 @@ Source: https://news.ycombinator.com/item?id=22131815"
             )
           "\\|")))
 #+end_src
+
+*** Cooperation with smart-mode-line
+<2021-04-23 Fri>
+
+I got this line in *Messages* during startup:
+
+#+begin_quote
+You don’t need to activate rich-minority-mode if you’re using smart-mode-line
+#+end_quote
+
+So, I will disable rich-minority package for now.
 
 ** mode-line resets when locally
 For some reason mode-line turns to contain only buffer name
@@ -704,7 +810,8 @@ Source: https://gist.github.com/rnkn/a522429ed7e784ae091b8760f416ecf8"
     (kill-local-variable 'mode-line-format)))
 #+end_src
 
-* Font
+* Font   :Font:
+
 #+begin_src emacs-lisp
 (defun pp/set-font (font size)
   "Use FONT with SIZE if it's present in the system."
@@ -817,12 +924,14 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
 
 [[https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change][System appearance change]] in Emacs Plus.
 
-=emacs-mac-port= does have this built-in.
-=emacs-plus= allows to add hook on changing system appearance.
+=emacs-mac-port= does have this built-in
+[[https://github.com/d12frosted/homebrew-emacs-plus][emacs-plus]] allows to add hook on changing system appearance
 
 #+begin_src emacs-lisp
 (defun pp/apply-appearance (appearance)
-  "Load theme, taking current system APPEARANCE into consideration."
+  "Load theme, taking current system APPEARANCE into consideration.
+
+Works only in emacs-plus."
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance
     ('light (progn (setq modus-operandi-theme-no-mixed-fonts t)
@@ -857,7 +966,7 @@ On [2020-11-26 Thu] in the commit [[https://github.com/WJCFerguson/emacs-faff-th
 (add-hook 'org-mode-hook #'pp/line-numbers-off)
 #+end_src
 
-* Keybindings
+* Keybindings                                                   :Keybindings:
 
 I found it works better if all the keybindings defined in a single
 subtree instead of being configured in =use-package= import. The main
@@ -865,6 +974,8 @@ reason is that I can review them and find those I forget about and
 either try using them or eventually remove entirely.
 
 I use =general.el= package for managing keybindings.
+
+=C-h m= :: describe mode, contains keybindings defined by given major mode
 
 #+begin_src emacs-lisp
 ;; Use ESC as universal get me out of here command
@@ -886,7 +997,7 @@ To define keybinding I use =general.el= package:
 (use-package general :ensure t)
 
 (general-define-key
- ;;"<tab>" 'org-cycle
+ "§" 'other-window
  "s-s" 'save-buffer
  "s-S" 'write-file        ;; save as
  "s-a" 'mark-whole-buffer ;; select all
@@ -896,7 +1007,7 @@ To define keybinding I use =general.el= package:
  "s-." 'company-complete
 
  ;; windows
- "s-y" 'ace-window
+ "s-q" 'ace-window
  "s-1" 'delete-other-windows
  "s-2" 'split-window-below
  "s-3" 'split-window-right
@@ -908,7 +1019,7 @@ To define keybinding I use =general.el= package:
  "<s-backspace>" 'goto-last-change
  "s-j" 'previous-buffer
  "s-k" 'next-buffer
- "s-b" 'consult-buffer
+ "s-b" 'frog-jump-buffer
  "s-m" 'consult-mark
  "C-;" 'avy-goto-char
  "s-e" 'pp/open-in-eww
@@ -925,20 +1036,28 @@ To define keybinding I use =general.el= package:
  "s-F" 'deadgrep
 
  ;; modes
- "s-t" (make-toggle-function "*eshell*" 'eshell)
+ "s-t" (pp/make-toggle-eshell)
  "s-g" 'magit-status
 
  ;"M-x" 'execute-extended-command ;; this is the default
+
  ;; function keys
+ ; "<f1>" - standard Emacs keybinding for help subcommand
  "<f2>" 'dired-sidebar-toggle-sidebar
  "<f3>" 'ace-window
- "<f4>" (make-toggle-function "*scratch*" (lambda ()))
+ "<f4>" (pp/make-toggle-scratch)
+
  "<f5>" 'deadgrep
- ;"<f6>" 'flymake-show-diagnostics-buffer
+ "<f6>" (lambda () (interactive) (push-mark))
  "<f7>" 'goto-last-change
  "<f8>" 'repeat
- "<f9>" 'dired-jump
- ;"<f10>" (make-toggle-function "*eshell*" 'eshell)
+
+ "<f9>" 'execute-extended-command
+ ;"<f10>" - standard macOS keybinding for opening top menu
+ ;"<f11>" - standard macOS keybinding for showing Desktop, can't rebind it
+ "<f12>" 'eval-last-sexp
+
+ "<f13>" 'deadgrep
 
  ;; text manipulation
  "s-'" 'er/expand-region
@@ -948,31 +1067,29 @@ To define keybinding I use =general.el= package:
 
 (general-define-key
  :states '(normal)
- "§" 'other-window
  "C-k" 'evil-scroll-up
  "C-j" 'evil-scroll-down
- "C-r" 'isearch-backward
- ;"*" 'swiper-thing-at-point
-)
+ "C-r" 'isearch-backward)
 
 (general-define-key :states '(normal) :prefix "SPC"
   ;"1" 'pp/switch-to-scratch-buffer
   ;"2" 'lispy-arglist-inline
-  "SPC" (make-toggle-function "*scratch*" (lambda ()))
+  "SPC" (pp/make-toggle-scratch)
   "a" 'org-agenda
   "," 'org-insert-structure-template
-  "[" 'flymake-goto-previous-error
+  "[" 'flymake-goto-prev-error
   "]" 'flymake-goto-next-error
-  "d" 'projectile-find-dir ;'counsel-projectile-find-dir
+  "d" 'projectile-find-dir
   "j" 'dired-jump
   "k" 'kill-this-buffer
   "n" 'deft ; mnemonics - notes
-  "p" 'project-switch-project ;'counsel-projectile-switch-project
+  "p" 'project-switch-project
   "h" 'highlight-symbol ;; mnemonics - highlight
   "l" 'lispy-mode
-  "w" 'visual-line-mode
+  "v" 'visual-line-mode
+  "w" 'widen
   "f" 'fundamental-mode
-  "e" (make-toggle-function "*eshell*" 'eshell)
+  "e" (pp/make-toggle-eshell)
   "t" 'projectile-test-project)
 
 (general-define-key
@@ -980,8 +1097,10 @@ To define keybinding I use =general.el= package:
  "t" 'go-translate-popup-current)
 
 (general-define-key
- :states '(normal) :prefix "C-x"
- "C-o" 'find-file)
+ :prefix "C-x"
+ "C-o" 'find-file
+ "b" 'consult-buffer ; default 'switch-to-buffer
+)
 
 (general-define-key
  :states '(visual)
@@ -998,13 +1117,38 @@ To define keybinding I use =general.el= package:
 
 ** Commenting/uncommenting
 
-- =M-;=, =comment-dwim= :: in Command mode will add comment to the end of line, in Visual mode will comment the whole line
-- =C-x C-;=, =s-;=, =comment-line= :: will comment the whole line, but works strange in Org Babel
+- =M-;=, =comment-dwim= :: in Command mode will add comment to the end
+  of line, in Visual mode will comment the whole line
+- =C-x C-;=, =s-;=, =comment-line= :: will comment the whole line, but
+  works strange in Org Babel
 
 Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim.html.
 
-* Evil mode - vim keybindings
+** Key-chords
+<2021-04-24 Sat>
+
+Documentation is in the package source code.
+
+Update <2021-04-25 Sun>: Alghout the package looks to be useful, I
+started to see noticable lag while typing, so I disabled it and
+configured F13-F15 keys for the initial commands I configured as
+chords.
+
+#+begin_src emacs-lisp
+(use-package key-chord :ensure t :defer t
+  :config
+  (setq key-chord-two-keys-delay 0.06)
+  (key-chord-define-global "jk" 'execute-extended-command)
+  (key-chord-define-global "df" 'deadgrep)
+  (key-chord-define-global "xe" 'eval-last-sexp)
+  (key-chord-mode -1))
+#+end_src
+
+* Evil mode - vim keybindings                                          :Evil:
 <2021-03-07 Sun>
+
+Evil is a minor mode implementing semantic navigation mode, like in vim. Other notable semantic
+modes are compared on [[https://github.com/jyp/boon][Boon's README]].
 
 #+begin_src emacs-lisp
 (use-package evil
@@ -1017,9 +1161,6 @@ Good description in http://ergoemacs.org/misc/emacs_comment-line_vs_comment-dwim
   :config
   (global-evil-surround-mode 1))
 #+end_src
-
-#+RESULTS:
-: t
 
 Notable differences from vim:
 - =C-u= is a universal argument in Emacs (changes the following
@@ -1045,7 +1186,7 @@ Links:
     (projectile-mode +1))
 #+end_src
 
-* Improving M-x
+* Improving M-x (=execute-extended-command=)
 #+begin_src emacs-lisp
 (use-package smex :ensure t)
 #+end_src
@@ -1064,10 +1205,10 @@ Replaces Ivy+Counsel.
 (use-package selectrum-prescient :ensure t
   :init (selectrum-prescient-mode +1))
 
-(use-package completing-read-xref
-  :straight (completing-read-xref :type git :host github :repo "travitch/completing-read-xref.el")
-  :commands (completing-read-xref-show-xrefs completing-read-xref-show-xrefs)
-  :init (setq xref-show-definitions-function 'completing-read-xref-show-defs))
+;; (use-package completing-read-xref
+;;   :straight (completing-read-xref :type git :host github :repo "travitch/completing-read-xref.el")
+;;   :commands (completing-read-xref-show-xrefs completing-read-xref-show-xrefs)
+;;   :init (setq xref-show-definitions-function 'completing-read-xref-show-defs))
 #+end_src
 
 ** Prescient - Frecency-based candidate sorting, also offers filtering
@@ -1104,10 +1245,19 @@ Can't make it working on both 27" display and on MacBook display.
         marginalia-margin-threshold 165)
   (marginalia-mode))
 #+end_example
+
 ** Consult
 
+[[https://github.com/minad/consult/blob/923a34330207ed868b6388acf0f432ae989f1427/README.org#use-package-example][Example of extended configuration]] with many standard keybindings
+rebinded to consult functions.
+
 #+begin_src emacs-lisp
-(use-package consult :ensure t)
+(use-package consult :ensure t
+  :config
+  (setq consult-preview-key (list (kbd "<down>")
+                                  (kbd "<up>")
+                                  (kbd "`")
+                                  (kbd "\\"))))
 
 ;(use-package icomplete-vertical :ensure t
 ;  :init (icomplete-vertical-mode))
@@ -1133,9 +1283,10 @@ Error in post-command-hook (icomplete-post-command-hook):
 (wrong-type-argument number-or-marker-p nil)
 #+end_quote
 
-* git
+*** DONE Configure =consult-preview-key=
+<2021-04-18 Sun>
 
-Search terms: version control system, vcs, magit, Magit
+* git                                                             :git:magit:
 
 - =C-c C-a= :: when on a patch file, apply hunk at point
 
@@ -1189,11 +1340,15 @@ Search terms: version control system, vcs, magit, Magit
 #+end_src
 
 * Org-mode                                                          :OrgMode:
-- [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org cheatsheet]]
+- [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org Reference Card]]
 - [[https://orgmode.org/guide/Hyperlinks.html][Hyperlinks]]
+- [[https://orgmode.org/manual/The-date_002ftime-prompt.html][Date and time prompts (by =C-c .=)]]
 
-- =C-c C-l=, =org-insert-link= :: if on url - uses it and prompts for description. [[https://orgmode.org/manual/Handling-Links.html#Handling-Links][Docs]]
+- =C-c .= :: open caledar to insert date
+- =C-c C-l=, (org-insert-link) :: if on url - uses it and prompts for description. [[https://orgmode.org/manual/Handling-Links.html#Handling-Links][Docs]]
 - =C-c C-o= :: Open link at point
+- (org-clock-in), =C-c C-x TAB= :: Start timer for a given task
+- (outline-hide-other) :: useful to fold all headings
 
 #+begin_example emacs-lisp
 (describe-variable 'org-version)
@@ -1236,23 +1391,29 @@ Babel enables literate programming in Org Mode.
 - =C-c C-c= :: execute block
 - =C-c '= :: edit this block in a separate buffer
 
+The =noweb= feature of babel allows us to expand references to other code blocks within a code block.
+
 #+begin_src emacs-lisp
 (setq-default org-confirm-babel-evaluate nil)
 (use-package ob-restclient :ensure t) ;; support restclient in org-babel
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((clojure . t)
+ '(
+   (calc . t)
+   (clojure . t)
    (emacs-lisp . t)
+   (ledger . t)
    (plantuml . t)
-   (shell . t)
    (python . t)
    (restclient . t)
-   (calc . t)))
+   (shell . t)
+))
 #+end_src
 
-*** TODO Setup org-mode-babel for sql files
+*** Setup org-mode-babel for sql files
 - Should be able to run SQL in Snowflake
+- Well, at least formatting
 
 *** DONE Setup org-mode-babel for shell
 CLOSED: [2020-09-21 Mon 23:02]
@@ -1277,7 +1438,7 @@ ls ~
 | go            |
 | repos         |
 
-*** TODO Setup org-mode-babel for clojure
+*** Setup org-mode-babel for clojure
 
 #+begin_src clojure
 (+ 2 3)
@@ -1300,6 +1461,7 @@ printf "Done!\n"
 *** TODO Try ob-async
 Asynchronous src_block execution for org-babel
 https://github.com/astahlman/ob-async
+
 *** How to insert source code block?
 <2020-01-24 Fri>
 
@@ -1348,10 +1510,12 @@ There is such configuration from Castlemacs which did that damage:
 
 https://emacs.stackexchange.com/questions/39034/prefer-vertical-splits-over-horizontal-ones
 https://www.gnu.org/software/emacs/manual/html_node/eintr/See-variable-current-value.html
+
 *** TODO u/alphapapa published org-super-agenda package to bring it to the next level
 <2020-11-22 Sun>
 https://github.com/alphapapa/org-super-agenda
 https://www.reddit.com/r/emacs/comments/jy87i3/ann_orgsuperagenda_12_released/
+
 *** TODO Write a function to add current buffer to org-agenda-files
 
 ** Org-table
@@ -1435,11 +1599,11 @@ them fit to the width of the buffer?
 #+begin_example emacs-lisp
 (describe-variable 'outline-promotion-headings)
 #+end_example
-* Eshell
+
+* Eshell                                                             :EShell:
 
 *Links*
-- https://ambrevar.xyz/emacs-eshell/
-- https://www.reddit.com/r/emacs/comments/6y3q4k/yes_eshell_is_my_main_shell/
+- [[https://ambrevar.xyz/emacs-eshell/][Eshell as a main shell]]
 
 #+begin_src emacs-lisp
 
@@ -1510,7 +1674,7 @@ Another alternative - Elisp package https://github.com/tkf/emacs-request.
 (use-package anybar :ensure t)
 #+end_example
 
-* DeadGrep - Searching in multiple files / project
+* DeadGrep - Searching in multiple files / project             :ack:rg:deadgrep:
 
 grep / ripgrep / ag / ack / pt
 
@@ -1540,13 +1704,18 @@ grep / ripgrep / ag / ack / pt
 (use-package format-all :ensure t)
 #+end_src
 
-** Working with S-expressions:
-- =C-M f= :: forward
-- =C-M b= :: backward
-- =C-M n= :: next
-- =C-M p= :: previous
-- =C-M u= :: up
-- =C-M d= :: down
+** Built-in keybindings for working with S-expressions
+<2021-04-25 Sun>
+- =C-M-f=, (forward-sexp) :: forward
+- =C-M-b=, (backward-sexp) :: backward
+- =C-M-n=, (forward-list) :: next
+- =C-M-p=, (backward-list) :: previous
+- =C-M-u=, (backward-up-list) :: up
+- =C-M-d=, (down-list) :: down
+- =C-M-k=, (kill-sexp) :: kill balanced expression forward
+- =C-M-SPC=, (mark-sexp) :: Put the mark at the end of the sexp
+- =C-M-e=, (end-of-defun) :: End of defun - go to the next line of current top-level sexp
+- =C-M-a=, (beginning-of-defun) :: Beginning of defun - go to the beginning of the first line of current top-level sexp
 
 ** Lispy - working with lisp s-expressions
 Useful keybindings in Lispy:
@@ -1819,7 +1988,7 @@ https://github.com/magnars/s.el
   (setq-default go-test-args "-timeout 30s"))
 #+end_src
 
-** variable binding depth exceeds max-specpdl-size error
+** DONE Fix "variable binding depth exceeds max-specpdl-size" error
 <2021-04-16 Fri> <2021-04-17 Sat>
 
 [[https://www.reddit.com/r/emacs/comments/9jp9zt/anyone_know_what_variable_binding_depth_exceeds/][Discussion on Reddit]]
@@ -1906,8 +2075,16 @@ https://github.com/syohex/emacs-json-pointer
 #+end_src
 
 * Ledger, double-entry plain text accounting system
+<2021-04-18 Sun>
 #+begin_src emacs-lisp
 (use-package ledger-mode :ensure t)
+#+end_src
+
+Manual to use ledger from Org-mode.
+
+#+name balance-in-eur
+#+begin_src ledger :cmdline -s -f ~/Documents/Notes/ledger.txt bal Assets Liabilities -X EUR --depth 2
+; comment
 #+end_src
 
 * Clojure
@@ -1988,6 +2165,7 @@ clojure.string/includes? ["cider" "nrepl" "clojure"]))
 ** ClojureScript
 *** TODO Try re-jump for re-frame
 https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
+
 ** 4Clojure
 <2020-09-23 Wed> <2020-11-28 Sat>
 
@@ -2066,8 +2244,6 @@ https://github.com/oliyh/re-jump.el/blob/master/re-jump.el
    minibuffer-local-completion-map)
    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
    (setq sbt:program-options '("-Dsbt.supershell=false")))
-
-
 #+end_src
 
 * Highlighting
@@ -2107,7 +2283,7 @@ Don't remember what's this.
 
 * Network utilities in Emacs
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+begin_example emacs-lisp
 
 (telnet "ya.ru" 80)
 
@@ -2115,38 +2291,127 @@ Don't remember what's this.
 
 (telnet "inbucket.nyancat.gcp.in-gr.ru" 443)
 
-#+END_EXAMPLE
+#+end_example
+
 * Open browser from Emacs
 
-#+BEGIN_EXAMPLE emacs-lisp
+#+begin_example emacs-lisp
 (start-process "" nil "open" "http://clojure.org")
 
 (xwidget-webkit-browse-url "http://clojure.org")
-#+END_EXAMPLE
+#+end_example
+
 * Blogging
+:LOGBOOK:
+CLOCK: [2021-04-19 Mon 12:32]--[2021-04-19 Mon 13:52] =>  1:20
+:END:
 <2020-09-27 Sun>
 
 How to run a blog from Emacs with minimum overhead efforts.
 
-Check ./How-do-I-blog.org file for details.
+Options I considered:
+
+** Weblorg - A Static HTML Generator for Emacs and Org-Mode
+<2021-02-07 Sun>
+
+- [[https://www.reddit.com/r/emacs/comments/l9ohho/weblorg_a_static_html_generator_for_emacs_orgmode/][Announcement on Reddit]]
+- Website :: [[https://emacs.love/weblorg/][emacs.love/weblorg]]
+
+#+begin_src emacs-lisp
+(use-package weblorg :ensure t)
+#+end_src
+** LazyBlorg - Python-powered opinionated site generator
+
+Used on https://karl-voit.at website containing thousands of postings.
+
+I tried to use it and it's difficult to setup for my own use.
+
+** Use org-html-export and run exports manually
+
+Check How-do-I-blog.org file for details.
 
 #+begin_src emacs-lisp
 (defun pp/export-to-blog ()
   "Converts current Org buffer to html and moves it to blog sources folder."
   (interactive)
   (let ((filename (org-html-export-to-html)))
-    (rename-file filename "~/Documents/Projects/pavel-popov.github.io/" t)))
+    (rename-file filename "~/Documents/Projects/velppa.github.io/" t)))
 #+end_src
 
-** Weblorg - A Static HTML Generator for Emacs and Org-Mode
-<2021-02-07 Sun>
+This approach works fine, but it has certain limitations:
 
-- [[https://www.reddit.com/r/emacs/comments/l9ohho/weblorg_a_static_html_generator_for_emacs_orgmode/][Announcement on Reddit]]
-- Website :: [[https://emacs.love/weblorg/][emacs.lov/weblorg]]
+- Each post should live in it's own org file
+- Hard to setup styling, toolbar, footer and references to common
+  pages
 
-#+begin_src emacs-lisp
-(use-package weblorg :ensure t)
+*** Example post generated with =org-html-export=                    :blog:
+:PROPERTIES:
+:EXPORT_HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css"/>
+:EXPORT_AUTHOR: Pavel P.
+:EXPORT_FILE_NAME: example-blog-post.html
+:EXPORT_DATE: <2021-05-01 Sat>
+:EXPORT_OPTIONS: toc:nil num:3 H:4 ^:nil pri:t
+:END:
+
+#+begin_abstract
+This post is a showcase of various elements that can present in a blog
+post. It's a template and a reference post where I describe how do I
+blog.
+
+Abstract is a short description of the note which goes before Table of
+Contents.
+#+end_abstract
+
+#+TOC: headlines 2
+
+**** Exporting a post to an html
+
+Post can be a separate org document or a subtree in an org document.
+For example, I plan to export Emacs-related posts from my Emacs
+configuration.
+
+Some text inside section one.
+
+Text can be organised in paragraphs.
+
+To export an note, add needed properties and run (org-export-dispatch)
+using =C-c C-e C-s h o=.
+
+**** Section two
+
+Source code block:
+
+#+begin_src calc
+2 + 3 + 4
 #+end_src
+
+#+RESULTS:
+: 9
+
+**** Section three
+
+Let's add some quote:
+
+#+begin_quote
+E = m * c^2
+---
+Albert Einstein
+#+end_quote
+
+
+
+
+
+
+
+** Maybe write my own static site generator?
+<2021-04-24 Sat>
+
+- Powered by OrgMode, add a tag :blog: on a subtree and manually run M-x command
+- Templating based on [[https://clarete.li/templatel/][templatel]] package
+
+
+
 * Notes
 ** Deft - a package for dealing with text notes
 <2020-11-22 Sun>
@@ -2258,15 +2523,20 @@ https://macreports.com/record-face-screen-mac/
    "*jet error buffer*"
    t))
 #+end_src
+
 * Command log mode - record keystrokes
 <2020-09-22 Tue>
+
 #+begin_src emacs-lisp
 (use-package command-log-mode :ensure t)
 #+end_src
+
 * Collaborative editing, Floobits, Live Share
+
 #+begin_src emacs-lisp
-(use-package floobits :ensure t)
+(use-package floobits :ensure t :defer t)
 #+end_src
+
 * Packages to try someday
 - Productivity tips :: https://news.ycombinator.com/item?id=22129636
 - Literate Devops ::
@@ -2274,12 +2544,16 @@ https://macreports.com/record-face-screen-mac/
   Discussion: https://news.ycombinator.com/item?id=16559004
 - Purpose :: Manage Windows and Buffers According to Purposes
   https://github.com/bmag/emacs-purpose
+
 * Trying packages
+
 #+begin_src emacs-lisp
 (use-package try :ensure t)
 #+end_src
+
 * Reading from s3 using =sqlc= tool
 <2020-11-18 Wed>
+
 #+begin_src emacs-lisp
 (defun pp/sqlc (url)
   "Run sql command with provided URL and other options."
@@ -2315,6 +2589,7 @@ emacs-webkit requires at least Emacs 28
 * TODO How to explicitly record the mental stack?
 <2020-11-22 Sun>
 https://www.reddit.com/r/emacs/comments/jxvm1h/how_to_explicitly_record_the_mental_stack/
+
 * Opening file in External App
 <2021-03-20 Sat>
 
@@ -2472,6 +2747,7 @@ Bob --> Alice: Good Bye !
 }
 @endjson
 #+end_example
+
 * Convert text into Slack's Alphabet Emojis
 <2020-12-09 Wed>
 
@@ -2487,6 +2763,7 @@ Let's write it:
 #+begin_src emacs-lisp
 
 #+end_src
+
 * Autoremove asked to delete 15 packages that I use
 <2020-12-12 Sat>
 
@@ -2540,11 +2817,8 @@ https://github.com/applied-science/emacs-vega-view
 * prism.el - highlight code by depth
 <2020-12-28 Mon>
 
-by u/alphapapa.
-
 #+begin_src emacs-lisp
 (use-package prism :ensure t
-  :straight (prism :type git :host github :repo "alphapapa/prism.el")
   :hook (prog-mode-hook . prism-mode))
 #+end_src
 
@@ -2556,14 +2830,18 @@ by u/alphapapa.
   :comments-fn (lambda (color) (prism-blend color (face-attribute 'font-lock-comment-face :foreground) 0.25))
   :strings-fn (lambda (color) (prism-blend color "white" 1.7)))
 #+end_example
+
 * Emacs NES emulator
 <2021-01-08 Fri>
+
 Didn't end having it set up because of reviews from
 the author saying it's painfully slow.
+
 #+begin_example
 (add-to-list 'load-path "~/.emacs.d/packages/emacs-nes")
 (load-library 'nes)
 #+end_example
+
 * Working with S3
 <2021-01-15 Fri>
 
@@ -2596,13 +2874,45 @@ A valid remote file name starts with "/method:host:" or
 https://keminglabs.com/finda/setup/
 
 #+begin_src emacs-lisp
-;(load "~/.finda/integrations/emacs/finda.el")
+(load "~/.finda/integrations/emacs/finda.el")
 #+end_src
-* Testing how built-in calc works with Babel
+
+
+#+begin_src css
+// original .finda/theme.css
+/* Note: Only Finda customers can customize themes. */
+
+/* These styles apply in all modes. */
+:root {
+    --color-background: hsl(0, 0%, 90%);
+    --color-highlight: #af0a0a;
+    --color-text: black;
+
+    /* AnonymousPro ships with Finda. */
+    /* Specify local fonts via their PostScript name. */
+    /* You can also add @font-face declarations for more control */
+    /* See: https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face */
+    --font-family: 'AnonymousPro';
+    --font-size: 16px;
+}
+
+/* These values apply in OS X 10.14 (Mojave) light mode. */
+[data-theme='light'] {
+
+}
+
+/* These values only apply in OS X 10.14 (Mojave) dark mode. */
+[data-theme='dark'] {
+    --color-highlight: hsl(357,  60%,  60%);
+    --color-background: #2f2f32;
+    --color-text: #bebec5;
+}
+#+end_src
+
+* Testing how built-in calc works with Babel  :calc:
 <2021-01-26 Tue>
 
-Documentation:
-https://www.gnu.org/software/emacs/manual/html_mono/calc.html
+[[https://www.gnu.org/software/emacs/manual/html_mono/calc.html][Documentation]]
 
 #+begin_src calc
 fsolve(x*2+x=4,x)
@@ -2645,6 +2955,7 @@ x + y
 
 #+RESULTS:
 : 83016
+
 * Beginend - go to meaningful begin/end of the buffer
 <2021-02-06 Sat>
 
@@ -2695,8 +3006,6 @@ Let's try to see how we'd do this in Emacs (Evil).
 
 * Preparing tweets
 
-
-
 #+begin_src emacs-lisp
 (defun pp/count-words-region (posBegin posEnd)
   "Print number of words and chars in region.
@@ -2724,7 +3033,6 @@ experience had been quite terrible.
 
 Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
 
-
 #+begin_src emacs-lisp
 (use-package visual-fill-column :ensure t)
 
@@ -2739,12 +3047,13 @@ Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   :hook ((nov-mode-hook . pp/nov-mode-hook)))
 #+end_src
-* Repeat last command run via M-x
+
+* Repeat last command run via =M-x=
 <2021-02-18 Thu>
 
 [[http://ergoemacs.org/emacs/emacs_repeat_command.html][Emacs Repeat Command]]
 
-- =repeat= :: repeat last
+- (repeat) :: repeat last
 
 * Reading RSS with elfeed
 <2021-03-16 Tue>
@@ -2755,6 +3064,9 @@ Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
   (setq elfeed-feeds
       '("https://daringfireball.net/feeds/main"
         "https://avva.livejournal.com/data/rss"
+        "https://reddit.com/r/emacs.rss"
+        "https://reddit.com/r/clojure.rss"
+        "https://blog.tecosaur.com/tmio/rss.xml"
         "https://kieranhealy.org/index.xml")))
 #+end_src
 
@@ -2770,13 +3082,17 @@ Let's try [[https://depp.brause.cc/nov.el/][nov.el]] mode.
   "Opens url at point using `eww'"
   (interactive)
   (eww (thing-at-point 'url)))
+#+end_src
 
-;; Source - https://stackoverflow.com/a/66670455
+This example enables opening http and https links in eww.
+Inspired by https://stackoverflow.com/a/66670455:
+
+#+begin_example emacs-lisp
 (eval-after-load 'ol
   '(dolist (scheme '("http" "https"))
      (org-link-set-parameters
       scheme :follow (lambda (url) (eww (substring url 2))))))
-#+end_src
+#+end_example
 
 #+begin_example emacs-lisp
 ((lambda (url)
@@ -2796,11 +3112,10 @@ A minor mode for previewing Org documents using eww.
 
 Link: https://www.reddit.com/r/emacs/comments/m5ibyh/
 
-
 - =C-x ^= :: make current window taller, =.= to repeat
 
-On <2021-04-13 Tue> I disabled the package as *eshell* windows it
-manages are too short.
+Update: On <2021-04-13 Tue> I disabled the package as *eshell* windows
+it manages are too short.
 
 #+begin_example emacs-lisp
 (use-package popper :ensure t
@@ -2820,3 +3135,143 @@ manages are too short.
 
 (setq popper-group-function #'popper-group-by-project)
 #+end_example
+
+* Pasting into Minibuffer and ISearch from macOS clipboard
+<2021-04-19 Mon>
+
+To use =s-c=, =s-x=, =s-v= in macOS I use =simpleclip.el= package.
+However it doesn't provide options to insert into minibuffer and
+ISearch lines, so I have added support for =s-v= keybinding.
+
+#+begin_src emacs-lisp
+(defun pp/paste-in-minibuffer ()
+  (interactive)
+  (local-set-key (kbd "s-v") 'simpleclip-paste))
+
+(add-hook 'minibuffer-setup-hook 'pp/paste-in-minibuffer)
+
+(defun pp/paste-in-isearch ()
+  (interactive)
+  (isearch-yank-string (simpleclip-get-contents)))
+
+(define-key isearch-mode-map (kbd "s-v") 'pp/paste-in-isearch)
+#+end_src
+
+Links:
+
+- [[https://www.emacswiki.org/emacs/IncrementalSearch][IncrementalSearch on EmacsWiki]]
+- [[http://blog.binchen.org/posts/paste-string-from-clipboard-into-minibuffer-in-emacs.html][Note on Chen's blog]]
+
+
+** TODO Fix pasting into ISearch to not convert to lowercase
+<2021-04-21 Wed>
+
+Converting to lowercase happens only on pasting to
+ISearch string. It pastes to Minibuffer fine.
+
+* Glasses minor mode
+<2021-04-24 Sat>
+
+=glasses-mode= minor mode displays underscores between all the pairs
+of lower and upper English letters. (This only displays underscores,
+the text is not changed actually.) Alternatively, you can say you want
+the capitals in some given face (e.g. bold).
+
+* Posframe - have a popup at point
+<2021-04-25 Sun>
+
+Postframe is a built-in package.
+
+#+begin_src emacs-lisp
+(use-package which-key-posframe :ensure t
+  :defer t
+  :config
+  (which-key-posframe-mode -1))
+#+end_src
+
+* [[https://github.com/magit/transient][Transient]] - package to create hydra-like shortcut prefixes
+<2021-04-25 Sun>
+
+[[https://github.com/olivertaylor/dotfiles/blob/master/emacs/lisp/oht-transient.el][Example of configuration]]
+
+* Midnight-mode - run commands on schedule
+<2021-04-28 Wed>
+
+#+begin_example emacs-lisp
+(defun pp/midnight-mode-hook ()
+  "Run command on schedule using midnight-mode."
+  (interactive)
+  (when (eq evil-state 'normal) (push-mark)))
+
+(use-package midnight :ensure t
+  :hook
+  (midnight-mode-hook . pp/midnight-mode-hook)
+  :config
+  (setq midnight-period 60)
+  (midnight-mode -1))
+#+end_example
+
+* Reading [[https://tecosaur.github.io/emacs-config/config.html#teach-man-fish][tecosaur's Doom Emacs Configuration]]
+<2021-04-28 Wed>
+
+I tried to add advice, but failed to achieve anything handy.
+
+Links:
+- https://www.emacswiki.org/emacs/AdvisingFunctions
+
+#+begin_example emacs-lisp
+
+(defun pp/advice-split-window-right (&optional)
+    (other-window 0)
+    (frog-jump-buffer)
+    (other-window 0))
+
+(advice-add 'split-window-right :after
+  'pp/advice-split-window-right)
+
+(advice-remove 'split-window-right 'pp/advice-split-window-right)
+
+#+end_example
+
+* DONE =s-t= invokes scratch buffer instead of eshell
+CLOSED: [2021-04-30 Fri 20:55]
+<2021-04-30 Fri>
+
+* DONE Emoji doesn't work in emacs-plus@28
+CLOSED: [2021-04-30 Fri 21:15]
+<2021-04-30 Fri>
+
+Found the below snippet on [[https://github.com/d12frosted/homebrew-emacs-plus/issues/53][emacs-plus#53]]:
+
+#+begin_src emacs-lisp
+(set-fontset-font t 'symbol
+                    (font-spec :family "Apple Color Emoji")
+                    nil 'prepend)
+
+#+end_src
+
+* TODO Many things broken in emacs-mac 27.2 (prebuilt binary) after using emacs-plus@28
+:PROPERTIES:
+:EXPORT_AUTHOR: Pavel P.
+:EXPORT_FILE_NAME: using-emacs-plus.html
+:EXPORT_DATE: <2021-05-01 Sat>
+:END:
+
+Pros of emacs-plus@28:
++ Better switch between light and dark modes, themes are configurable
+  and I chose modus-vivendi and modus-operandi
++ I like GUI dialogs better
+
+Broken things in emacs-mac 27.2 (prebuilt binary):
+- Line in *Messages*: function make-closure is void
+- Lispy is not enabled
+- Line numbers are not enabled
+
+* Calculations using ledger postings
+
+#+begin_src calc
+                    +55869.34 RUB + 7335.80 RUB +14671.61 RUB
+#+end_src
+
+#+RESULTS:
+: 77876.75 RUB

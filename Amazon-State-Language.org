@@ -7,7 +7,7 @@ https://states-language.net
 * Validating State Machine locally
 
 #+begin_src sh
-❯ asl-validator --json-path state-machine-example.asl.json
+asl-validator --json-path state-machine-example.asl.json
 #+end_src
 
 #+RESULTS:
