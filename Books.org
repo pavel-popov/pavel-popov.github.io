@@ -1,0 +1,61 @@
+#+TITLE: Books
+
+* Cognitive Behavioral Therapy Made Simple
+<2021-02-12 Fri>
+
+At the end of this book, you will:
+
+- Have a better understanding of what CBT means.
+- Understand how your thoughts determine your feelings and behaviors.
+- Discover science-backed research why CBT is a very effective
+  therapeutic option in the treatment of depression, anxiety, anger,
+  and panic attacks.
+- Be more aware of what you must do to ensure you get the most out of
+  CBT.
+- Be enlightened on how the negative thoughts that fuel your negative
+  emotions develop, and how you can identify them when they come to
+  mind.
+- Uncover life hacks that you can apply right away to challenge and
+  replace your negative thoughts with more balanced, healthy, and
+  rational thoughts.
+- Know how to make your new, restructured thoughts your second nature,
+  and how to monitor your feelings to prevent a relapse.
+- Discover tailored and proven techniques you can start right now and
+  how you can apply them to overcome depression, end anxiety, manage
+  anger, and stop panic attacks in its tracks.
+- Begin your journey toward reclaiming your overall health and mental
+  wellbeing with the aid of the carefully structured case studies and
+  practice exercises to guide you along the way.
+
+* Daily Rituals. How Artists Work - Mason Curry
+<2021-02-12 Fri>
+
+Short write ups of the routines of famous writers.
+
+- Ernest Hamingway - wakes up before sunrise
+
+- Haruki Murakami - wakes up at 04:00, works for 6-8 hours, then
+  running/swimming, goes to sleep at 21:00
+
+* Einstein on the Run
+<2021-02-12 Fri>
+
+#+begin_quote
+Britain is the country that made Einstein into the worldwide
+phenomenon he is today.
+
+This book, Einstein on the Run, is the first to focus on Einstein and
+Britain. It brings together material that is both familiar and
+unfamiliar – some of it hitherto unpublished – from disparate parts of
+the Einstein archives. These archives at the Hebrew University in
+Jerusalem contain a total of around 30,000 documents, making them
+similar in size to the archives of Napoleon Bonaparte and several
+times the size of those of Newton and Galileo, according to the unique
+Einstein Papers Project at the California Institute of Technology.
+#+end_quote
+* When I Die - Gould Philip
+description of deadly conditions to the human body
+
+* Code Shifter - C.E. Meier
+Code Shifter is an adventure book with real programming code and
+concepts for 8-13 year olds.

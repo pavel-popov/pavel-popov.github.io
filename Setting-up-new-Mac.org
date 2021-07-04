@@ -171,3 +171,45 @@ Add =/usr/local/opt/openjdk/bin= to =PATH=.
 ** Manual installation
 
 - =LICEcap= :: create GIFs from screen capture. @stas_kulesh [[https://twitter.com/stas_kulesh/status/1369779208017170432?s=20][tweeted]] about it
+
+* Keybindings
+:PROPERTIES:
+:CREATED:  <2021-06-19 Sat>
+:END:
+
+Emacs keybindings
+
+Configured in ~/Library/KeyBindings/DefaultKeyBinding.dict
+
+
+https://github.com/ttscoff/KeyBindings/blob/master/DefaultKeyBinding.dict
+
+
+- C-w, M-bsp :: delete word backward
+- M-d :: delete word forward
+- C-k :: delete till the end of line
+
+- C-a :: beginning of line
+- C-e :: end of line
+- C-l :: recenter vertically
+- M-f :: forward word - DOESN’T WORK, M-arrow works
+- C-f :: forward character
+- M-b :: backward word
+- C-b :: backward character
+- C-p :: previous line
+- C-n :: next line
+- M-< :: move to the beginning of the document
+- M-> :: move to the end of the document
+- M-v :: page up
+
+- M-y :: copy paragraph
+- M-x :: cut paragraph
+- M-p :: paste paragraph below
+- M-P :: paste paragraph above
+
+- M-/ :: complete
+
+- M-c :: Capitalise word
+- M-U :: uppercase word
+
+- M-s :: select current paragraph

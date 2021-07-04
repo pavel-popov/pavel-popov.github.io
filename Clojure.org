@@ -28,15 +28,14 @@ This file contains manual how to live with Clojure.
   ClojureScript source code.
 
 * Notes on talks/books/posts
-
-** What Sucks about Clojure and Why You'll Love It Anyway Chas Emerick
+** What Sucks about Clojure and Why You'll Love It Anyway - Chas Emerick
 https://www.youtube.com/watch?v=wXgdxCFDjD0
 
 Objectives:
 - Present a fair critique of Clojure from a pragmatic user's perspective
 - What will you with you knew now?
 
-* Starting new application
+* Starting a new application
 
 - [[https://github.com/seancorfield/clj-new][clj-new]] :: Generate new projects based on clj, Boot, or Leiningen Templates
 
@@ -195,3 +194,91 @@ Conclusions:
 - *Strategy* is just a function passed to another function.
 - if a language support multiple dispatch, you don’t need *Visitor* pattern
 - if your function has side-effects, memoization is bad idea
+
+* Macro vs composition vs anonymous function vs regular call
+
+#+begin_src clojure
+(let [a (fn [x] (+ x 3))
+      b (fn [y] (* y 2))]
+  {:lambda (#(a (b %)) 4)
+   :comp ((comp a b) 4)
+   :call (a (b 4))
+   :macro (-> 4 b a)})
+#+end_src
+
+* Dealing with time using Java
+
+#+begin_src clojure
+(.format
+ (java.time.ZonedDateTime/now (java.time.ZoneId/of "Europe/Dublin"))
+ (java.time.format.DateTimeFormatter/ISO_INSTANT))
+
+
+(.format
+ (java.time.ZonedDateTime/ofInstant
+  (java.time.Instant/ofEpochMilli (System/currentTimeMillis))
+  (java.time.ZoneId/of "Europe/Dublin"))
+ (java.time.format.DateTimeFormatter/ISO_INSTANT))
+
+
+(.format
+ (java.time.LocalDateTime/now)
+ (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss"))
+
+
+;; (.parse date-formatter (format-datetime))
+;;
+;; (string->timestamp-seconds (format-datetime))
+;; => 1622823919
+
+(def date-formatter
+  (java.time.format.DateTimeFormatter/ofPattern "yyyy-MM-dd'T'HH:mm:ssZ"))
+
+
+(defn timestamp-seconds->string [ts]
+  (.format
+   (java.time.ZonedDateTime/ofInstant
+    (java.time.Instant/ofEpochSecond ts)
+    (java.time.ZoneId/of "Europe/Dublin"))
+   date-formatter))
+
+(defn string->timestamp-seconds
+  "Parse string in ISO format and returns unix timestamp in seconds."
+  [s]
+  (.getLong
+   (java.time.ZonedDateTime/parse s date-formatter)
+   (java.time.temporal.ChronoField/INSTANT_SECONDS)))
+
+;; (string->timestamp-seconds "2021-06-04T17:25:39+0100")
+#+end_src
+
+* Parsing command line arguments
+<2021-06-25 Fri>
+
+Links:
+
+- https://vlaaad.github.io/tools-cli-in-10-lines-of-code
+
+* Writing main function to invoke as an app
+<2021-06-25 Fri>
+
+#+begin_src clojure
+(defn -main [& opts]
+  (let [f #(try
+             (let [form (read-string %)]
+               (cond
+                 (qualified-symbol? form) @(requiring-resolve form)
+                 (symbol? form) @((ns-publics (symbol (namespace `-main))) form)
+                 :else form))
+             (catch Exception _ %))
+        [f & args] (map f opts)]
+    (some-> (apply f args) prn)))
+
+(defn rooms [& {:as params}]
+  (poll rooms-context params))
+#+end_src
+
+
+#+begin_src sh
+clj -m fh.sapi.main fh.sapi.raa/rooms :hotel-id 1137651 :currency RUB
+#+end_src

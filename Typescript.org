@@ -1,0 +1,34 @@
+#+TITLE: Notes on learning TypeScript
+
+* Types specified in a function declaration are interfaces
+* Using literal string types
+<2021-06-30 Wed>
+
+When using string literals in types, like this:
+
+#+begin_src typescript
+interface Car {
+  model: 'Mercedes'|'BMW'
+}
+#+end_src
+
+later in the code we assign =model= to some value literally,
+TypeScript complains that string is not compatible with the type
+literal. To overcome the error we can use type casting (suggestion
+found on [[https://stackoverflow.com/questions/43121661/typescript-type-inference-issue-with-string-literal][StackOverflow]]):
+
+#+begin_src typescript
+const myCar = {
+  model: 'BMW' as 'BMW'
+}
+#+end_src
+
+But this breaks type safety as TypeScript won't complain on this:
+
+#+begin_src typescript
+const myCar = {
+  model: 'foo' as 'BMW'
+}
+#+end_src
+
+and indeed the result value would be =foo=.
