@@ -171,7 +171,9 @@ Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_sm
 - [[https://www.gnu.org/software/emacs/refcards/pdf/orgcard.pdf][Org]]
 
 * Regenerating Elisp code from Org code
-#+begin_src emacs-lisp
+On <2021-07-04 Sun> I disabled the below block as it's not clear what is it doing.
+
+#+begin_example emacs-lisp
 (use-package emacs
 
   :config
@@ -183,7 +185,7 @@ Link: [[https://www.reddit.com/r/emacs/comments/l4v1ux/one_of_the_most_useful_sm
   :hook (kill-emacs-hook . pp/delete-emacs-init)
  ;;  (kill-emacs-hook . package-quickstart-refresh)
 )
-#+end_src
+#+end_example
 
 * Server mode
 Needed to edit commit messages from Eshell when running git commands.
@@ -283,6 +285,8 @@ https://github.com/waymondo/frog-jump-buffer/issues/23
 - =s-m=, (consult-mark) :: open a fuzzy selector to jump to a mark
 - =M-r=, (move-to-window-line-top-bottom) :: moves cursor to the
   middle, then top, then bottom of the screen
+- =C-o=, (evil-jump-backward) :: Go to older position in jump list.
+  To go the other way, press TAB.
 
 ** Marks
 <2021-03-07 Sun>
@@ -301,7 +305,7 @@ Emacs marks use (mark-ring), and works like this:
   =C-s= and moved somewhere and then you need to get back to your
   previous position.
 
-Update <2021-04-28 Wed>: Watched a video [[https://youtu.be/Dq5UOt63Mms][Efficient Text Selection with
+On <2021-04-28 Wed> I watched a video [[https://youtu.be/Dq5UOt63Mms][Efficient Text Selection with
 Emacs Key Bindings]].
 
 #+begin_src emacs-lisp
@@ -313,7 +317,7 @@ Emacs Key Bindings]].
 Links:
 - http://ergoemacs.org/emacs/emacs_jump_to_previous_position.html
 
-** Jumping - better-jumper - disabled
+** better-jumper - disabled
 <2021-03-07 Sun> <2021-06-08 Tue>
 
 It's needed when you moved coursor to some position in the buffer
@@ -324,10 +328,13 @@ before.
 I'm trying to use [[https://github.com/gilbertw1/better-jumper][better-jumper]] to get back to previous position
 after jumps.
 
-- =s-[=, =better-jumper-jump-backward= :: jump backwards
-- =s-]=, =better-jumper-jump-forward= :: jump forwards
+- =better-jumper-jump-backward= :: jump backwards
+- =better-jumper-jump-forward= :: jump forwards
+
+On <2021-07-04 Sun> I disabled =better-jumper= in favour to Gumshoe.
 
 #+begin_example emacs-lisp
+
 ;; (use-package better-jumper :ensure t
 ;;   :config
 ;;   (setq better-jumper-context 'buffer
@@ -379,12 +386,12 @@ mode:
 - =C-i=, (evil-jump-forward) :: jump forward
 
 ** Gumshoe: a spatial Point movement tracker
-<2021-06-27 Sun> <2021-06-29 Tue>
+<2021-06-27 Sun> <2021-06-29 Tue> <2021-07-04 Sun>
 
 - https://github.com/overdr0ne/gumshoe
 - [[https://www.reddit.com/r/emacs/comments/o8e6om/gumshoe_follows_you_around_and_logs_your_movements/][Discussion on Reddit]]
 
-#+begin_example emacs-lisp
+#+begin_src emacs-lisp
 (use-package gumshoe
   :straight (gumshoe :type git
                      :host github
@@ -393,13 +400,11 @@ mode:
   :config
   ;; The minor mode must be enabled to begin tracking
   (global-gumshoe-mode 1))
-#+end_example
+#+end_src
 
-
-** Moving back
-<2021-03-07 Sun>
-
-I found this tiny helper to move back to last change, will try to use it.
+** Go to last change
+On <2021-03-07 Sun> I found this tiny helper to move back to last
+change, will try to use it.
 
 - =g ;=, =goto-last-change= :: go to last change
 - =g ,= :: go to last change reverse
@@ -432,6 +437,8 @@ I found this tiny helper to move back to last change, will try to use it.
 
 ** Isearch - searching in a buffer
 <2021-06-26 Sat>
+
+I-search is built-in into Emacs, so I'm using it.
 
 Alternatives - https://github.com/raxod502/ctrlf
 
@@ -840,11 +847,11 @@ original name is already built in.
   hunting for a default that you think should be present, try out =M-n=
   or =M-p=. =↓= runs the command (next-history-element), so does =M-n=.
 
-The solution was found on Gihtub in Selectrum repository by searching for =dired-dwim-target=
-on issue [[https://github.com/raxod502/selectrum/issues/323#issuecomment-776097349][selectrum#323]].
+The solution was found on Gihtub in Selectrum repository by searching
+for =dired-dwim-target= on issue [[https://github.com/raxod502/selectrum/issues/323#issuecomment-776097349][selectrum#323]].
 
 #+begin_src emacs-lisp
-(defun selectrum-refine-candidates-using-completions-styles-with-dots (input candidates)
+(defun pp/selectrum-refine-candidates-with-dots (input candidates)
   "Use INPUT to filter and highlight CANDIDATES.
 Uses `completion-styles'."
   (let ((cands (prescient-filter input candidates)))
@@ -852,10 +859,11 @@ Uses `completion-styles'."
              (string-empty-p input))
         (cons "./" cands)
       cands)))
-
-(setq selectrum-refine-candidates-function #'selectrum-refine-candidates-using-completions-styles-with-dots)
-
 #+end_src
+
+On <2021-07-04 Sun> after enabling native compilation it stopped for
+some reason. After checking the value of 'selectrum-refine-candidates-function (=C-h v=) it's set to 'prescient-filter,
+probably due to prescient mode enabled afterwards. Let's move =setq= there.
 
 
 * Undo and redo
@@ -960,7 +968,8 @@ See URL `https://www.emacswiki.org/emacs/HideModeLine'."
             "ElDoc"           ;; Emacs Lisp documentation
             "fix"             ;; eslintd-fix-mode
             "s3ed"
-            "better-jumper"
+            ;"better-jumper"
+            "Gumshoe"
             "be"              ;; beginend
             )
           "\\|")))
@@ -1217,8 +1226,8 @@ I use =general.el= package for managing keybindings.
  "s-w" 'delete-window
 
  ;; going around
- "s-[" 'better-jumper-jump-backward
- "s-]" 'better-jumper-jump-forward
+ "s-[" 'gumshoe-backtrack-back
+ "s-]" 'gumshoe-backtrack-forward
  "<s-backspace>" 'goto-last-change
  "s-j" 'previous-buffer
  "s-k" 'next-buffer
@@ -1448,6 +1457,14 @@ Links:
 
 Replaces Ivy+Counsel.
 
+** Prescient - Frecency-based candidate sorting, also offers filtering
+
+#+begin_src emacs-lisp
+(use-package prescient :ensure t
+  :config
+  (prescient-persist-mode +1))
+#+end_src
+
 ** Selectrum
 
 https://github.com/raxod502/selectrum
@@ -1461,18 +1478,12 @@ Incremental narrowing in Emacs.
 (use-package selectrum-prescient :ensure t
   :init (selectrum-prescient-mode +1))
 
+(setq selectrum-refine-candidates-function #'pp/selectrum-refine-candidates-with-dots)
+
 ;; (use-package completing-read-xref
 ;;   :straight (completing-read-xref :type git :host github :repo "travitch/completing-read-xref.el")
 ;;   :commands (completing-read-xref-show-xrefs completing-read-xref-show-xrefs)
 ;;   :init (setq xref-show-definitions-function 'completing-read-xref-show-defs))
-#+end_src
-
-** Prescient - Frecency-based candidate sorting, also offers filtering
-
-#+begin_src emacs-lisp
-(use-package prescient :ensure t
-  :config
-  (prescient-persist-mode +1))
 #+end_src
 
 ** Marginalia - additional information on completion
